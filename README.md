@@ -7,6 +7,7 @@ A .NET library to generate Mermaid diagrams from C# code.
 - [Implementation status](#implementation-status)
 - [Quick Start](#quick-start)
   - [Sequence diagram](#sequence-diagram)
+  - [Entity relationship diagram](#entity-relationship-diagram)
 - [License](#license)
 - [Credits](#credits)
 
@@ -17,7 +18,7 @@ A .NET library to generate Mermaid diagrams from C# code.
 - [x] Sequence diagram
 - [ ] Class diagram
 - [ ] State diagram
-- [ ] Entity relationship diagram
+- [x] Entity relationship diagram
 - [ ] User journe
 - [ ] Gantt
 - [ ] Pie chart
@@ -50,6 +51,21 @@ string diagram = Mermaid
 ```
 
 Read more at [docs/sequence-diagram.md](docs/sequence-diagram.md).
+
+### Entity relationship diagram
+
+```csharp
+string diagram = Mermaid
+    .EntityRelationshipDiagram
+    .AddEntity("Customer", out var c)
+    .AddEntity("Order", out var o)
+    .AddEntity("Product", out var p)
+    .AddRelationship(Cardinality.ExactlyOne, c, Cardinality.ZeroOrMore, o, "places")
+    .AddRelationship(Cardinality.ExactlyOne, o, Cardinality.OneOrMore, p, "contains")
+    .Build();
+```
+
+Read more at [docs/entity-relationship-diagram.md](docs/entity-relationship-diagram.md).
 
 ## License
 
