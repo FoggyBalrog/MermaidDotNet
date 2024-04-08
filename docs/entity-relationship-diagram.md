@@ -1,7 +1,11 @@
-# Entity relationship diagram <!-- omit from toc -->
+# Entity relationship diagram<!-- omit from toc -->
 
 *Official Mermaid documentation: [Entity Relationship Diagram](https://mermaid.js.org/syntax/entityRelationshipDiagram.html).*
 
+- [Simple diagram](#simple-diagram)
+- [Cardinality](#cardinality)
+- [Attributes](#attributes)
+- [Identification](#identification)
 
 ## Simple diagram
 
@@ -28,7 +32,7 @@ Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 erDiagram
@@ -44,6 +48,8 @@ erDiagram
     Order ||--|{ Product : "contains"
 ```
 
+[⬆ Back to top](#entity-relationship-diagram)
+
 ## Cardinality
 
 Cardinality must be defined for each end of a relationship and may be one of the following values:
@@ -52,6 +58,8 @@ Cardinality must be defined for each end of a relationship and may be one of the
 - `ExactlyOne`
 - `ZeroOrMore`
 - `OneOrMore`
+
+[⬆ Back to top](#entity-relationship-diagram)
 
 ## Attributes
 
@@ -70,7 +78,7 @@ Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 erDiagram
@@ -99,6 +107,8 @@ erDiagram
     }
     E1 ||--o{ E2 : "has"
 ```
+
+[⬆ Back to top](#entity-relationship-diagram)
 
 ## Identification
 
@@ -117,7 +127,7 @@ Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 erDiagram
@@ -130,3 +140,5 @@ That renders as:
 erDiagram
     E1 ||..o{ E2 : "foo"
 ```
+
+[⬆ Back to top](#entity-relationship-diagram)

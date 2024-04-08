@@ -1,4 +1,4 @@
-# Sequence Diagram <!-- omit from toc -->
+# Sequence Diagram<!-- omit from toc -->
 
 *Official Mermaid documentation: [Sequence Diagram](https://mermaid.js.org/syntax/sequenceDiagram.html).*
 
@@ -40,7 +40,7 @@ Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -81,7 +81,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -136,7 +136,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -172,7 +172,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -216,7 +216,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -268,7 +268,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -333,7 +333,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -399,7 +399,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -449,7 +449,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -502,7 +502,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -566,7 +566,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -657,7 +657,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -748,7 +748,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -819,7 +819,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -867,7 +867,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
@@ -921,7 +921,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-It produces the following mermaid code:
+The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
