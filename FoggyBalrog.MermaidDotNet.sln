@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoggyBalrog.MermaidDotNet", "FoggyBalrog.MermaidDotNet\FoggyBalrog.MermaidDotNet.csproj", "{E540EE64-C0C6-4D76-A149-DB2788E299AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoggyBalrog.MermaidDotNet.UnitTests", "FoggyBalrog.MermaidDotNet.UnitTests\FoggyBalrog.MermaidDotNet.UnitTests.csproj", "{06DB296E-8463-4EEF-A253-1CDC9150E9C4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E540EE64-C0C6-4D76-A149-DB2788E299AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E540EE64-C0C6-4D76-A149-DB2788E299AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E540EE64-C0C6-4D76-A149-DB2788E299AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E540EE64-C0C6-4D76-A149-DB2788E299AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06DB296E-8463-4EEF-A253-1CDC9150E9C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06DB296E-8463-4EEF-A253-1CDC9150E9C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06DB296E-8463-4EEF-A253-1CDC9150E9C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06DB296E-8463-4EEF-A253-1CDC9150E9C4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {21A7B6C6-FC87-4C98-ACB2-5F69614C68D5}
+	EndGlobalSection
+EndGlobal
