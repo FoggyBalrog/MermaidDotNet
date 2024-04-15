@@ -32,7 +32,7 @@ Generate the diagram mermaid code with the `Build` method.
 
 ```csharp
 Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .SendMessage(a, b, $"Hello {b.Name}!")
@@ -72,7 +72,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .WithAutoNumber()
     .AddMember("Alice", MemberType.Participant, out var m1)
     .AddMember("Bob", MemberType.Participant, out var m2)
@@ -129,7 +129,7 @@ Line types (table):
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .SendMessage(a, b, $"Hello {b.Name}!", lineType: LineType.Dotted, arrowType: ArrowType.Open)
@@ -164,7 +164,7 @@ Either use the `AddMember` method with the right `MemberType` argument, or use t
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddMember("Alice", MemberType.Participant, out var a)
     .AddMember("Bob", MemberType.Actor, out var b)
     .AddParticipant("Charlie", out var c)
@@ -204,7 +204,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddMember("Alice", MemberType.Participant, out var a)
     .AddMember("Bob", MemberType.Participant, out var b)
     .AddLink(a, "Dashboard", "https://dashboard.contoso.com/alice")
@@ -256,7 +256,7 @@ Use the `SendCreateMessage` and `SendDestroyMessage` methods.
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .SendMessage(a, b, $"Hello {b.Name}, how are you?")
@@ -316,7 +316,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddBox("Box1", out var box1, Color.Aquamarine)
     .AddBox("Box2", out var box2, Color.FromArgb(70, 55, 56, 57))
     .AddBox("Box3", out var box3)
@@ -389,7 +389,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("John", out var j)
     .SendMessage(a, j, "Hello John, how are you?", activationType: ActivationType.Activate)
@@ -436,7 +436,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .AddParticipant("Charlie", out var c)
@@ -491,7 +491,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .SendMessage(a, b, "Hello Bob!")
@@ -542,7 +542,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .SendMessage(a, b, "Hello Bob!")
@@ -630,7 +630,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .AddParticipant("Charlie", out var c)
@@ -727,7 +727,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Service", out var s)
     .AddParticipant("DB 1", out var db1)
     .AddParticipant("DB 2", out var db2)
@@ -810,7 +810,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .SendMessage(a, b, "Hello!")
@@ -855,7 +855,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .AddRectangle(Color.AliceBlue, builder => builder
@@ -911,7 +911,7 @@ Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .Comment("Alice is greeting Bob")

@@ -8,7 +8,7 @@ public class EntityRelationshipDiagramBuilderTests
     public void CanBuildEmptyDiagram()
     {
         string diagram = Mermaid
-            .EntityRelationshipDiagram
+            .EntityRelationshipDiagram()
             .Build();
 
         Assert.Equal("erDiagram", diagram, ignoreLineEndingDifferences: true);
@@ -18,7 +18,7 @@ public class EntityRelationshipDiagramBuilderTests
     public void CanBuildDiagramWithOnlyEntities()
     {
         string diagram = Mermaid
-            .EntityRelationshipDiagram
+            .EntityRelationshipDiagram()
             .AddEntity("E1", out _, ("string", "foo"), ("int", "bar", EntityAttributeKeys.Primary | EntityAttributeKeys.Unique))
             .AddEntity("E2", out _, ("string", "baz", EntityAttributeKeys.Foreign, "hello"), ("int", "qux", "world"))
             .AddEntity("E3", out _)
@@ -41,7 +41,7 @@ public class EntityRelationshipDiagramBuilderTests
     public void CanBuildSimpleDiagram()
     {
         string diagram = Mermaid
-            .EntityRelationshipDiagram
+            .EntityRelationshipDiagram()
             .AddEntity("Customer", out var c)
             .AddEntity("Order", out var o)
             .AddRelationship(Cardinality.ExactlyOne, c, Cardinality.ZeroOrMore, o, "places")
@@ -58,7 +58,7 @@ public class EntityRelationshipDiagramBuilderTests
     public void CanBuildDiagramWithEachCardinality()
     {
         string diagram = Mermaid
-            .EntityRelationshipDiagram
+            .EntityRelationshipDiagram()
             .AddEntity("E1", out var e1)
             .AddEntity("E2", out var e2)
             .AddEntity("E3", out var e3)
@@ -80,7 +80,7 @@ public class EntityRelationshipDiagramBuilderTests
     public void CanBuildDiagramWithIdentifyingRelationship()
     {
         string diagram = Mermaid
-            .EntityRelationshipDiagram
+            .EntityRelationshipDiagram()
             .AddEntity("E1", out var e1)
             .AddEntity("E2", out var e2)
             .AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "foo", RelationshipType.Identifying)
@@ -94,7 +94,7 @@ public class EntityRelationshipDiagramBuilderTests
     public void CanBuildDiagramWithNonIdentifyingRelationship()
     {
         string diagram = Mermaid
-            .EntityRelationshipDiagram
+            .EntityRelationshipDiagram()
             .AddEntity("E1", out var e1)
             .AddEntity("E2", out var e2)
             .AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "foo", RelationshipType.NonIdentifying)
@@ -108,7 +108,7 @@ public class EntityRelationshipDiagramBuilderTests
     public void CanBuildDiagramWithAttributes()
     {
         string diagram = Mermaid
-            .EntityRelationshipDiagram
+            .EntityRelationshipDiagram()
             .AddEntity("E1", out var e1, ("string", "foo"), ("int", "bar", EntityAttributeKeys.Primary | EntityAttributeKeys.Unique))
             .AddEntity("E2", out var e2, ("string", "baz", EntityAttributeKeys.Foreign, "hello"), ("int", "qux", "world"))
             .AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "has")
@@ -130,7 +130,7 @@ public class EntityRelationshipDiagramBuilderTests
     public void ThrowsExceptionWhenAddingEntityWithSameName()
     {
         var builder = Mermaid
-            .EntityRelationshipDiagram
+            .EntityRelationshipDiagram()
             .AddEntity("E1", out _);
 
         Assert.Throws<InvalidOperationException>(() => builder.AddEntity("E1", out _));
@@ -140,11 +140,11 @@ public class EntityRelationshipDiagramBuilderTests
     public void ThrowsExceptionWhenUsingEntitiesFromDifferentDiagram()
     {
         var builder1 = Mermaid
-            .EntityRelationshipDiagram
+            .EntityRelationshipDiagram()
             .AddEntity("E1", out var e1);
 
         Mermaid
-            .EntityRelationshipDiagram
+            .EntityRelationshipDiagram()
             .AddEntity("E2", out var e2);
 
         Assert.Throws<InvalidOperationException>(() => builder1.AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "foo"));

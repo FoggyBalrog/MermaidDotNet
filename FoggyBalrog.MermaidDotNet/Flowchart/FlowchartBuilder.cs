@@ -42,7 +42,7 @@ public class FlowchartBuilder
             throw new ArgumentOutOfRangeException(nameof(extraLength), "Extra length must be greater than or equal to 0");
         }
 
-        _items.Add(new Link(from, to, text, lineStyle, ending, multidirectional, extraLength));
+        _items.Add(new Link([from], [to], text, lineStyle, ending, multidirectional, extraLength));
         return this;
     }
 
@@ -58,7 +58,7 @@ public class FlowchartBuilder
         ThrowIfExternalItem(from);
         ThrowIfExternalItem(to);
 
-        _items.Add(new LinkChain(from, to, text, lineStyle, ending, multidirectional, extraLength));
+        _items.Add(new Link(from, to, text, lineStyle, ending, multidirectional, extraLength));
         return this;
     }
 
@@ -122,10 +122,6 @@ public class FlowchartBuilder
                     BuildLink(indent, builder, link);
                     break;
 
-                case LinkChain linkChain:
-                    BuildLinkChain(indent, builder, linkChain);
-                    break;
-
                 case Subgraph subgraph:
                     BuildSubgraph(indent, builder, subgraph);
                     break;
@@ -167,42 +163,6 @@ public class FlowchartBuilder
         }
     }
 
-    private static void BuildLinkChain(string indent, StringBuilder builder, LinkChain linkChain)
-    {
-        string text = linkChain.Text is not null ? $"|\"{linkChain.Text}\"|" : string.Empty;
-        string line = linkChain.LineStyle switch
-        {
-            LinkLineStyle.Solid => $"--{new string('-', linkChain.ExtraLength)}",
-            LinkLineStyle.Dotted => $"-{new string('.', 1 + linkChain.ExtraLength)}-",
-            LinkLineStyle.Thick => $"=={new string('=', linkChain.ExtraLength)}",
-            LinkLineStyle.Invisible => $"~~~{new string('~', linkChain.ExtraLength)}",
-            _ => throw new InvalidOperationException($"Unknown line style: {linkChain.LineStyle}")
-        };
-        string ending = (linkChain.LineStyle, linkChain.Ending) switch
-        {
-            (LinkLineStyle.Invisible, _) => string.Empty,
-            (_, LinkEnding.Arrow) => ">",
-            (_, LinkEnding.Circle) => "o",
-            (_, LinkEnding.Cross) => "x",
-            (LinkLineStyle.Solid, LinkEnding.Open) => "-",
-            (LinkLineStyle.Thick, LinkEnding.Open) => "=",
-            (_, LinkEnding.Open) => "",
-            _ => throw new InvalidOperationException($"Unknown ending: {linkChain.Ending}")
-        };
-        string beginning = linkChain.Multidirectional ? (linkChain.LineStyle, linkChain.Ending) switch
-        {
-            (LinkLineStyle.Invisible, _) => string.Empty,
-            (_, LinkEnding.Arrow) => "<",
-            (_, LinkEnding.Circle) => "o",
-            (_, LinkEnding.Cross) => "x",
-            (_, LinkEnding.Open) => "",
-            _ => throw new InvalidOperationException($"Unknown ending: {linkChain.Ending}")
-        } : string.Empty;
-        string from = string.Join(" & ", linkChain.From.Select(n => n.Id));
-        string to = string.Join(" & ", linkChain.To.Select(n => n.Id));
-        builder.AppendLine($"{indent}{from} {beginning}{line}{ending}{text} {to}");
-    }
-
     private static void BuildLink(string indent, StringBuilder builder, Link link)
     {
         string text = link.Text is not null ? $"|\"{link.Text}\"|" : string.Empty;
@@ -234,7 +194,9 @@ public class FlowchartBuilder
             (_, LinkEnding.Open) => "",
             _ => throw new InvalidOperationException($"Unknown ending: {link.Ending}")
         } : string.Empty;
-        builder.AppendLine($"{indent}{link.From.Id} {beginning}{line}{ending}{text} {link.To.Id}");
+        string from = string.Join(" & ", link.From.Select(n => n.Id));
+        string to = string.Join(" & ", link.To.Select(n => n.Id));
+        builder.AppendLine($"{indent}{from} {beginning}{line}{ending}{text} {to}");
     }
 
     private static void BuildNode(string indent, StringBuilder builder, Node node)

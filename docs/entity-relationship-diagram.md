@@ -23,7 +23,7 @@ Example:
 
 ```csharp
 Mermaid
-    .EntityRelationshipDiagram
+    .EntityRelationshipDiagram()
     .AddEntity("Customer", out var c)
     .AddEntity("Order", out var o)
     .AddEntity("Product", out var p)
@@ -71,7 +71,7 @@ Example:
 
 ```csharp
 Mermaid
-    .EntityRelationshipDiagram
+    .EntityRelationshipDiagram()
     .AddEntity("E1", out var e1, ("string", "foo"), ("int", "bar", EntityAttributeKeys.Primary | EntityAttributeKeys.Unique))
     .AddEntity("E2", out var e2, ("string", "baz", EntityAttributeKeys.Foreign, "hello"), ("int", "qux", "world"))
     .AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "has")
@@ -120,7 +120,7 @@ Example:
 
 ```csharp
 Mermaid
-    .EntityRelationshipDiagram
+    .EntityRelationshipDiagram()
     .AddEntity("E1", out var e1)
     .AddEntity("E2", out var e2)
     .AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "foo", RelationshipType.NonIdentifying)
