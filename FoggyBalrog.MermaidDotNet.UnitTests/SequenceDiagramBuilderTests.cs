@@ -3,7 +3,7 @@ using FoggyBalrog.MermaidDotNet.SequenceDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.UnitTests;
 
-public class SequenceDiagramTests
+public class SequenceDiagramBuilderTests
 {
     [Fact]
     public void CanBuildEmptyDiagram()

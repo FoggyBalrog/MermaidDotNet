@@ -4,39 +4,31 @@
 
 A .NET library to generate Mermaid diagrams from C# code.
 
-- [Implementation status](#implementation-status)
 - [Quick Start](#quick-start)
+  - [Flowchart](#flowchart)
   - [Sequence diagram](#sequence-diagram)
   - [Entity relationship diagram](#entity-relationship-diagram)
 - [License](#license)
 - [Credits](#credits)
 
-
-## Implementation status
-
-- [ ] Flowchart
-- [x] Sequence diagram
-- [ ] Class diagram
-- [ ] State diagram
-- [x] Entity relationship diagram
-- [ ] User journe
-- [ ] Gantt
-- [ ] Pie chart
-- [ ] Quadrant chart
-- [ ] Requirement diagram
-- [ ] Gitgraph diagram
-- [ ] Mindmaps
-- [ ] Timeline
-- [ ] Zenuml
-- [ ] Sankey
-- [ ] XYChart
-- [ ] Block diagram
-
-Experimental diagrams are not planned to be implemented.
-
 ## Quick Start
 
 The following code samples show how to create a simple Mermaid diagram of each implemented diagram type.
+
+### Flowchart
+
+```csharp
+string diagram = Mermaid
+    .Flowchart()
+    .AddNode("N1", out var n1)
+    .AddNode("N2", out var n2)
+    .AddNode("N3", out var n3)
+    .AddLink(n1, n2, "some text")
+    .AddLink(n2, n3)
+    .Build();
+```
+
+Read more at [docs/flowchart.md](docs/flowchart.md).
 
 ### Sequence diagram
 
