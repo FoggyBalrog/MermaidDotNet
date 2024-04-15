@@ -4,6 +4,9 @@
 
 A .NET library to generate Mermaid diagrams from C# code.
 
+> [!WARNING]  
+> Still under development. Not ready for production.
+
 - [Quick Start](#quick-start)
   - [Flowchart](#flowchart)
   - [Sequence diagram](#sequence-diagram)
@@ -34,7 +37,7 @@ Read more at [docs/flowchart.md](docs/flowchart.md).
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram
+    .SequenceDiagram()
     .AddParticipant("Alice", out var a)
     .AddParticipant("Bob", out var b)
     .SendMessage(a, b, $"Hello {b.Name}!")
@@ -48,7 +51,7 @@ Read more at [docs/sequence-diagram.md](docs/sequence-diagram.md).
 
 ```csharp
 string diagram = Mermaid
-    .EntityRelationshipDiagram
+    .EntityRelationshipDiagram()
     .AddEntity("Customer", out var c)
     .AddEntity("Order", out var o)
     .AddEntity("Product", out var p)

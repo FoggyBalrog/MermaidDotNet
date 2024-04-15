@@ -348,6 +348,22 @@ public class FlowchartBuilderTests
     }
 
     [Fact]
+    public void CanBuildDiagramWithComments()
+    {
+        string diagram = Mermaid
+            .Flowchart()
+            .Comment("This is a comment")
+            .AddNode("N1", out _)
+            .Comment("This is another comment")
+            .Build();
+
+        Assert.Equal(@"flowchart TB
+    %% This is a comment
+    id2[""N1""]
+    %% This is another comment", diagram, ignoreLineEndingDifferences: true);
+    }
+
+    [Fact]
     public void ThrowsExceptionWhenUsingNodeFromDifferentDiagram()
     {
         var builder = Mermaid
