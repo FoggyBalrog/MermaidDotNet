@@ -55,7 +55,8 @@ public class EntityRelationshipDiagramBuilder
 
             foreach (var (type, name, keys, comment) in entity.Attributes)
             {
-                var keyArray = Enum.GetValues<EntityAttributeKeys>()
+                var keyArray = Enum.GetValues(typeof(EntityAttributeKeys))
+                    .Cast<EntityAttributeKeys>()
                     .Where(k => keys.HasFlag(k) && k != EntityAttributeKeys.None)
                     .Select(k => k switch
                     {
