@@ -15,6 +15,7 @@ A .NET library to generate Mermaid diagrams from C# code.
   - [Flowchart](#flowchart)
   - [Sequence diagram](#sequence-diagram)
   - [Entity relationship diagram](#entity-relationship-diagram)
+  - [Pie chart](#pie-chart)
 - [License](#license)
 - [Credits](#credits)
 
@@ -65,6 +66,18 @@ string diagram = Mermaid
 ```
 
 Read more at [docs/entity-relationship-diagram.md](docs/entity-relationship-diagram.md).
+
+### Pie chart
+
+```csharp
+var pieChart = Mermaid
+    .PieChart()
+    .AddDataSet("Label1", 42.7)
+    .AddDataSet("Label2", 57.3)
+    .Build();
+```
+
+Read more at [docs/pie-chart.md](docs/pie-chart.md).
 
 ## License
 
