@@ -7,15 +7,14 @@ namespace FoggyBalrog.MermaidDotNet.SequenceDiagram;
 
 public class SequenceDiagramBuilder
 {
-    private bool _autonumber = false;
+    private readonly bool _autonumber;
     private readonly List<Box> _boxes = [];
     private readonly List<Member> _membersOutsideBoxes = [];
     private readonly List<ISequenceItem> _sequenceItems = [];
 
-    public SequenceDiagramBuilder WithAutoNumber()
+    internal SequenceDiagramBuilder(bool autonumber)
     {
-        _autonumber = true;
-        return this;
+        _autonumber = autonumber;
     }
 
     public SequenceDiagramBuilder AddNoteOver(Member m1, Member m2, string text)

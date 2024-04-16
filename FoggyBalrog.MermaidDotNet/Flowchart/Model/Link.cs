@@ -3,8 +3,8 @@
 public record Link : IFlowItem
 {
     internal Link(
-        ILinkable from,
-        ILinkable to,
+        ILinkable[] from,
+        ILinkable[] to,
         string? text,
         LinkLineStyle lineStyle,
         LinkEnding ending,
@@ -20,8 +20,8 @@ public record Link : IFlowItem
         ExtraLength = extraLength;
     }
 
-    public ILinkable From { get; }
-    public ILinkable To { get; }
+    public ILinkable[] From { get; }
+    public ILinkable[] To { get; }
     public string? Text { get; }
     public LinkLineStyle LineStyle { get; }
     public LinkEnding Ending { get; }
