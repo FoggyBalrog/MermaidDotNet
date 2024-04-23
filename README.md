@@ -2,7 +2,7 @@
 
 <img src="./mermaid.png" alt="Mermaid icon" width="100"/>
 
-A .NET library to generate Mermaid diagrams from C# code.
+A .NET library to generate Mermaid diagrams code.
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/FoggyBalrog/MermaidDotNet/main-workflow.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FoggyBalrog_MermaidDotNet&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=FoggyBalrog_MermaidDotNet)
@@ -17,6 +17,7 @@ A .NET library to generate Mermaid diagrams from C# code.
 - [Quick Start](#quick-start)
   - [Flowchart](#flowchart)
   - [Sequence diagram](#sequence-diagram)
+  - [Class diagram](#class-diagram)
   - [Entity relationship diagram](#entity-relationship-diagram)
   - [Pie chart](#pie-chart)
   - [Timeline diagram](#timeline-diagram)
@@ -55,6 +56,30 @@ string diagram = Mermaid
 ```
 
 Read more at [docs/sequence-diagram.md](docs/sequence-diagram.md).
+
+### Class diagram
+
+```csharp
+var diagram = Mermaid
+    .ClassDiagram()
+    .AddClass("Animal", out var animal)
+    .AddClass("Dog", out var dog)
+    .AddProperty(animal, "int", "Age")
+    .AddMethod(animal, null, "Breathe")
+    .AddMethod(animal, "void", "Eat", parameters: 
+    [
+        ("Food", "food")
+    ])
+    .AddMethod(dog, "Sound", "Bark", parameters: 
+    [
+        ("int", "times"),
+        ("int", "volume")
+    ])
+    .AddRelationship(animal, dog, RelationshipType.Inheritance, label: "A dog is an animal")
+    .Build();
+```
+
+Read more at [docs/class-diagram.md](docs/class-diagram.md).
 
 ### Entity relationship diagram
 
