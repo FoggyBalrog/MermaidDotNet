@@ -1,4 +1,6 @@
-﻿using FoggyBalrog.MermaidDotNet.EntityRelationshipDiagram;
+﻿using FoggyBalrog.MermaidDotNet.ClassDiagram;
+using FoggyBalrog.MermaidDotNet.ClassDiagram.Model;
+using FoggyBalrog.MermaidDotNet.EntityRelationshipDiagram;
 using FoggyBalrog.MermaidDotNet.Flowchart;
 using FoggyBalrog.MermaidDotNet.Flowchart.Model;
 using FoggyBalrog.MermaidDotNet.PieChart;
@@ -9,6 +11,7 @@ namespace FoggyBalrog.MermaidDotNet;
 
 public static class Mermaid
 {
+    public static ClassDiagramBuilder ClassDiagram(string? title = null, ClassDiagramDirection? direction = null) => new(title, direction);
     public static EntityRelationshipDiagramBuilder EntityRelationshipDiagram() => new();
     public static FlowchartBuilder Flowchart(FlowchartOrientation orientation = FlowchartOrientation.TopToBottom) => new(orientation);
     public static PieChartBuilder PieChart(bool displayValuesOnLegend = false, string? title = null) => new(displayValuesOnLegend, title);

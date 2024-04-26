@@ -8,7 +8,7 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <Version>0.3.0</Version>
     <Authors>FoggyBalrog</Authors>
-    <Description>A .NET library to generate Mermaid diagrams from C# code.</Description>
+    <Description>A .NET library to generate Mermaid diagrams code.</Description>
     <PackageIcon>mermaid.png</PackageIcon>
     <RepositoryUrl>https://github.com/FoggyBalrog/MermaidDotNet</RepositoryUrl>
     <PackageTags>mermaid</PackageTags>
