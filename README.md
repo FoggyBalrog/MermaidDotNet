@@ -18,6 +18,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Flowchart](#flowchart)
   - [Sequence diagram](#sequence-diagram)
   - [Class diagram](#class-diagram)
+  - [State diagram](#state-diagram)
   - [Entity relationship diagram](#entity-relationship-diagram)
   - [Pie chart](#pie-chart)
   - [Timeline diagram](#timeline-diagram)
@@ -80,6 +81,21 @@ var diagram = Mermaid
 ```
 
 Read more at [docs/class-diagram.md](docs/class-diagram.md).
+
+### State diagram
+
+```csharp
+var diagram = Mermaid
+    .StateDiagram()
+    .AddState("State 1", out var s1)
+    .AddState("State 2", out var s2)
+    .AddTransitionFromStart(s1)
+    .AddStateTransition(s1, s2)
+    .AddTransitionToEnd(s2)
+    .Build();
+```
+
+Read more at [docs/state-diagram.md](docs/state-diagram.md).
 
 ### Entity relationship diagram
 
