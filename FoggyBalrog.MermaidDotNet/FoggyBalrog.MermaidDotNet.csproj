@@ -6,14 +6,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Authors>FoggyBalrog</Authors>
     <Description>A .NET library to generate Mermaid diagrams code.</Description>
     <PackageIcon>mermaid.png</PackageIcon>
     <RepositoryUrl>https://github.com/FoggyBalrog/MermaidDotNet</RepositoryUrl>
     <PackageTags>mermaid</PackageTags>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
