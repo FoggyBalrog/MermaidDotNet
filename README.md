@@ -1,6 +1,6 @@
 # MermaidDotNet <!-- omit from toc -->
 
-<img src="./mermaid.png" alt="Mermaid icon" width="100"/>
+<img src="https://raw.githubusercontent.com/FoggyBalrog/MermaidDotNet/main/mermaid.png" alt="Mermaid icon" width="100"/>
 
 A .NET library to generate Mermaid diagrams code.
 
@@ -42,7 +42,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/flowchart.md](docs/flowchart.md).
+Read more at [docs/flowchart.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/flowchart.md).
 
 ### Sequence diagram
 
@@ -56,7 +56,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/sequence-diagram.md](docs/sequence-diagram.md).
+Read more at [docs/sequence-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/sequence-diagram.md).
 
 ### Class diagram
 
@@ -80,7 +80,7 @@ var diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/class-diagram.md](docs/class-diagram.md).
+Read more at [docs/class-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/class-diagram.md).
 
 ### State diagram
 
@@ -95,7 +95,7 @@ var diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/state-diagram.md](docs/state-diagram.md).
+Read more at [docs/state-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/state-diagram.md).
 
 ### Entity relationship diagram
 
@@ -110,7 +110,7 @@ string diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/entity-relationship-diagram.md](docs/entity-relationship-diagram.md).
+Read more at [docs/entity-relationship-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/entity-relationship-diagram.md).
 
 ### Pie chart
 
@@ -122,7 +122,7 @@ var pieChart = Mermaid
     .Build();
 ```
 
-Read more at [docs/pie-chart.md](docs/pie-chart.md).
+Read more at [docs/pie-chart.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/pie-chart.md).
 
 ### Timeline diagram
 
@@ -135,11 +135,11 @@ string diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/timeline-diagram.md](docs/timeline-diagram.md).
+Read more at [docs/timeline-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/timeline-diagram.md).
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/LICENSE) file for details.
 
 ## Credits
 
