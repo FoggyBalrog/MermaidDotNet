@@ -6,7 +6,7 @@ A .NET library to generate Mermaid diagrams code.
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/FoggyBalrog/MermaidDotNet/main-workflow.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FoggyBalrog_MermaidDotNet&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=FoggyBalrog_MermaidDotNet)
-[![GitHub License](https://img.shields.io/github/license/FoggyBalrog/MermaidDotNet)](LICENSE)
+[![GitHub License](https://img.shields.io/github/license/FoggyBalrog/MermaidDotNet?)](LICENSE)
 [![NuGet Version](https://img.shields.io/nuget/v/FoggyBalrog.MermaidDotNet?logo=nuget&color=blue)
 ](https://www.nuget.org/packages/FoggyBalrog.MermaidDotNet)
 
@@ -123,7 +123,7 @@ Read more at [docs/timeline-diagram.md](docs/timeline-diagram.md).
 
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Credits
 
