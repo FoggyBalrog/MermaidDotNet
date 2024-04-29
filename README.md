@@ -20,6 +20,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Class diagram](#class-diagram)
   - [State diagram](#state-diagram)
   - [Entity relationship diagram](#entity-relationship-diagram)
+  - [User journey diagram](#user-journey-diagram)
   - [Pie chart](#pie-chart)
   - [Timeline diagram](#timeline-diagram)
 - [License](#license)
@@ -111,6 +112,24 @@ string diagram = Mermaid
 ```
 
 Read more at [docs/entity-relationship-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/entity-relationship-diagram.md).
+
+### User journey diagram
+
+```csharp
+var diagram = Mermaid
+    .UserJourneyDiagram()
+    .AddTask("Task 1", 1, "Actor 1", "Actor 2")
+    .AddTask("Task 2", 2)
+    .AddSection("Section 1")
+    .AddTask("Task 3", 3)
+    .AddTask("Task 4", 4, "Actor 3")
+    .AddSection("Section 2")
+    .AddTask("Task 5", 5, "Actor 1", "Actor 3")
+    .AddTask("Task 6", 6, "Actor 2")
+    .Build();
+```
+
+Read more at [docs/user-journey-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/user-journey-diagram.md).
 
 ### Pie chart
 
