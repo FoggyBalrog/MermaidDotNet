@@ -16,7 +16,7 @@ public record Class : IClassDiagramItem
     public string Name { get; }
     public string? Label { get; }
     public string? Annotation { get; }
-    public IClassClickBindind? ClickBindind { get; internal set; }
+    internal IClassClickBindind? ClickBindind { get; set; }
 
     public IReadOnlyCollection<Property> Properties => _properties.AsReadOnly();
     public IReadOnlyCollection<Method> Methods => _methods.AsReadOnly();

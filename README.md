@@ -14,6 +14,7 @@ A .NET library to generate Mermaid diagrams code.
 > [!WARNING]  
 > Still under development. Not ready for production.
 
+- [Compatibility](#compatibility)
 - [Quick Start](#quick-start)
   - [Flowchart](#flowchart)
   - [Sequence diagram](#sequence-diagram)
@@ -21,10 +22,17 @@ A .NET library to generate Mermaid diagrams code.
   - [State diagram](#state-diagram)
   - [Entity relationship diagram](#entity-relationship-diagram)
   - [User journey diagram](#user-journey-diagram)
+  - [Gantt diagram](#gantt-diagram)
   - [Pie chart](#pie-chart)
   - [Timeline diagram](#timeline-diagram)
 - [License](#license)
 - [Credits](#credits)
+
+## Compatibility
+
+The library targets **.NET Standard 2.1**, that is notably compatible with .NET Core 3.0 and later, .NET 5.0 and later, and Mono 6.4 and later.
+
+See details [on the package _frameworks_ tab on nuget.org](https://www.nuget.org/packages/FoggyBalrog.MermaidDotNet#supportedframeworks-body-tab) or [on Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/standard/net-standard?tabs=net-standard-2-1#select-net-standard-version).
 
 ## Quick Start
 
@@ -130,6 +138,18 @@ var diagram = Mermaid
 ```
 
 Read more at [docs/user-journey-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/user-journey-diagram.md).
+
+### Gantt diagram
+
+```csharp
+string diagram = Mermaid
+    .GanttDiagram()
+    .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out _)
+    .AddTask("Bar", Date("2024-05-08"), Date("2024-05-12"), out _)
+    .Build();
+```
+
+Read more at [docs/gantt-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/gantt-diagram.md).
 
 ### Pie chart
 

@@ -1,5 +1,5 @@
 ﻿namespace FoggyBalrog.MermaidDotNet.ClassDiagram.Model;
 
-public interface IClassClickBindind
+internal interface IClassClickBindind
 {
 }

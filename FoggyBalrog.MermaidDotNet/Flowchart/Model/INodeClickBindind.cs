@@ -1,5 +1,5 @@
 ﻿namespace FoggyBalrog.MermaidDotNet.Flowchart.Model;
 
-public interface INodeClickBindind
+internal interface INodeClickBindind
 {
 }
