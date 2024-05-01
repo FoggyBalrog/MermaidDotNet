@@ -8,6 +8,7 @@ using FoggyBalrog.MermaidDotNet.SequenceDiagram;
 using FoggyBalrog.MermaidDotNet.StateDiagram;
 using FoggyBalrog.MermaidDotNet.StateDiagram.Model;
 using FoggyBalrog.MermaidDotNet.TimelineDiagram;
+using FoggyBalrog.MermaidDotNet.UserJourneyDiagram;
 
 namespace FoggyBalrog.MermaidDotNet;
 
@@ -20,4 +21,5 @@ public static class Mermaid
     public static SequenceDiagramBuilder SequenceDiagram(bool autonumber = false) => new(autonumber);
     public static StateDiagramBuilder StateDiagram(string? title = null, StateDiagramDirection? direction = null) => new(title, direction);
     public static TimelineDiagramBuilder TimelineDiagram(string? title = null) => new(title);
+    public static UserJourneyDiagramBuilder UserJourneyDiagram(string? title = null) => new(title);
 }
