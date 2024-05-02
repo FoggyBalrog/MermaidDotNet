@@ -13,5 +13,5 @@ public record Node : ILinkable
     public string Id { get; }
     public string Text { get; }
     public NodeShape Shape { get; }
-    public INodeClickBindind? NodeClickBindind { get; internal set; }
+    internal INodeClickBindind? NodeClickBindind { get; set; }
 }
