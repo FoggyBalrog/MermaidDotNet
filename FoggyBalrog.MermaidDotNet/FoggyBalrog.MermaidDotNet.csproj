@@ -6,15 +6,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    <Version>0.5.0</Version>
+    <Version>0.6.0</Version>
     <Authors>FoggyBalrog</Authors>
     <Description>A .NET library to generate Mermaid diagrams code.</Description>
     <PackageIcon>mermaid.png</PackageIcon>
     <RepositoryUrl>https://github.com/FoggyBalrog/MermaidDotNet</RepositoryUrl>
-    <PackageTags>mermaid;diagrams;mermaid diagrams</PackageTags>
+    <PackageTags>mermaid;diagrams</PackageTags>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/FoggyBalrog/MermaidDotNet</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

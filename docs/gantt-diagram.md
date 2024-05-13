@@ -115,9 +115,9 @@ Example:
 ```csharp
 string diagram = Mermaid
     .GanttDiagram()
-    .AddTask("Task 1", Date("2024-05-01"), Date("2024-05-05"), out var t2, TaskTags.Done)
-    .AddTask("Task 2", Date("2024-05-01"), Date("2024-05-05"), out var t6, TaskTags.Active | TaskTags.Critical)
-    .AddTask("Task 3", Date("2024-05-01"), Date("2024-05-05"), out var t15, TaskTags.Active | TaskTags.Done | TaskTags.Critical | TaskTags.Milestone)
+    .AddTask("Task 1", DateTimeOffset.Parse("2024-05-01"), DateTimeOffset.Parse("2024-05-05"), out var t2, TaskTags.Done)
+    .AddTask("Task 2", DateTimeOffset.Parse("2024-05-01"), DateTimeOffset.Parse("2024-05-05"), out var t6, TaskTags.Active | TaskTags.Critical)
+    .AddTask("Task 3", DateTimeOffset.Parse("2024-05-01"), DateTimeOffset.Parse("2024-05-05"), out var t15, TaskTags.Active | TaskTags.Done | TaskTags.Critical | TaskTags.Milestone)
     .Build();
 ```
 
@@ -204,8 +204,8 @@ Example:
 ```csharp
 string diagram = Mermaid
     .GanttDiagram()
-    .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out var t1)
-    .AddTask("Bar", Date("2024-05-08"), Date("2024-05-12"), out var t2)
+    .AddTask("Foo", DateTimeOffset.Parse("2024-05-01"), DateTimeOffset.Parse("2024-05-05"), out var t1)
+    .AddTask("Bar", DateTimeOffset.Parse("2024-05-08"), DateTimeOffset.Parse("2024-05-12"), out var t2)
     .AddHyperlink(t1, "https://example.com")
     .AddCallback(t2, "myFunction")
     .Build();
@@ -268,7 +268,7 @@ string diagram = Mermaid
         axisFormat: "%d-%m",
         tickInterval: "1week",
         weekIntervalStartDay: "monday")
-    .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out var t1)
+    .AddTask("Foo", DateTimeOffset.Parse("2024-05-01"), DateTimeOffset.Parse("2024-05-05"), out var t1)
     .Build();
 ```
 
