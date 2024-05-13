@@ -24,6 +24,7 @@ A .NET library to generate Mermaid diagrams code.
   - [User journey diagram](#user-journey-diagram)
   - [Gantt diagram](#gantt-diagram)
   - [Pie chart](#pie-chart)
+  - [Quadrant chart](#quadrant-chart)
   - [Timeline diagram](#timeline-diagram)
 - [License](#license)
 - [Credits](#credits)
@@ -162,6 +163,18 @@ var pieChart = Mermaid
 ```
 
 Read more at [docs/pie-chart.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/pie-chart.md).
+
+### Quadrant chart
+
+```csharp
+var quadrantChart = Mermaid
+    .QuadrantChart()
+    .AddPoint("A", 0.1, 0.2)
+    .AddPoint("B", 0.3, 0.4)
+    .Build();
+```
+
+Read more at [docs/quadrant-chart.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/quadrant-chart.md).
 
 ### Timeline diagram
 

@@ -5,6 +5,7 @@ using FoggyBalrog.MermaidDotNet.Flowchart;
 using FoggyBalrog.MermaidDotNet.Flowchart.Model;
 using FoggyBalrog.MermaidDotNet.GanttDiagram;
 using FoggyBalrog.MermaidDotNet.PieChart;
+using FoggyBalrog.MermaidDotNet.QuadrantChart;
 using FoggyBalrog.MermaidDotNet.SequenceDiagram;
 using FoggyBalrog.MermaidDotNet.StateDiagram;
 using FoggyBalrog.MermaidDotNet.StateDiagram.Model;
@@ -27,6 +28,12 @@ public static class Mermaid
         string? tickInterval = null,
         string? weekIntervalStartDay = null) => new(title, compactMode, hideTodayMarker, dateFormat, axisFormat, tickInterval, weekIntervalStartDay);
     public static PieChartBuilder PieChart(bool displayValuesOnLegend = false, string? title = null) => new(displayValuesOnLegend, title);
+    public static QuadrantChartBuilder QuadrantChart(
+        string? title = null,
+        string? quadrant1 = null,
+        string? quadrant2 = null,
+        string? quadrant3 = null,
+        string? quadrant4 = null) => new(title, quadrant1, quadrant2, quadrant3, quadrant4);
     public static SequenceDiagramBuilder SequenceDiagram(bool autonumber = false) => new(autonumber);
     public static StateDiagramBuilder StateDiagram(string? title = null, StateDiagramDirection? direction = null) => new(title, direction);
     public static TimelineDiagramBuilder TimelineDiagram(string? title = null) => new(title);
