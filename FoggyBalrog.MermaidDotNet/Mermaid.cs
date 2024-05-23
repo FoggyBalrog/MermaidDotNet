@@ -4,6 +4,7 @@ using FoggyBalrog.MermaidDotNet.EntityRelationshipDiagram;
 using FoggyBalrog.MermaidDotNet.Flowchart;
 using FoggyBalrog.MermaidDotNet.Flowchart.Model;
 using FoggyBalrog.MermaidDotNet.GanttDiagram;
+using FoggyBalrog.MermaidDotNet.MindMap;
 using FoggyBalrog.MermaidDotNet.PieChart;
 using FoggyBalrog.MermaidDotNet.QuadrantChart;
 using FoggyBalrog.MermaidDotNet.SequenceDiagram;
@@ -27,6 +28,7 @@ public static class Mermaid
         string? axisFormat = null,
         string? tickInterval = null,
         string? weekIntervalStartDay = null) => new(title, compactMode, hideTodayMarker, dateFormat, axisFormat, tickInterval, weekIntervalStartDay);
+    public static MindMapBuilder MindMap(string rootText, MindMap.Model.NodeShape rootShape = MermaidDotNet.MindMap.Model.NodeShape.Default) => new(rootText, rootShape);
     public static PieChartBuilder PieChart(bool displayValuesOnLegend = false, string? title = null) => new(displayValuesOnLegend, title);
     public static QuadrantChartBuilder QuadrantChart(
         string? title = null,

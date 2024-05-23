@@ -23,6 +23,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Entity relationship diagram](#entity-relationship-diagram)
   - [User journey diagram](#user-journey-diagram)
   - [Gantt diagram](#gantt-diagram)
+  - [Mind Map](#mind-map)
   - [Pie chart](#pie-chart)
   - [Quadrant chart](#quadrant-chart)
   - [Timeline diagram](#timeline-diagram)
@@ -151,6 +152,23 @@ string diagram = Mermaid
 ```
 
 Read more at [docs/gantt-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/gantt-diagram.md).
+
+### Mind Map
+
+```csharp
+var mindMap = Mermaid
+    .MindMap("Root")
+    .AddNode("Node 1", out var node1)
+    .AddNode("Node 2", out var node2, node1)
+    .AddNode("Node 3", out var node3, node1)
+    .AddNode("Node 4", out var node4, node2)
+    .AddNode("Node 5", out var node5, node2)
+    .AddNode("Node 6", out var node6, node3)
+    .AddNode("Node 7", out var node7, node3)
+    .Build();
+```
+
+Read more at [docs/mind-map.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/mind-map.md).
 
 ### Pie chart
 
