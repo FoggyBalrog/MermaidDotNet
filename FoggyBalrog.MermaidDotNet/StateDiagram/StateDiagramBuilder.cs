@@ -135,32 +135,32 @@ public class StateDiagramBuilder
             builder.AppendLine($"{_indent}direction {directionString}");
         }
 
-        foreach (var item in _items)
+        foreach (IStateDiagramItem? item in _items)
         {
             switch (item)
             {
-                case State state when state.Kind is StateKind.Choice:
+                case State { Kind: StateKind.Choice } state:
                     builder.AppendLine($"{_indent}state {state.Id} <<choice>>");
                     break;
 
-                case State state when state.Kind is StateKind.Fork:
+                case State { Kind: StateKind.Fork } state:
                     builder.AppendLine($"{_indent}state {state.Id} <<fork>>");
                     break;
 
-                case State state when state.Kind is StateKind.Join:
+                case State { Kind: StateKind.Join } state:
                     builder.AppendLine($"{_indent}state {state.Id} <<join>>");
                     break;
 
-                case State state when state.Kind is StateKind.Composite:
+                case State { Kind: StateKind.Composite } state:
                     builder.AppendLine($"{_indent}state \"{state.Description}\" as {state.Id} {{");
                     _indent += "    ";
                     break;
 
-                case State state when state.Kind is StateKind.Simple:
+                case State { Kind: StateKind.Simple } state:
                     builder.AppendLine($"{_indent}{state.Id} : {state.Description}");
                     break;
 
-                case CompositeStateEnd _:
+                case CompositeStateEnd:
                     _indent = _indent[..^4];
                     builder.AppendLine($"{_indent}}}");
                     break;
@@ -189,7 +189,7 @@ public class StateDiagramBuilder
                     builder.AppendLine($"{_indent}end note");
                     break;
 
-                case ConcurrencySeparator _:
+                case ConcurrencySeparator:
                     builder.AppendLine($"{_indent}--");
                     break;
 

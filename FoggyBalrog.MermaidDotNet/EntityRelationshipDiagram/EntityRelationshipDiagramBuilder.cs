@@ -10,7 +10,7 @@ public class EntityRelationshipDiagramBuilder
 
     public EntityRelationshipDiagramBuilder AddEntity(string name, out Entity entity, params EntityAttribute[] attributes)
     {
-        if (_entities.Any(e => e.Name == name))
+        if (_entities.Exists(e => e.Name == name))
         {
             throw new InvalidOperationException($"Entity {name} already exists in the diagram");
         }
@@ -44,18 +44,18 @@ public class EntityRelationshipDiagramBuilder
 
     public string Build()
     {
-        string indent = "    ";
+        const string indent = "    ";
         var builder = new StringBuilder();
 
         builder.AppendLine("erDiagram");
 
-        foreach (var entity in _entities.Where(e => e.Attributes.Length != 0 || !_relationships.Any(r => r.FromEntity == e || r.ToEntity == e)))
+        foreach (Entity? entity in _entities.Where(e => e.Attributes.Length != 0 || !_relationships.Exists(r => r.FromEntity == e || r.ToEntity == e)))
         {
             builder.AppendLine($"{indent}{entity.Name} {{");
 
-            foreach (var (type, name, keys, comment) in entity.Attributes)
+            foreach ((string type, string name, EntityAttributeKeys keys, string comment) in entity.Attributes)
             {
-                var keyArray = Enum.GetValues(typeof(EntityAttributeKeys))
+                IEnumerable<string> keyArray = Enum.GetValues(typeof(EntityAttributeKeys))
                     .Cast<EntityAttributeKeys>()
                     .Where(k => keys.HasFlag(k) && k != EntityAttributeKeys.None)
                     .Select(k => k switch
@@ -64,7 +64,8 @@ public class EntityRelationshipDiagramBuilder
                         EntityAttributeKeys.Foreign => "FK",
                         EntityAttributeKeys.Unique => "UK",
                         _ => throw new InvalidOperationException($"Unknown key: {k}")
-                    });
+                    })
+                    .ToList();
 
                 string keyString = keyArray.Any() ? $" {string.Join(", ", keyArray)}" : string.Empty;
 
@@ -76,7 +77,7 @@ public class EntityRelationshipDiagramBuilder
             builder.AppendLine($"{indent}}}");
         }
 
-        foreach (var relationship in _relationships)
+        foreach (Relationship? relationship in _relationships)
         {
             string fromCardinalitySymbol = relationship.FromCardinality switch
             {
@@ -84,7 +85,7 @@ public class EntityRelationshipDiagramBuilder
                 Cardinality.ExactlyOne => "||",
                 Cardinality.ZeroOrMore => "}o",
                 Cardinality.OneOrMore => "}|",
-                _ => throw new InvalidOperationException($"Unknow cardinality: {relationship.FromCardinality}")
+                _ => throw new InvalidOperationException($"Unknown cardinality: {relationship.FromCardinality}")
             };
 
             string toCardinalitySymbol = relationship.ToCardinality switch
@@ -93,14 +94,14 @@ public class EntityRelationshipDiagramBuilder
                 Cardinality.ExactlyOne => "||",
                 Cardinality.ZeroOrMore => "o{",
                 Cardinality.OneOrMore => "|{",
-                _ => throw new InvalidOperationException($"Unknow cardinality: {relationship.ToCardinality}")
+                _ => throw new InvalidOperationException($"Unknown cardinality: {relationship.ToCardinality}")
             };
 
             string line = relationship.Type switch
             {
                 RelationshipType.Identifying => "--",
                 RelationshipType.NonIdentifying => "..",
-                _ => throw new InvalidOperationException($"Unknow relationship name: {relationship.Type}")
+                _ => throw new InvalidOperationException($"Unknown relationship name: {relationship.Type}")
             };
 
             builder.AppendLine($"{indent}{relationship.FromEntity.Name} {fromCardinalitySymbol}{line}{toCardinalitySymbol} {relationship.ToEntity.Name} : \"{relationship.Label}\"");

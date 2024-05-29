@@ -8,7 +8,7 @@ public class TimelineDiagramBuilder
     private const string _doubleIndent = "        ";
     private const string _singleIndent = "    ";
     private readonly string? _title;
-    private readonly List<ITimelineItem> _items = new();
+    private readonly List<ITimelineItem> _items = [];
 
     internal TimelineDiagramBuilder(string? title)
     {
@@ -39,13 +39,13 @@ public class TimelineDiagramBuilder
             builder.AppendLine($"{indent}title {_title}");
         }
 
-        foreach (var item in _items)
+        foreach (ITimelineItem? item in _items)
         {
             switch (item)
             {
                 case TimelineRecord record:
                     builder.Append($"{indent}{record.TimePeriod}");
-                    foreach (var @event in record.Events)
+                    foreach (string @event in record.Events)
                     {
                         builder.Append($" : {@event}");
                     }

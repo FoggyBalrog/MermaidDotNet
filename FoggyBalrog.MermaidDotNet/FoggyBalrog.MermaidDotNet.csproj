@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    <Version>0.7.0</Version>
+    <Version>0.8.0</Version>
     <Authors>FoggyBalrog</Authors>
     <Description>A .NET library to generate Mermaid diagrams code.</Description>
     <PackageIcon>mermaid.png</PackageIcon>

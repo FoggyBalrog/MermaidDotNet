@@ -1,4 +1,5 @@
-﻿using FoggyBalrog.MermaidDotNet.EntityRelationshipDiagram.Model;
+﻿using FoggyBalrog.MermaidDotNet.EntityRelationshipDiagram;
+using FoggyBalrog.MermaidDotNet.EntityRelationshipDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.UnitTests;
 
@@ -42,10 +43,10 @@ public class EntityRelationshipDiagramBuilderTests
     {
         string diagram = Mermaid
             .EntityRelationshipDiagram()
-            .AddEntity("Customer", out var c)
-            .AddEntity("Order", out var o)
+            .AddEntity("Customer", out Entity c)
+            .AddEntity("Order", out Entity o)
             .AddRelationship(Cardinality.ExactlyOne, c, Cardinality.ZeroOrMore, o, "places")
-            .AddEntity("Product", out var p)
+            .AddEntity("Product", out Entity p)
             .AddRelationship(Cardinality.ExactlyOne, o, Cardinality.OneOrMore, p, "contains")
             .Build();
 
@@ -59,10 +60,10 @@ public class EntityRelationshipDiagramBuilderTests
     {
         string diagram = Mermaid
             .EntityRelationshipDiagram()
-            .AddEntity("E1", out var e1)
-            .AddEntity("E2", out var e2)
-            .AddEntity("E3", out var e3)
-            .AddEntity("E4", out var e4)
+            .AddEntity("E1", out Entity e1)
+            .AddEntity("E2", out Entity e2)
+            .AddEntity("E3", out Entity e3)
+            .AddEntity("E4", out Entity e4)
             .AddRelationship(Cardinality.ZeroOrOne, e1, Cardinality.ZeroOrOne, e2, "foo")
             .AddRelationship(Cardinality.ExactlyOne, e2, Cardinality.ExactlyOne, e3, "foo")
             .AddRelationship(Cardinality.ZeroOrMore, e3, Cardinality.ZeroOrMore, e4, "foo")
@@ -81,8 +82,8 @@ public class EntityRelationshipDiagramBuilderTests
     {
         string diagram = Mermaid
             .EntityRelationshipDiagram()
-            .AddEntity("E1", out var e1)
-            .AddEntity("E2", out var e2)
+            .AddEntity("E1", out Entity e1)
+            .AddEntity("E2", out Entity e2)
             .AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "foo", RelationshipType.Identifying)
             .Build();
 
@@ -95,8 +96,8 @@ public class EntityRelationshipDiagramBuilderTests
     {
         string diagram = Mermaid
             .EntityRelationshipDiagram()
-            .AddEntity("E1", out var e1)
-            .AddEntity("E2", out var e2)
+            .AddEntity("E1", out Entity e1)
+            .AddEntity("E2", out Entity e2)
             .AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "foo", RelationshipType.NonIdentifying)
             .Build();
 
@@ -109,8 +110,8 @@ public class EntityRelationshipDiagramBuilderTests
     {
         string diagram = Mermaid
             .EntityRelationshipDiagram()
-            .AddEntity("E1", out var e1, ("string", "foo"), ("int", "bar", EntityAttributeKeys.Primary | EntityAttributeKeys.Unique))
-            .AddEntity("E2", out var e2, ("string", "baz", EntityAttributeKeys.Foreign, "hello"), ("int", "qux", "world"))
+            .AddEntity("E1", out Entity e1, ("string", "foo"), ("int", "bar", EntityAttributeKeys.Primary | EntityAttributeKeys.Unique))
+            .AddEntity("E2", out Entity e2, ("string", "baz", EntityAttributeKeys.Foreign, "hello"), ("int", "qux", "world"))
             .AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "has")
             .Build();
 
@@ -129,7 +130,7 @@ public class EntityRelationshipDiagramBuilderTests
     [Fact]
     public void ThrowsExceptionWhenAddingEntityWithSameName()
     {
-        var builder = Mermaid
+        EntityRelationshipDiagramBuilder builder = Mermaid
             .EntityRelationshipDiagram()
             .AddEntity("E1", out _);
 
@@ -139,13 +140,13 @@ public class EntityRelationshipDiagramBuilderTests
     [Fact]
     public void ThrowsExceptionWhenUsingEntitiesFromDifferentDiagram()
     {
-        var builder1 = Mermaid
+        EntityRelationshipDiagramBuilder builder1 = Mermaid
             .EntityRelationshipDiagram()
-            .AddEntity("E1", out var e1);
+            .AddEntity("E1", out Entity e1);
 
         Mermaid
             .EntityRelationshipDiagram()
-            .AddEntity("E2", out var e2);
+            .AddEntity("E2", out Entity e2);
 
         Assert.Throws<InvalidOperationException>(() => builder1.AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "foo"));
         Assert.Throws<InvalidOperationException>(() => builder1.AddRelationship(Cardinality.ExactlyOne, e2, Cardinality.ZeroOrMore, e1, "foo"));

@@ -34,7 +34,7 @@ public class MindMapBuilder
         return builder.ToString();
     }
 
-    private void BuildNode(StringBuilder builder, Node node, string indent = _defaultIndent, int count = 0)
+    private static void BuildNode(StringBuilder builder, Node node, string indent = _defaultIndent, int count = 0)
     {
         if (node.Shape == NodeShape.Default)
         {
@@ -50,13 +50,13 @@ public class MindMapBuilder
                 NodeShape.Circle => ("((", "))"),
                 NodeShape.Bang => ("))", "(("),
                 NodeShape.Cloud => (")", "("),
-                NodeShape.Hegaxon => ("{{", "}}"),
+                NodeShape.Hexagon => ("{{", "}}"),
                 _ => throw new InvalidOperationException($"Unknown rootShape: {node.Shape}")
             };
             builder.AppendLine($"{indent}{id}{left}{node.Text}{right}");
         }
 
-        foreach (var child in node.Children)
+        foreach (Node? child in node.Children)
         {
             BuildNode(builder, child, indent + _defaultIndent, count + 1);
         }

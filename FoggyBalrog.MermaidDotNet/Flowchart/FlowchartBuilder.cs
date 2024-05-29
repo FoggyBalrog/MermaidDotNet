@@ -66,7 +66,7 @@ public class FlowchartBuilder
     {
         ThrowIfExternalItem(node);
 
-        node.NodeClickBindind = new NodeCallback(functionName, tooltip);
+        node.NodeClickBinding = new NodeCallback(functionName, tooltip);
         return this;
     }
 
@@ -74,7 +74,7 @@ public class FlowchartBuilder
     {
         ThrowIfExternalItem(node);
 
-        node.NodeClickBindind = new NodeHyperlink(uri, tooltip, target);
+        node.NodeClickBinding = new NodeHyperlink(uri, tooltip, target);
         return this;
     }
 
@@ -95,7 +95,7 @@ public class FlowchartBuilder
 
     public string Build()
     {
-        string indent = "    ";
+        const string indent = "    ";
         var builder = new StringBuilder();
 
         string orientation = _orientation switch
@@ -110,7 +110,7 @@ public class FlowchartBuilder
 
         builder.AppendLine($"flowchart {orientation}");
 
-        foreach (var flowItem in _items)
+        foreach (IFlowItem? flowItem in _items)
         {
             switch (flowItem)
             {
@@ -126,7 +126,7 @@ public class FlowchartBuilder
                     BuildSubgraph(indent, builder, subgraph);
                     break;
 
-                case End _:
+                case End:
                     builder.AppendLine($"{indent}end");
                     break;
 
@@ -222,7 +222,7 @@ public class FlowchartBuilder
 
         builder.AppendLine($"{indent}{node.Id}{leftBoundary}\"{node.Text}\"{rightBoundary}");
 
-        switch (node.NodeClickBindind)
+        switch (node.NodeClickBinding)
         {
             case NodeCallback nodeCallback:
                 builder.AppendLine($"{indent}click {node.Id} {nodeCallback.FunctionName}{(nodeCallback.Tooltip is not null ? $" \"{nodeCallback.Tooltip}\"" : string.Empty)}");
@@ -253,7 +253,7 @@ public class FlowchartBuilder
 
     private void ThrowIfExternalItem(ILinkable[] items)
     {
-        foreach (var item in items)
+        foreach (ILinkable item in items)
         {
             ThrowIfExternalItem(item);
         }

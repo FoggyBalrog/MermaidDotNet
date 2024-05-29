@@ -5,7 +5,7 @@ public class UserJourneyDiagramBuilderTests
     [Fact]
     public void CanBuildSimpleDiagramWithoutTitle()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .UserJourneyDiagram()
             .AddTask("Task 1", 1, "Actor 1", "Actor 2")
             .AddTask("Task 2", 2)
@@ -31,7 +31,7 @@ public class UserJourneyDiagramBuilderTests
     [Fact]
     public void CanBuildSimpleDiagramWithTitle()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .UserJourneyDiagram("My title")
             .AddTask("Task 1", 1, "Actor 1", "Actor 2")
             .AddTask("Task 2", 2)

@@ -2,5 +2,5 @@
 
 public abstract record GanttTask(string Id, string Name, TaskTags Tags) : IGanttItem
 {
-    internal ITaskClickBindind? ClickBindind { get; set; } = null;
+    internal ITaskClickBinding? ClickBinding { get; set; } = null;
 }

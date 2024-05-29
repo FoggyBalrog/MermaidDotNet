@@ -7,9 +7,7 @@ A .NET library to generate Mermaid diagrams code.
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/FoggyBalrog/MermaidDotNet/main-workflow.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FoggyBalrog_MermaidDotNet&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=FoggyBalrog_MermaidDotNet)
 [![GitHub License](https://img.shields.io/github/license/FoggyBalrog/MermaidDotNet?)](LICENSE)
-[![NuGet Version](https://img.shields.io/nuget/v/FoggyBalrog.MermaidDotNet?logo=nuget&color=blue)
-](https://www.nuget.org/packages/FoggyBalrog.MermaidDotNet)
-
+[![NuGet Version](https://img.shields.io/nuget/v/FoggyBalrog.MermaidDotNet?logo=nuget&color=blue)](https://www.nuget.org/packages/FoggyBalrog.MermaidDotNet)
 
 > [!WARNING]  
 > Still under development. Not ready for production.
@@ -23,6 +21,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Entity relationship diagram](#entity-relationship-diagram)
   - [User journey diagram](#user-journey-diagram)
   - [Gantt diagram](#gantt-diagram)
+  - [Git graph](#git-graph)
   - [Mind Map](#mind-map)
   - [Pie chart](#pie-chart)
   - [Quadrant chart](#quadrant-chart)
@@ -53,7 +52,16 @@ string diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/flowchart.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/flowchart.md).
+```mermaid
+flowchart TB
+    id1["N1"]
+    id2["N2"]
+    id3["N3"]
+    id1 -->|"some text"| id2
+    id2 --> id3
+```
+
+Read more at [docs/flowchart.md](./docs/flowchart.md).
 
 ### Sequence diagram
 
@@ -67,7 +75,15 @@ string diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/sequence-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/sequence-diagram.md).
+```mermaid
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>Bob: Hello Bob!
+    Bob->>Alice: Hello Alice!
+```
+
+Read more at [docs/sequence-diagram.md](./docs/sequence-diagram.md).
 
 ### Class diagram
 
@@ -91,7 +107,20 @@ var diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/class-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/class-diagram.md).
+```mermaid
+classDiagram
+    class Animal {
+        +int Age
+        +Breathe()
+        +Eat(Food food) Energy
+    }
+    class Dog {
+        +Bark(int times, int volume) Sound
+    }
+    Animal <|-- Dog : A dog is an animal
+```
+
+Read more at [docs/class-diagram.md](./docs/class-diagram.md).
 
 ### State diagram
 
@@ -106,7 +135,16 @@ var diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/state-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/state-diagram.md).
+```mermaid
+stateDiagram-v2
+    s1 : State 1
+    s2 : State 2
+    [*] --> s1
+    s1 --> s2
+    s2 --> [*]
+```
+
+Read more at [docs/state-diagram.md](./docs/state-diagram.md).
 
 ### Entity relationship diagram
 
@@ -121,7 +159,13 @@ string diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/entity-relationship-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/entity-relationship-diagram.md).
+```mermaid
+erDiagram
+    Customer ||--o{ Order : "places"
+    Order ||--|{ Product : "contains"
+```
+
+Read more at [docs/entity-relationship-diagram.md](./docs/entity-relationship-diagram.md).
 
 ### User journey diagram
 
@@ -139,7 +183,19 @@ var diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/user-journey-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/user-journey-diagram.md).
+```mermaid
+journey
+    Task 1: 1: Actor 1, Actor 2
+    Task 2: 2
+    section Section 1
+        Task 3: 3
+        Task 4: 4: Actor 3
+    section Section 2
+        Task 5: 5: Actor 1, Actor 3
+        Task 6: 6: Actor 2
+```
+
+Read more at [docs/user-journey-diagram.md](./docs/user-journey-diagram.md).
 
 ### Gantt diagram
 
@@ -151,7 +207,48 @@ string diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/gantt-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/gantt-diagram.md).
+```mermaid
+gantt
+    dateFormat YYYY-MM-DD
+    Foo: task1, 2024-05-01, 2024-05-05
+    Bar: task2, 2024-05-03, 2024-05-08
+```
+
+Read more at [docs/gantt-diagram.md](./docs/gantt-diagram.md).
+
+### Git graph
+
+```csharp
+string graph = Mermaid
+    .GitGraph()
+    .Commit()
+    .Branch("dev", out Branch dev)
+    .Commit()
+    .Checkout(dev)
+    .Commit()
+    .Commit()
+    .CheckoutMain()
+    .Commit()
+    .Merge(dev)
+    .Commit()
+    .Build();
+```
+
+```mermaid
+gitGraph
+    commit
+    branch dev
+    commit
+    checkout dev
+    commit
+    commit
+    checkout main
+    commit
+    merge dev
+    commit
+```
+
+Read more at [docs/git-graph.md](./docs/git-graph.md).
 
 ### Mind Map
 
@@ -168,7 +265,19 @@ var mindMap = Mermaid
     .Build();
 ```
 
-Read more at [docs/mind-map.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/mind-map.md).
+```mermaid
+mindmap
+    Root
+        Node 1
+            Node 2
+                Node 4
+                Node 5
+            Node 3
+                Node 6
+                Node 7
+```
+
+Read more at [docs/mind-map.md](./docs/mind-map.md).
 
 ### Pie chart
 
@@ -180,7 +289,13 @@ var pieChart = Mermaid
     .Build();
 ```
 
-Read more at [docs/pie-chart.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/pie-chart.md).
+```mermaid
+pie
+    "Label1": 42.7
+    "Label2": 57.3
+```
+
+Read more at [docs/pie-chart.md](./docs/pie-chart.md).
 
 ### Quadrant chart
 
@@ -192,7 +307,13 @@ var quadrantChart = Mermaid
     .Build();
 ```
 
-Read more at [docs/quadrant-chart.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/quadrant-chart.md).
+```mermaid
+quadrantChart
+    A: [0.1, 0.2]
+    B: [0.3, 0.4]
+```
+
+Read more at [docs/quadrant-chart.md](./docs/quadrant-chart.md).
 
 ### Timeline diagram
 
@@ -205,11 +326,19 @@ string diagram = Mermaid
     .Build();
 ```
 
-Read more at [docs/timeline-diagram.md](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/docs/timeline-diagram.md).
+```mermaid
+timeline
+    title Some title
+    2021 : Event 1 : Event 2
+    2022 : Event 3
+    2023 : Event 4 : Event 5 : Event 6
+```
+
+Read more at [docs/timeline-diagram.md](./docs/timeline-diagram.md).
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
 
 ## Credits
 

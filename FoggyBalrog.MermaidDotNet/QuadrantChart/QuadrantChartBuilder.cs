@@ -98,7 +98,7 @@ public class QuadrantChartBuilder
             builder.AppendLine($"{_indent}quadrant-4 {_quadrant4}");
         }
 
-        foreach (var point in _points)
+        foreach (Point? point in _points)
         {
             string x = point.X.ToString(CultureInfo.InvariantCulture);
             string y = point.Y.ToString(CultureInfo.InvariantCulture);

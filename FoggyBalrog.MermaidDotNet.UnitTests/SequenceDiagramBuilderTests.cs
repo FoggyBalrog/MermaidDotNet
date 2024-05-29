@@ -1,4 +1,5 @@
 using System.Drawing;
+using FoggyBalrog.MermaidDotNet.SequenceDiagram;
 using FoggyBalrog.MermaidDotNet.SequenceDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.UnitTests;
@@ -38,11 +39,11 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddMember("Alice", MemberType.Participant, out var m1)
-            .AddMember("Bob", MemberType.Participant, out var m2)
+            .AddMember("Alice", MemberType.Participant, out Member m1)
+            .AddMember("Bob", MemberType.Participant, out Member m2)
             .SendMessage(m1, m2, $"Hello {m2.Name}!")
             .SendMessage(m2, m1, $"Hello {m1.Name}!", LineType.Dotted)
-            .AddMember("Charlie", MemberType.Actor, out var m3)
+            .AddMember("Charlie", MemberType.Actor, out Member m3)
             .SendMessage(m1, m2, $"How are you {m2.Name}?", arrowType: ArrowType.Open)
             .SendMessage(m1, m3, $"How are you {m3.Name}?", arrowType: ArrowType.None)
             .SendMessage(m3, m1, $"I'm fine, thank you {m1.Name}!")
@@ -66,9 +67,9 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
-            .AddParticipant("Charlie", out var c)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
+            .AddParticipant("Charlie", out Member c)
             .AddNoteOver(a, b, "This is a note")
             .AddNoteRightOf(c, "This is another note")
             .SendMessage(a, b, $"Hello {b.Name}!")
@@ -94,14 +95,14 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddBox("Box1", out var box1, Color.Aquamarine)
-            .AddBox("Box2", out var box2, Color.FromArgb(70, 55, 56, 57))
-            .AddBox("Box3", out var box3)
-            .AddParticipant("Alice", out var a, box1)
-            .AddParticipant("Bob", out var b, box1)
-            .AddParticipant("Charlie", out var c, box2)
-            .AddParticipant("David", out var d, box3)
-            .AddParticipant("Eve", out var e)
+            .AddBox("Box1", out Box box1, Color.Aquamarine)
+            .AddBox("Box2", out Box box2, Color.FromArgb(70, 55, 56, 57))
+            .AddBox("Box3", out Box box3)
+            .AddParticipant("Alice", out Member a, box1)
+            .AddParticipant("Bob", out Member b, box1)
+            .AddParticipant("Charlie", out Member c, box2)
+            .AddParticipant("David", out Member d, box3)
+            .AddParticipant("Eve", out Member e)
             .SendMessage(a, b, $"Hello {b.Name}!")
             .SendMessage(b, c, $"Hello {c.Name}!")
             .SendMessage(c, d, $"Hello {d.Name}!")
@@ -133,11 +134,11 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
             .SendMessage(a, b, $"Hello {b.Name}, how are you?")
             .SendMessage(b, a, "Fine, thank you. And you?")
-            .SendCreateMessage(a, "Carl", MemberType.Participant, out var c, "Hi Carl!")
+            .SendCreateMessage(a, "Carl", MemberType.Participant, out Member c, "Hi Carl!")
             .SendCreateMessage(c, "Donald", MemberType.Actor, out _, "Hi!")
             .SendDestroyMessage(a, c, DestructionTarget.Recipient, "We are too many", arrowType: ArrowType.Cross)
             .SendDestroyMessage(b, a, DestructionTarget.Sender, "I agree")
@@ -163,8 +164,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("John", out var j)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("John", out Member j)
             .SendMessage(a, j, "Hello John, how are you?", activationType: ActivationType.Activate)
             .SendMessage(a, j, "John, can you hear me?", activationType: ActivationType.Activate)
             .SendMessage(j, a, "Hi Alice, I can hear you!", activationType: ActivationType.Deactivate)
@@ -185,8 +186,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
             .SendMessage(a, b, "Hello Bob!")
             .AddLoop("Every minute", builder => builder
                 .SendMessage(b, a, "Hello Alice!")
@@ -212,8 +213,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
             .SendMessage(a, b, "Hello Bob!")
             .Alternatives(
                 ("Bob is happy", builder => builder
@@ -262,8 +263,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
             .SendMessage(a, b, "Hello Bob!")
             .Alternatives(
                 ("Bob is happy", builder => builder
@@ -288,8 +289,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
             .SendMessage(a, b, "Hello Bob!")
             .Alternatives()
             .SendMessage(a, b, "Bye")
@@ -307,8 +308,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
             .SendMessage(a, b, "Hello Bob!")
             .Optional("Bob is happy", builder => builder
                 .SendMessage(b, a, "Hello Alice!")
@@ -332,11 +333,11 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
-            .AddParticipant("Charlie", out var c)
-            .AddParticipant("David", out var d)
-            .AddParticipant("Eve", out var e)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
+            .AddParticipant("Charlie", out Member c)
+            .AddParticipant("David", out Member d)
+            .AddParticipant("Eve", out Member e)
             .Parallels(
                 ("Alice to Bob", builder => builder
                     .SendMessage(a, b, "Hello Bob!")
@@ -388,9 +389,9 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
-            .AddParticipant("Charlie", out var c)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
+            .AddParticipant("Charlie", out Member c)
             .Parallels(
                 ("Alice to Bob", builder => builder
                     .SendMessage(a, b, "Hello Bob!")
@@ -414,8 +415,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
             .Parallels()
             .SendMessage(a, b, "Hello Bob!")
             .Build();
@@ -431,9 +432,9 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Service", out var s)
-            .AddParticipant("DB 1", out var db1)
-            .AddParticipant("DB 2", out var db2)
+            .AddParticipant("Service", out Member s)
+            .AddParticipant("DB 1", out Member db1)
+            .AddParticipant("DB 2", out Member db2)
             .Critical("Connect to DB1", builder => builder
                 .SendMessage(s, db1, "Connect", LineType.Dotted, ArrowType.None)
                 .Critical("Connect to DB2", builder => builder
@@ -478,8 +479,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Service", out var s)
-            .AddParticipant("DB", out var db1)
+            .AddParticipant("Service", out Member s)
+            .AddParticipant("DB", out Member db1)
             .Critical("Connect to DB", builder => builder
                 .SendMessage(s, db1, "Connect", LineType.Dotted, ArrowType.None))
             .Build();
@@ -497,8 +498,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
             .SendMessage(a, b, "Hello!")
             .Break("Something happens", builder => builder
                 .SendMessage(a, b, "Bye!"))
@@ -518,8 +519,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
             .AddRectangle(Color.AliceBlue, builder => builder
                 .SendMessage(a, b, "Hello Bob!")
                 .SendMessage(b, a, "Hello Alice!"))
@@ -546,8 +547,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b)
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member b)
             .Comment("Alice is greeting Bob")
             .SendMessage(a, b, "Hello Bob!")
             .Comment("Bob is greeting Alice")
@@ -568,8 +569,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram(true)
-            .AddMember("Alice", MemberType.Participant, out var m1)
-            .AddMember("Bob", MemberType.Participant, out var m2)
+            .AddMember("Alice", MemberType.Participant, out Member m1)
+            .AddMember("Bob", MemberType.Participant, out Member m2)
             .SendMessage(m1, m2, $"Hello {m2.Name}!")
             .SendMessage(m2, m1, $"Hello {m1.Name}!")
             .Build();
@@ -587,8 +588,8 @@ public class SequenceDiagramBuilderTests
     {
         string diagram = Mermaid
             .SequenceDiagram()
-            .AddMember("Alice", MemberType.Participant, out var a)
-            .AddMember("Bob", MemberType.Participant, out var b)
+            .AddMember("Alice", MemberType.Participant, out Member a)
+            .AddMember("Bob", MemberType.Participant, out Member b)
             .AddLink(a, "Dashboard", "https://dashboard.contoso.com/alice")
             .AddLink(a, "Wiki", "https://wiki.contoso.com/alice")
             .AddLink(b, "Dashboard", "https://dashboard.contoso.com/bob")
@@ -611,7 +612,7 @@ public class SequenceDiagramBuilderTests
     [Fact]
     public void ThrowsExceptionWhenAddingMemberWithSameName()
     {
-        var builder = Mermaid
+        SequenceDiagramBuilder builder = Mermaid
             .SequenceDiagram()
             .AddParticipant("Alice", out _)
             .AddActor("Bob", out _);
@@ -625,15 +626,15 @@ public class SequenceDiagramBuilderTests
     [Fact]
     public void ThrowsExceptionWhenUsingMemberFromDifferentDiagram()
     {
-        var builder1 = Mermaid
+        SequenceDiagramBuilder builder1 = Mermaid
             .SequenceDiagram()
-            .AddParticipant("Alice", out var a)
-            .AddParticipant("Bob", out var b);
+            .AddParticipant("Alice", out Member a)
+            .AddParticipant("Bob", out Member _);
 
-        var builder2 = Mermaid
+        Mermaid
             .SequenceDiagram()
-            .AddParticipant("Charlie", out var c)
-            .AddParticipant("David", out var d);
+            .AddParticipant("Charlie", out Member c)
+            .AddParticipant("David", out Member _);
 
         Assert.Throws<InvalidOperationException>(() => builder1.SendMessage(a, c, "Hello Charlie!"));
         Assert.Throws<InvalidOperationException>(() => builder1.SendMessage(c, a, "Hello Alice!"));

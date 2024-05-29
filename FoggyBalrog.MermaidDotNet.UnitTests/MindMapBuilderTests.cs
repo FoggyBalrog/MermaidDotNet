@@ -7,7 +7,7 @@ public class MindMapBuilderTests
     [Fact]
     public void CanBuildSimpleMindMap()
     {
-        var mindMap = Mermaid
+        string mindMap = Mermaid
             .MindMap("Root")
             .Build();
 
@@ -18,15 +18,15 @@ public class MindMapBuilderTests
     [Fact]
     public void CanBuildComplexMindMap()
     {
-        var mindMap = Mermaid
+        string mindMap = Mermaid
             .MindMap("Root")
-            .AddNode("Node 1", out var node1)
-            .AddNode("Node 2", out var node2, node1)
-            .AddNode("Node 3", out var node3, node1)
-            .AddNode("Node 4", out var node4, node2)
-            .AddNode("Node 5", out var node5, node2)
-            .AddNode("Node 6", out var node6, node3)
-            .AddNode("Node 7", out var node7, node3)
+            .AddNode("Node 1", out Node node1)
+            .AddNode("Node 2", out Node node2, node1)
+            .AddNode("Node 3", out Node node3, node1)
+            .AddNode("Node 4", out Node _, node2)
+            .AddNode("Node 5", out Node _, node2)
+            .AddNode("Node 6", out Node _, node3)
+            .AddNode("Node 7", out Node _, node3)
             .Build();
 
         Assert.Equal(@"mindmap
@@ -43,13 +43,13 @@ public class MindMapBuilderTests
     [Fact]
     public void CanBuildMindMapWithDifferentShapes()
     {
-        var mindMap = Mermaid
-            .MindMap("Root", NodeShape.Hegaxon)
-            .AddNode("Node 1", out var node1, shape: NodeShape.Square)
-            .AddNode("Node 2", out var node2, shape: NodeShape.RoundedSquare, parent: node1)
-            .AddNode("Node 3", out var node3, shape: NodeShape.Circle, parent: node1)
-            .AddNode("Node 4", out var node4, shape: NodeShape.Bang, parent: node2)
-            .AddNode("Node 5", out var node5, shape: NodeShape.Cloud, parent: node2)
+        string mindMap = Mermaid
+            .MindMap("Root", NodeShape.Hexagon)
+            .AddNode("Node 1", out Node node1, shape: NodeShape.Square)
+            .AddNode("Node 2", out Node node2, shape: NodeShape.RoundedSquare, parent: node1)
+            .AddNode("Node 3", out Node _, shape: NodeShape.Circle, parent: node1)
+            .AddNode("Node 4", out Node _, shape: NodeShape.Bang, parent: node2)
+            .AddNode("Node 5", out Node _, shape: NodeShape.Cloud, parent: node2)
             .Build();
 
         Assert.Equal(@"mindmap

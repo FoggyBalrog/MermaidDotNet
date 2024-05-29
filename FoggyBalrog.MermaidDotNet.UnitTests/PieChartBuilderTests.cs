@@ -5,47 +5,47 @@ public class PieChartBuilderTests
     [Fact]
     public void CanBuildEmptyPieChart()
     {
-        var pieChart = Mermaid
+        string pieChart = Mermaid
             .PieChart()
             .Build();
 
-        Assert.Equal(@"pie", pieChart, ignoreLineEndingDifferences: true);
+        Assert.Equal("pie", pieChart, ignoreLineEndingDifferences: true);
     }
 
     [Fact]
     public void CanBuildEmptyPieChartWithTitle()
     {
-        var pieChart = Mermaid
+        string pieChart = Mermaid
             .PieChart(title: "Title")
             .Build();
 
-        Assert.Equal(@"pie title Title", pieChart, ignoreLineEndingDifferences: true);
+        Assert.Equal("pie title Title", pieChart, ignoreLineEndingDifferences: true);
     }
 
     [Fact]
     public void CanBuildEmptyPieChartWithDisplayValuesOnLegend()
     {
-        var pieChart = Mermaid
+        string pieChart = Mermaid
             .PieChart(displayValuesOnLegend: true)
             .Build();
 
-        Assert.Equal(@"pie showData", pieChart, ignoreLineEndingDifferences: true);
+        Assert.Equal("pie showData", pieChart, ignoreLineEndingDifferences: true);
     }
 
     [Fact]
     public void CanBuildEmptyPieChartWithTitleAndDisplayValuesOnLegend()
     {
-        var pieChart = Mermaid
+        string pieChart = Mermaid
             .PieChart(displayValuesOnLegend: true, title: "Title")
             .Build();
 
-        Assert.Equal(@"pie showData title Title", pieChart, ignoreLineEndingDifferences: true);
+        Assert.Equal("pie showData title Title", pieChart, ignoreLineEndingDifferences: true);
     }
 
     [Fact]
     public void CanBuildPieChartWithSingleDataSet()
     {
-        var pieChart = Mermaid
+        string pieChart = Mermaid
             .PieChart()
             .AddDataSet("Label", 42.7)
             .Build();
@@ -57,7 +57,7 @@ public class PieChartBuilderTests
     [Fact]
     public void CanBuildPieChartWithMultipleDataSets()
     {
-        var pieChart = Mermaid
+        string pieChart = Mermaid
             .PieChart()
             .AddDataSet("Label1", 42.7)
             .AddDataSet("Label2", 57.3)
@@ -71,7 +71,7 @@ public class PieChartBuilderTests
     [Fact]
     public void CanBuildFullPieChart()
     {
-        var pieChart = Mermaid
+        string pieChart = Mermaid
             .PieChart(displayValuesOnLegend: true, title: "Title")
             .AddDataSet("Label1", 42.7)
             .AddDataSet("Label2", 57.3)

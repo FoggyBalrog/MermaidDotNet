@@ -67,7 +67,7 @@ public class SequenceDiagramBuilder
 
     public SequenceDiagramBuilder AddMember(string name, MemberType memberType, out Member member, Box? box = null)
     {
-        if (_membersOutsideBoxes.Any(m => m.Name == name) || _boxes.SelectMany(b => b.Members).Any(m => m.Name == name))
+        if (_membersOutsideBoxes.Exists(m => m.Name == name) || _boxes.SelectMany(b => b.Members).Any(m => m.Name == name))
         {
             throw new InvalidOperationException($"Member with name '{name}' already exists.");
         }
@@ -200,7 +200,7 @@ public class SequenceDiagramBuilder
         _sequenceItems.Add(new Critical(description));
         action(this);
 
-        foreach (var option in options)
+        foreach ((string description, Action<SequenceDiagramBuilder> action) option in options)
         {
             _sequenceItems.Add(new Option(option.description));
             option.action(this);
@@ -248,7 +248,7 @@ public class SequenceDiagramBuilder
             builder.AppendLine($"{indent}autonumber");
         }
 
-        foreach (var box in _boxes)
+        foreach (Box? box in _boxes)
         {
             string color = BuildColorRgbaExpression(box.Color);
             builder.AppendLine($"{indent}box {color} {box.Name}");
@@ -260,7 +260,7 @@ public class SequenceDiagramBuilder
 
         BuildMembers(indent, builder, _membersOutsideBoxes);
 
-        foreach (var item in _sequenceItems)
+        foreach (ISequenceItem? item in _sequenceItems)
         {
             switch (item)
             {
@@ -321,7 +321,7 @@ public class SequenceDiagramBuilder
                     break;
 
                 case Rect rect:
-                    var color = BuildColorRgbaExpression(rect.Color);
+                    string color = BuildColorRgbaExpression(rect.Color);
                     builder.AppendLine($"{indent}rect {color}");
                     indent = $"{indent}    ";
                     break;
@@ -334,7 +334,7 @@ public class SequenceDiagramBuilder
                     builder.AppendLine($"{indent}link {link.Member.Name}: {link.Title} @ {link.Uri}");
                     break;
 
-                case End _:
+                case End:
                     indent = indent[..^4];
                     builder.AppendLine($"{indent}end");
                     break;
@@ -358,7 +358,7 @@ public class SequenceDiagramBuilder
 
     private static void BuildMembers(string indent, StringBuilder builder, IList<Member> members)
     {
-        foreach (var member in members)
+        foreach (Member? member in members)
         {
             string memberType = member.Type switch
             {
@@ -436,7 +436,7 @@ public class SequenceDiagramBuilder
     {
         if (!_membersOutsideBoxes.Contains(member)
             && !_boxes.SelectMany(b => b.Members).Contains(member)
-            && !_sequenceItems.OfType<CreateMessage>().Any(m => m.Recipient == member))
+            && _sequenceItems.OfType<CreateMessage>().All(m => m.Recipient != member))
         {
             throw new InvalidOperationException($"Member '{member.Name}' is not defined in the diagram.");
         }

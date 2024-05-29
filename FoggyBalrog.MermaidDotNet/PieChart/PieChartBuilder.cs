@@ -24,7 +24,7 @@ public class PieChartBuilder
 
     public string Build()
     {
-        string indent = "    ";
+        const string indent = "    ";
         var builder = new StringBuilder();
 
         builder.Append("pie");
@@ -41,7 +41,7 @@ public class PieChartBuilder
 
         builder.AppendLine();
 
-        foreach (var dataSet in _dataSets)
+        foreach (DataSet? dataSet in _dataSets)
         {
             string formattedValue = dataSet.Value.ToString(CultureInfo.InvariantCulture);
             builder.AppendLine($"{indent}\"{dataSet.Label}\" : {formattedValue}");

@@ -40,7 +40,7 @@ public class UserJourneyDiagramBuilder
             builder.AppendLine($"{_indent}title {_title}");
         }
 
-        foreach (var item in _items)
+        foreach (IUserJourneyDiagramItem? item in _items)
         {
             switch (item)
             {

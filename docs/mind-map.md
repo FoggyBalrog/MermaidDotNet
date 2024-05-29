@@ -76,7 +76,7 @@ Example:
 
 ```csharp
 var mindMap = Mermaid
-    .MindMap("Root", NodeShape.Hegaxon)
+    .MindMap("Root", NodeShape.Hexagon)
     .AddNode("Node 1", out var node1, shape: NodeShape.Square)
     .AddNode("Node 2", out var node2, shape: NodeShape.RoundedSquare, parent: node1)
     .AddNode("Node 3", out var node3, shape: NodeShape.Circle, parent: node1)
