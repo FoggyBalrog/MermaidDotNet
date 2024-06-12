@@ -10,12 +10,12 @@ public class GanttDiagramBuilderTests
     {
         string diagram = Mermaid
             .GanttDiagram()
-            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out var t1)
-            .AddTask("Bar", Date("2024-05-08"), TimeSpan.FromDays(3), out var t2)
-            .AddTask("Baz", t1, Date("2024-05-09"), out var t3)
-            .AddTask("Qux", t1, TimeSpan.FromDays(2), out var t4)
-            .AddTask("Quux", Date("2024-05-04"), t2, out var t5)
-            .AddTask("Corge", t1, t2, out var t6)
+            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask t1)
+            .AddTask("Bar", Date("2024-05-08"), TimeSpan.FromDays(3), out GanttTask t2)
+            .AddTask("Baz", t1, Date("2024-05-09"), out GanttTask _)
+            .AddTask("Qux", t1, TimeSpan.FromDays(2), out GanttTask _)
+            .AddTask("Quux", Date("2024-05-04"), t2, out GanttTask _)
+            .AddTask("Corge", t1, t2, out GanttTask _)
             .Build();
 
         Assert.Equal(@"gantt
@@ -33,14 +33,14 @@ public class GanttDiagramBuilderTests
     {
         string diagram = Mermaid
             .GanttDiagram()
-            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out var t1)
+            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask t1)
             .AddSection("Section 1")
-            .AddTask("Bar", Date("2024-05-08"), TimeSpan.FromDays(3), out var t2)
-            .AddTask("Baz", t1, Date("2024-05-09"), out var t3)
-            .AddTask("Qux", t1, TimeSpan.FromDays(2), out var t4)
+            .AddTask("Bar", Date("2024-05-08"), TimeSpan.FromDays(3), out GanttTask t2)
+            .AddTask("Baz", t1, Date("2024-05-09"), out GanttTask _)
+            .AddTask("Qux", t1, TimeSpan.FromDays(2), out GanttTask _)
             .AddSection("Section 2")
-            .AddTask("Quux", Date("2024-05-04"), t2, out var t5)
-            .AddTask("Corge", t1, t2, out var t6)
+            .AddTask("Quux", Date("2024-05-04"), t2, out GanttTask _)
+            .AddTask("Corge", t1, t2, out GanttTask _)
             .Build();
 
         Assert.Equal(@"gantt
@@ -60,21 +60,21 @@ public class GanttDiagramBuilderTests
     {
         string diagram = Mermaid
             .GanttDiagram()
-            .AddTask("Task 1", Date("2024-05-01"), Date("2024-05-05"), out var t1, TaskTags.Active)
-            .AddTask("Task 2", Date("2024-05-01"), Date("2024-05-05"), out var t2, TaskTags.Done)
-            .AddTask("Task 3", Date("2024-05-01"), Date("2024-05-05"), out var t3, TaskTags.Critical)
-            .AddTask("Task 4", Date("2024-05-01"), Date("2024-05-05"), out var t4, TaskTags.Milestone)
-            .AddTask("Task 5", Date("2024-05-01"), Date("2024-05-05"), out var t5, TaskTags.Active | TaskTags.Done)
-            .AddTask("Task 6", Date("2024-05-01"), Date("2024-05-05"), out var t6, TaskTags.Active | TaskTags.Critical)
-            .AddTask("Task 7", Date("2024-05-01"), Date("2024-05-05"), out var t7, TaskTags.Active | TaskTags.Milestone)
-            .AddTask("Task 8", Date("2024-05-01"), Date("2024-05-05"), out var t8, TaskTags.Done | TaskTags.Critical)
-            .AddTask("Task 9", Date("2024-05-01"), Date("2024-05-05"), out var t9, TaskTags.Done | TaskTags.Milestone)
-            .AddTask("Task 10", Date("2024-05-01"), Date("2024-05-05"), out var t10, TaskTags.Critical | TaskTags.Milestone)
-            .AddTask("Task 11", Date("2024-05-01"), Date("2024-05-05"), out var t11, TaskTags.Active | TaskTags.Done | TaskTags.Critical)
-            .AddTask("Task 12", Date("2024-05-01"), Date("2024-05-05"), out var t12, TaskTags.Active | TaskTags.Done | TaskTags.Milestone)
-            .AddTask("Task 13", Date("2024-05-01"), Date("2024-05-05"), out var t13, TaskTags.Active | TaskTags.Critical | TaskTags.Milestone)
-            .AddTask("Task 14", Date("2024-05-01"), Date("2024-05-05"), out var t14, TaskTags.Done | TaskTags.Critical | TaskTags.Milestone)
-            .AddTask("Task 15", Date("2024-05-01"), Date("2024-05-05"), out var t15, TaskTags.Active | TaskTags.Done | TaskTags.Critical | TaskTags.Milestone)
+            .AddTask("Task 1", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Active)
+            .AddTask("Task 2", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Done)
+            .AddTask("Task 3", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Critical)
+            .AddTask("Task 4", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Milestone)
+            .AddTask("Task 5", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Active | TaskTags.Done)
+            .AddTask("Task 6", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Active | TaskTags.Critical)
+            .AddTask("Task 7", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Active | TaskTags.Milestone)
+            .AddTask("Task 8", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Done | TaskTags.Critical)
+            .AddTask("Task 9", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Done | TaskTags.Milestone)
+            .AddTask("Task 10", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Critical | TaskTags.Milestone)
+            .AddTask("Task 11", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Active | TaskTags.Done | TaskTags.Critical)
+            .AddTask("Task 12", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Active | TaskTags.Done | TaskTags.Milestone)
+            .AddTask("Task 13", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Active | TaskTags.Critical | TaskTags.Milestone)
+            .AddTask("Task 14", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Done | TaskTags.Critical | TaskTags.Milestone)
+            .AddTask("Task 15", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _, TaskTags.Active | TaskTags.Done | TaskTags.Critical | TaskTags.Milestone)
             .Build();
 
         Assert.Equal(@"gantt
@@ -110,7 +110,7 @@ public class GanttDiagramBuilderTests
             .ExcludeSunday()
             .ExcludeWeekends()
             .ExcludeDates(Date("2024-05-01"), Date("2024-05-05"))
-            .AddTask("Foo", Date("2024-04-30"), Date("2024-05-06"), out var t1)
+            .AddTask("Foo", Date("2024-04-30"), Date("2024-05-06"), out GanttTask _)
             .Build();
 
         Assert.Equal(@"gantt
@@ -131,7 +131,7 @@ public class GanttDiagramBuilderTests
                 axisFormat: "%d-%m",
                 tickInterval: "1week",
                 weekIntervalStartDay: "monday")
-            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out var t1)
+            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _)
             .Build();
 
         Assert.Equal(@"---
@@ -152,8 +152,8 @@ gantt
     {
         string diagram = Mermaid
             .GanttDiagram()
-            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out var t1)
-            .AddTask("Bar", Date("2024-05-08"), Date("2024-05-12"), out var t2)
+            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask t1)
+            .AddTask("Bar", Date("2024-05-08"), Date("2024-05-12"), out GanttTask t2)
             .AddHyperlink(t1, "https://example.com")
             .AddCallback(t2, "myFunction")
             .Build();

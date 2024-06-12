@@ -1,4 +1,5 @@
-﻿using FoggyBalrog.MermaidDotNet.Flowchart.Model;
+﻿using FoggyBalrog.MermaidDotNet.Flowchart;
+using FoggyBalrog.MermaidDotNet.Flowchart.Model;
 
 namespace FoggyBalrog.MermaidDotNet.UnitTests;
 
@@ -94,9 +95,9 @@ public class FlowchartBuilderTests
     {
         string diagram = Mermaid
             .Flowchart()
-            .AddNode("N1", out var n1)
-            .AddNode("N2", out var n2)
-            .AddNode("N3", out var n3)
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
             .AddLink(n1, n2, "some text")
             .AddLink(n2, n3)
             .Build();
@@ -114,18 +115,18 @@ public class FlowchartBuilderTests
     {
         string diagram = Mermaid
             .Flowchart()
-            .AddNode("N1", out var n1)
-            .AddNode("N2", out var n2)
-            .AddNode("N3", out var n3)
-            .AddNode("N4", out var n4)
-            .AddNode("N5", out var n5)
-            .AddNode("N6", out var n6)
-            .AddNode("N7", out var n7)
-            .AddNode("N8", out var n8)
-            .AddNode("N9", out var n9)
-            .AddNode("N10", out var n10)
-            .AddNode("N11", out var n11)
-            .AddNode("N12", out var n12)
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .AddNode("N4", out Node n4)
+            .AddNode("N5", out Node n5)
+            .AddNode("N6", out Node n6)
+            .AddNode("N7", out Node n7)
+            .AddNode("N8", out Node n8)
+            .AddNode("N9", out Node n9)
+            .AddNode("N10", out Node n10)
+            .AddNode("N11", out Node n11)
+            .AddNode("N12", out Node n12)
             .AddLink(n1, n2, "l1", LinkLineStyle.Solid, LinkEnding.Arrow)
             .AddLink(n2, n3, "l2", LinkLineStyle.Dotted, LinkEnding.Arrow)
             .AddLink(n3, n1, "l3", LinkLineStyle.Thick, LinkEnding.Arrow)
@@ -180,12 +181,12 @@ public class FlowchartBuilderTests
     {
         string diagram = Mermaid
             .Flowchart()
-            .AddNode("N1", out var n1)
-            .AddNode("N2", out var n2)
-            .AddNode("N3", out var n3)
-            .AddNode("N4", out var n4)
-            .AddNode("N5", out var n5)
-            .AddNode("N6", out var n6)
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .AddNode("N4", out Node n4)
+            .AddNode("N5", out Node n5)
+            .AddNode("N6", out Node _)
             .AddLink(n1, n2, "l1", ending: LinkEnding.Arrow, multidirectional: true)
             .AddLink(n2, n3, "l2", ending: LinkEnding.Open, multidirectional: true)
             .AddLink(n3, n1, "l3", ending: LinkEnding.Circle, multidirectional: true)
@@ -210,12 +211,12 @@ public class FlowchartBuilderTests
     {
         string diagram = Mermaid
             .Flowchart()
-            .AddNode("N1", out var n1)
-            .AddNode("N2", out var n2)
-            .AddNode("N3", out var n3)
-            .AddNode("N4", out var n4)
-            .AddNode("N5", out var n5)
-            .AddNode("N6", out var n6)
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .AddNode("N4", out Node n4)
+            .AddNode("N5", out Node n5)
+            .AddNode("N6", out Node n6)
             .AddLinkChain([n1, n2, n3], [n4, n5, n6], "foo")
             .Build();
 
@@ -234,10 +235,10 @@ public class FlowchartBuilderTests
     {
         string diagram = Mermaid
             .Flowchart()
-            .AddNode("N1", out var n1)
-            .AddNode("N2", out var n2)
-            .AddNode("N3", out var n3)
-            .AddNode("N4", out var n4)
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .AddNode("N4", out Node n4)
             .AddLink(n1, n2, extraLength: 3)
             .AddLink(n2, n3, "foo", extraLength: 3)
             .AddLink(n3, n4, lineStyle: LinkLineStyle.Dotted, extraLength: 3)
@@ -262,21 +263,21 @@ public class FlowchartBuilderTests
     {
         string diagram = Mermaid
             .Flowchart()
-            .AddNode("N1", out var n1)
-            .AddNode("N2", out var n2)
-            .AddNode("N3", out var n3)
-            .AddNode("N4", out var n4)
-            .AddNode("N5", out var n5)
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .AddNode("N4", out Node n4)
+            .AddNode("N5", out Node n5)
             .AddLink(n1, n2)
-            .AddSubgraph("SG1", out var sg1, builder => builder
+            .AddSubgraph("SG1", out Subgraph sg1, builder => builder
                 .AddLink(n2, n3)
                 .AddLink(n3, n4)
-                .AddSubgraph("SG1.1", out var sg11, builder => builder
+                .AddSubgraph("SG1.1", out Subgraph _, builder => builder
                     .AddLink(n1, n5)))
             .AddLink(n4, n1)
-            .AddSubgraph("SG2", out var sg2, builder => builder
-                .AddNode("N6", out var n6)
-                .AddNode("N7", out var n7)
+            .AddSubgraph("SG2", out Subgraph sg2, builder => builder
+                .AddNode("N6", out Node n6)
+                .AddNode("N7", out Node n7)
                 .AddLink(n6, n7), FlowchartOrientation.BottomToTop)
             .AddLink(n1, sg1)
             .AddLink(sg2, n4)
@@ -316,8 +317,8 @@ public class FlowchartBuilderTests
     {
         string diagram = Mermaid
             .Flowchart()
-            .AddNode("N1", out var n1)
-            .AddNode("N2", out var n2)
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
             .AddCallback(n1, "callback", "tooltip")
             .AddCallback(n2, "callback")
             .Build();
@@ -334,8 +335,8 @@ public class FlowchartBuilderTests
     {
         string diagram = Mermaid
             .Flowchart()
-            .AddNode("N1", out var n1)
-            .AddNode("N2", out var n2)
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
             .AddHyperlink(n1, "https://example.com")
             .AddHyperlink(n2, "https://example.com", "tooltip", HyperlinkTarget.Blank)
             .Build();
@@ -366,15 +367,15 @@ public class FlowchartBuilderTests
     [Fact]
     public void ThrowsExceptionWhenUsingNodeFromDifferentDiagram()
     {
-        var builder = Mermaid
+        FlowchartBuilder builder = Mermaid
             .Flowchart()
-            .AddNode("N1", out var n1)
-            .AddNode("N2", out var n2);
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2);
 
         Mermaid
             .Flowchart()
-            .AddNode("N3", out var n3)
-            .AddNode("N4", out var n4);
+            .AddNode("N3", out Node n3)
+            .AddNode("N4", out Node _);
 
         Assert.Throws<InvalidOperationException>(() => builder.AddLink(n1, n3));
         Assert.Throws<InvalidOperationException>(() => builder.AddLink(n3, n1));
@@ -387,10 +388,10 @@ public class FlowchartBuilderTests
     [Fact]
     public void ThrowsExceptionWhenAddingLinkWithNegativeAdditionalLength()
     {
-        var builder = Mermaid
+        FlowchartBuilder builder = Mermaid
             .Flowchart()
-            .AddNode("N1", out var n1)
-            .AddNode("N2", out var n2);
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => builder.AddLink(n1, n2, extraLength: -1));
     }

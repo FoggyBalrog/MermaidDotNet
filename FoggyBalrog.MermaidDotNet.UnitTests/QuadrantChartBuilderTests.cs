@@ -5,17 +5,17 @@ public class QuadrantChartBuilderTests
     [Fact]
     public void CanBuildEmptyQuadrantChart()
     {
-        var quadrantChart = Mermaid
+        string quadrantChart = Mermaid
             .QuadrantChart()
             .Build();
 
-        Assert.Equal(@"quadrantChart", quadrantChart, ignoreLineEndingDifferences: true);
+        Assert.Equal("quadrantChart", quadrantChart, ignoreLineEndingDifferences: true);
     }
 
     [Fact]
     public void CanBuildSimpleQuadrantChart()
     {
-        var quadrantChart = Mermaid
+        string quadrantChart = Mermaid
             .QuadrantChart()
             .AddPoint("A", 0.1, 0.2)
             .AddPoint("B", 0.3, 0.4)
@@ -29,7 +29,7 @@ public class QuadrantChartBuilderTests
     [Fact]
     public void CanBuildQuadrantChartWithTitleAndQuadrantLabels()
     {
-        var quadrantChart = Mermaid
+        string quadrantChart = Mermaid
             .QuadrantChart(
                 title: "Some title",
                 quadrant1: "Quadrant 1",
@@ -53,7 +53,7 @@ public class QuadrantChartBuilderTests
     [Fact]
     public void CanBuildQuadrantChartWithDoubleAxisLabels()
     {
-        var quadrantChart = Mermaid
+        string quadrantChart = Mermaid
             .QuadrantChart()
             .SetXAxisLabel("Left", "Right")
             .SetYAxisLabel("Bottom", "Top")
@@ -71,7 +71,7 @@ public class QuadrantChartBuilderTests
     [Fact]
     public void CanBuildQuadrantChartWithSingleAxisLabels()
     {
-        var quadrantChart = Mermaid
+        string quadrantChart = Mermaid
             .QuadrantChart()
             .SetXAxisLabel("Left")
             .SetYAxisLabel("Bottom")
@@ -89,7 +89,7 @@ public class QuadrantChartBuilderTests
     [Fact]
     public void CanBuildQuadrantChartWithAllLabels()
     {
-        var quadrantChart = Mermaid
+        string quadrantChart = Mermaid
             .QuadrantChart(
                 title: "Some title",
                 quadrant1: "Quadrant 1",

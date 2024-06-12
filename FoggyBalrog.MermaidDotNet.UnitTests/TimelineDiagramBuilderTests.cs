@@ -9,7 +9,7 @@ public class TimelineDiagramBuilderTests
             .TimelineDiagram()
             .Build();
 
-        Assert.Equal(@"timeline", diagram, ignoreLineEndingDifferences: true);
+        Assert.Equal("timeline", diagram, ignoreLineEndingDifferences: true);
     }
 
     [Fact]

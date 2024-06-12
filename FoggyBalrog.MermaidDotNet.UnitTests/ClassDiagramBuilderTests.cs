@@ -7,10 +7,10 @@ public class ClassDiagramBuilderTests
     [Fact]
     public void CanBuildSimpleClassDiagramWithTitle()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram("Simple Class Diagram")
-            .AddClass("Animal", out var animal)
-            .AddClass("Dog", out var dog)
+            .AddClass("Animal", out Class animal)
+            .AddClass("Dog", out Class dog)
             .AddProperty(animal, "int", "Age")
             .AddMethod(animal, null, "Breathe")
             .AddMethod(animal, "void", "Eat", Visibilities.Public | Visibilities.Abstract,
@@ -42,10 +42,10 @@ classDiagram
     [Fact]
     public void CanBuildSimpleClassDiagramWithoutTitle()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("Animal", out var animal)
-            .AddClass("Dog", out var dog)
+            .AddClass("Animal", out Class animal)
+            .AddClass("Dog", out Class dog)
             .AddProperty(animal, "int", "Age")
             .AddMethod(animal, null, "Breathe")
             .AddMethod(animal, "void", "Eat", Visibilities.Public | Visibilities.Abstract,
@@ -74,9 +74,9 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithGenericTypes()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c", out var c)
+            .AddClass("c", out Class c)
             .AddProperty(c, "List<List<int>>", "MyList")
             .AddMethod(c, "List<List<int>>", "GetList", parameters: [
                 ("List<List<int>>", "list")
@@ -93,12 +93,12 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithAllLinkStyles()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c1", out var c1)
-            .AddClass("c2", out var c2)
-            .AddClass("c3", out var c3)
-            .AddClass("c4", out var c4)
+            .AddClass("c1", out Class c1)
+            .AddClass("c2", out Class c2)
+            .AddClass("c3", out Class c3)
+            .AddClass("c4", out Class c4)
             .AddRelationship(c1, c2, RelationshipType.Inheritance, linkStyle: LinkStyle.Solid)
             .AddRelationship(c3, c4, RelationshipType.Inheritance, linkStyle: LinkStyle.Dashed)
             .Build();
@@ -111,18 +111,18 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithAllSingleWayRelationships()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c1", out var c1)
-            .AddClass("c2", out var c2)
-            .AddClass("c3", out var c3)
-            .AddClass("c4", out var c4)
-            .AddClass("c5", out var c5)
-            .AddClass("c6", out var c6)
-            .AddClass("c7", out var c7)
-            .AddClass("c8", out var c8)
-            .AddClass("c9", out var c9)
-            .AddClass("c10", out var c10)
+            .AddClass("c1", out Class c1)
+            .AddClass("c2", out Class c2)
+            .AddClass("c3", out Class c3)
+            .AddClass("c4", out Class c4)
+            .AddClass("c5", out Class c5)
+            .AddClass("c6", out Class c6)
+            .AddClass("c7", out Class c7)
+            .AddClass("c8", out Class c8)
+            .AddClass("c9", out Class c9)
+            .AddClass("c10", out Class c10)
             .AddRelationship(c1, c2, RelationshipType.Inheritance)
             .AddRelationship(c3, c4, RelationshipType.Composition)
             .AddRelationship(c5, c6, RelationshipType.Aggregation)
@@ -141,38 +141,38 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithAllTwoWayRelationships()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c1", out var c1)
-            .AddClass("c2", out var c2)
-            .AddClass("c3", out var c3)
-            .AddClass("c4", out var c4)
-            .AddClass("c5", out var c5)
-            .AddClass("c6", out var c6)
-            .AddClass("c7", out var c7)
-            .AddClass("c8", out var c8)
-            .AddClass("c9", out var c9)
-            .AddClass("c10", out var c10)
-            .AddClass("c11", out var c11)
-            .AddClass("c12", out var c12)
-            .AddClass("c13", out var c13)
-            .AddClass("c14", out var c14)
-            .AddClass("c15", out var c15)
-            .AddClass("c16", out var c16)
-            .AddClass("c17", out var c17)
-            .AddClass("c18", out var c18)
-            .AddClass("c19", out var c19)
-            .AddClass("c20", out var c20)
-            .AddClass("c21", out var c21)
-            .AddClass("c22", out var c22)
-            .AddClass("c23", out var c23)
-            .AddClass("c24", out var c24)
-            .AddClass("c25", out var c25)
-            .AddClass("c26", out var c26)
-            .AddClass("c27", out var c27)
-            .AddClass("c28", out var c28)
-            .AddClass("c29", out var c29)
-            .AddClass("c30", out var c30)
+            .AddClass("c1", out Class c1)
+            .AddClass("c2", out Class c2)
+            .AddClass("c3", out Class c3)
+            .AddClass("c4", out Class c4)
+            .AddClass("c5", out Class c5)
+            .AddClass("c6", out Class c6)
+            .AddClass("c7", out Class c7)
+            .AddClass("c8", out Class c8)
+            .AddClass("c9", out Class c9)
+            .AddClass("c10", out Class c10)
+            .AddClass("c11", out Class c11)
+            .AddClass("c12", out Class c12)
+            .AddClass("c13", out Class c13)
+            .AddClass("c14", out Class c14)
+            .AddClass("c15", out Class c15)
+            .AddClass("c16", out Class c16)
+            .AddClass("c17", out Class c17)
+            .AddClass("c18", out Class c18)
+            .AddClass("c19", out Class c19)
+            .AddClass("c20", out Class c20)
+            .AddClass("c21", out Class c21)
+            .AddClass("c22", out Class c22)
+            .AddClass("c23", out Class c23)
+            .AddClass("c24", out Class c24)
+            .AddClass("c25", out Class c25)
+            .AddClass("c26", out Class c26)
+            .AddClass("c27", out Class c27)
+            .AddClass("c28", out Class c28)
+            .AddClass("c29", out Class c29)
+            .AddClass("c30", out Class c30)
             .AddRelationship(c1, c2, RelationshipType.Inheritance, toRelationshipType: RelationshipType.Inheritance)
             .AddRelationship(c1, c3, RelationshipType.Inheritance, toRelationshipType: RelationshipType.Composition)
             .AddRelationship(c1, c4, RelationshipType.Inheritance, toRelationshipType: RelationshipType.Aggregation)
@@ -231,62 +231,62 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithAllCardinalities()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c1", out var c1)
-            .AddClass("c2", out var c2)
-                    .AddClass("c3", out var c3)
-                    .AddClass("c4", out var c4)
-                    .AddClass("c5", out var c5)
-                    .AddClass("c6", out var c6)
-                    .AddClass("c7", out var c7)
-                    .AddClass("c8", out var c8)
-                    .AddClass("c9", out var c9)
-                    .AddClass("c10", out var c10)
-                    .AddClass("c11", out var c11)
-                    .AddClass("c12", out var c12)
-                    .AddClass("c13", out var c13)
-                    .AddClass("c14", out var c14)
-                    .AddClass("c15", out var c15)
-                    .AddClass("c16", out var c16)
-                    .AddClass("c17", out var c17)
-                    .AddClass("c18", out var c18)
-                    .AddClass("c19", out var c19)
-                    .AddClass("c20", out var c20)
-                    .AddClass("c21", out var c21)
-                    .AddClass("c22", out var c22)
-                    .AddClass("c23", out var c23)
-                    .AddClass("c24", out var c24)
-                    .AddClass("c25", out var c25)
-                    .AddClass("c26", out var c26)
-                    .AddClass("c27", out var c27)
-                    .AddClass("c28", out var c28)
-                    .AddClass("c29", out var c29)
-                    .AddClass("c30", out var c30)
-                    .AddClass("c31", out var c31)
-                    .AddClass("c32", out var c32)
-                    .AddClass("c33", out var c33)
-                    .AddClass("c34", out var c34)
-                    .AddClass("c35", out var c35)
-                    .AddClass("c36", out var c36)
-                    .AddClass("c37", out var c37)
-                    .AddClass("c38", out var c38)
-                    .AddClass("c39", out var c39)
-                    .AddClass("c40", out var c40)
-                    .AddClass("c41", out var c41)
-                    .AddClass("c42", out var c42)
-                    .AddClass("c43", out var c43)
-                    .AddClass("c44", out var c44)
-                    .AddClass("c45", out var c45)
-                    .AddClass("c46", out var c46)
-                    .AddClass("c47", out var c47)
-                    .AddClass("c48", out var c48)
-                    .AddClass("c49", out var c49)
-                    .AddClass("c50", out var c50)
-                    .AddClass("c51", out var c51)
-                    .AddClass("c52", out var c52)
-                    .AddClass("c53", out var c53)
-                    .AddClass("c54", out var c54)
+            .AddClass("c1", out Class c1)
+            .AddClass("c2", out Class c2)
+                    .AddClass("c3", out Class c3)
+                    .AddClass("c4", out Class c4)
+                    .AddClass("c5", out Class c5)
+                    .AddClass("c6", out Class c6)
+                    .AddClass("c7", out Class c7)
+                    .AddClass("c8", out Class c8)
+                    .AddClass("c9", out Class c9)
+                    .AddClass("c10", out Class c10)
+                    .AddClass("c11", out Class c11)
+                    .AddClass("c12", out Class c12)
+                    .AddClass("c13", out Class c13)
+                    .AddClass("c14", out Class c14)
+                    .AddClass("c15", out Class c15)
+                    .AddClass("c16", out Class c16)
+                    .AddClass("c17", out Class c17)
+                    .AddClass("c18", out Class c18)
+                    .AddClass("c19", out Class c19)
+                    .AddClass("c20", out Class c20)
+                    .AddClass("c21", out Class c21)
+                    .AddClass("c22", out Class c22)
+                    .AddClass("c23", out Class c23)
+                    .AddClass("c24", out Class c24)
+                    .AddClass("c25", out Class c25)
+                    .AddClass("c26", out Class c26)
+                    .AddClass("c27", out Class c27)
+                    .AddClass("c28", out Class c28)
+                    .AddClass("c29", out Class c29)
+                    .AddClass("c30", out Class c30)
+                    .AddClass("c31", out Class c31)
+                    .AddClass("c32", out Class c32)
+                    .AddClass("c33", out Class c33)
+                    .AddClass("c34", out Class c34)
+                    .AddClass("c35", out Class c35)
+                    .AddClass("c36", out Class c36)
+                    .AddClass("c37", out Class c37)
+                    .AddClass("c38", out Class c38)
+                    .AddClass("c39", out Class c39)
+                    .AddClass("c40", out Class c40)
+                    .AddClass("c41", out Class c41)
+                    .AddClass("c42", out Class c42)
+                    .AddClass("c43", out Class c43)
+                    .AddClass("c44", out Class c44)
+                    .AddClass("c45", out Class c45)
+                    .AddClass("c46", out Class c46)
+                    .AddClass("c47", out Class c47)
+                    .AddClass("c48", out Class c48)
+                    .AddClass("c49", out Class c49)
+                    .AddClass("c50", out Class c50)
+                    .AddClass("c51", out Class c51)
+                    .AddClass("c52", out Class c52)
+                    .AddClass("c53", out Class c53)
+                    .AddClass("c54", out Class c54)
                     .AddRelationship(c1, c2, RelationshipType.Inheritance, fromCardinality: Cardinality.One)
                     .AddRelationship(c3, c4, RelationshipType.Inheritance, fromCardinality: Cardinality.ZeroOrOne)
                     .AddRelationship(c5, c6, RelationshipType.Inheritance, fromCardinality: Cardinality.ZeroOrMore)
@@ -349,31 +349,31 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramsWithAllDirections()
     {
-        var diagram1 = Mermaid
+        string diagram1 = Mermaid
             .ClassDiagram("Top to Bottom", ClassDiagramDirection.TopToBottom)
-            .AddClass("c1", out var d1c1)
-            .AddClass("c2", out var d1c2)
+            .AddClass("c1", out Class d1c1)
+            .AddClass("c2", out Class d1c2)
             .AddRelationship(d1c1, d1c2, RelationshipType.Inheritance)
             .Build();
 
-        var diagram2 = Mermaid
+        string diagram2 = Mermaid
             .ClassDiagram("Bottom to Top", ClassDiagramDirection.BottomToTop)
-            .AddClass("c1", out var d2c1)
-            .AddClass("c2", out var d2c2)
+            .AddClass("c1", out Class d2c1)
+            .AddClass("c2", out Class d2c2)
             .AddRelationship(d2c1, d2c2, RelationshipType.Inheritance)
             .Build();
 
-        var diagram3 = Mermaid
+        string diagram3 = Mermaid
             .ClassDiagram("Left to Right", ClassDiagramDirection.LeftToRight)
-            .AddClass("c1", out var d3c1)
-            .AddClass("c2", out var d3c2)
+            .AddClass("c1", out Class d3c1)
+            .AddClass("c2", out Class d3c2)
             .AddRelationship(d3c1, d3c2, RelationshipType.Inheritance)
             .Build();
 
-        var diagram4 = Mermaid
+        string diagram4 = Mermaid
             .ClassDiagram("Right to Left", ClassDiagramDirection.RightToLeft)
-            .AddClass("c1", out var d4c1)
-            .AddClass("c2", out var d4c2)
+            .AddClass("c1", out Class d4c1)
+            .AddClass("c2", out Class d4c2)
             .AddRelationship(d4c1, d4c2, RelationshipType.Inheritance)
             .Build();
 
@@ -406,12 +406,12 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithClickBinding()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c1", out var c1)
-            .AddClass("c2", out var c2)
-            .AddClass("c3", out var c3)
-            .AddClass("c4", out var c4)
+            .AddClass("c1", out Class c1)
+            .AddClass("c2", out Class c2)
+            .AddClass("c3", out Class c3)
+            .AddClass("c4", out Class c4)
             .AddCallback(c1, "callback")
             .AddCallback(c2, "callback", "tooltip")
             .AddHyperlink(c3, "https://example.com")
@@ -432,9 +432,9 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithNotes()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c1", out var c1)
+            .AddClass("c1", out Class c1)
             .AddNote("General note")
             .AddNote("Specific note", c1)
             .Build();
@@ -448,11 +448,11 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithCustomStyle()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c1", out var c1)
-            .AddClass("c2", out var c2)
-            .AddClass("c3", out var c3)
+            .AddClass("c1", out Class c1)
+            .AddClass("c2", out Class c2)
+            .AddClass("c3", out Class c3)
             .StyleWithRawCss(c1, "fill:#f9f,stroke:#333,stroke-width:4px")
             .StyleWithCssClass("styleClass", c2, c3)
             .Build();
@@ -468,18 +468,18 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithNamespaces()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c1", out var c1)
-            .AddClass("c2", out var c2)
+            .AddClass("c1", out Class c1)
+            .AddClass("c2", out Class _)
             .AddNamespace("ns1", builder => builder
-                .AddClass("c3", out var c3)
-                .AddClass("c4", out var c4)
+                .AddClass("c3", out Class c3)
+                .AddClass("c4", out Class c4)
                 .AddRelationship(c3, c4, RelationshipType.Inheritance))
-            .AddClass("c5", out var c5)
+            .AddClass("c5", out Class _)
             .AddNamespace("ns2", builder => builder
-                .AddClass("c6", out var c6)
-                .AddClass("c7", out var c7)
+                .AddClass("c6", out Class c6)
+                .AddClass("c7", out Class c7)
                 .AddRelationship(c6, c7, RelationshipType.Inheritance)
                 .AddRelationship(c1, c7, RelationshipType.Inheritance))
             .Build();
@@ -503,10 +503,10 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithClassLabels()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c1", out var c1, "Hello World!")
-            .AddClass("c2", out var c2, "Hello World!")
+            .AddClass("c1", out Class c1, "Hello World!")
+            .AddClass("c2", out Class _, "Hello World!")
             .AddProperty(c1, "int", "Age")
             .AddMethod(c1, null, "Breathe")
             .Build();
@@ -522,10 +522,10 @@ classDiagram
     [Fact]
     public void CanBuildClassDiagramWithClassAnnotations()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .ClassDiagram()
-            .AddClass("c1", out var c1, annotation: "foo")
-            .AddClass("c2", out var c2, annotation: "bar")
+            .AddClass("c1", out Class c1, annotation: "foo")
+            .AddClass("c2", out Class _, annotation: "bar")
             .AddProperty(c1, "int", "Age")
             .AddMethod(c1, null, "Breathe")
             .Build();

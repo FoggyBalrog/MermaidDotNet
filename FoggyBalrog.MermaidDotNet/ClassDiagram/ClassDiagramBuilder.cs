@@ -75,13 +75,13 @@ public class ClassDiagramBuilder
 
     public ClassDiagramBuilder AddCallback(Class @class, string functionName, string? tooltip = null)
     {
-        @class.ClickBindind = new ClassCallback(functionName, tooltip);
+        @class.ClickBinding = new ClassCallback(functionName, tooltip);
         return this;
     }
 
     public ClassDiagramBuilder AddHyperlink(Class @class, string uri, string? tooltip = null)
     {
-        @class.ClickBindind = new ClassHyperlink(uri, tooltip);
+        @class.ClickBinding = new ClassHyperlink(uri, tooltip);
         return this;
     }
 
@@ -123,7 +123,7 @@ public class ClassDiagramBuilder
             builder.AppendLine($"{_singleIndent}direction {directionString}");
         }
 
-        foreach (var note in _notes)
+        foreach (Note? note in _notes)
         {
             string noteClassString = note.Class is null ? "" : $" for {note.Class.Name}";
             builder.AppendLine($"{_singleIndent}note{noteClassString} \"{note.Text}\"");
@@ -131,7 +131,7 @@ public class ClassDiagramBuilder
 
         bool isInNamespace = false;
 
-        foreach (var item in _items)
+        foreach (IClassDiagramItem? item in _items)
         {
             switch (item)
             {
@@ -144,14 +144,14 @@ public class ClassDiagramBuilder
                     isInNamespace = true;
                     break;
 
-                case NamespaceEnd _:
+                case NamespaceEnd:
                     builder.AppendLine($"{_singleIndent}}}");
                     isInNamespace = false;
                     break;
             }
         }
 
-        foreach (var relationship in _relationships)
+        foreach (Relationship? relationship in _relationships)
         {
             string label = relationship.Label is null ? "" : $" : {relationship.Label}";
             string fromArrow = relationship.FromRelationshipType switch
@@ -181,12 +181,12 @@ public class ClassDiagramBuilder
             string fromCardinality = GetCardinalityString(relationship.FromCardinality);
             string toCardinality = GetCardinalityString(relationship.ToCardinality);
 
-            builder.AppendLine($"{_singleIndent}{@relationship.From.Name} {fromCardinality}{fromArrow}{link}{toArrow}{toCardinality} {@relationship.To.Name}{label}");
+            builder.AppendLine($"{_singleIndent}{relationship.From.Name} {fromCardinality}{fromArrow}{link}{toArrow}{toCardinality} {relationship.To.Name}{label}");
         }
 
-        foreach (var @class in _items.Where(i => i is Class c && c.ClickBindind is not null).Cast<Class>())
+        foreach (Class? @class in _items.Where(i => i is Class { ClickBinding: not null }).Cast<Class>())
         {
-            switch (@class.ClickBindind)
+            switch (@class.ClickBinding)
             {
                 case ClassCallback classCallback:
                     builder.AppendLine($"{_singleIndent}click {@class.Name} call {classCallback.FunctionName}(){(classCallback.Tooltip is not null ? $" \"{classCallback.Tooltip}\"" : string.Empty)}");
@@ -198,7 +198,7 @@ public class ClassDiagramBuilder
             }
         }
 
-        foreach (var style in _style)
+        foreach (IStyle? style in _style)
         {
             switch (style)
             {
@@ -220,8 +220,8 @@ public class ClassDiagramBuilder
 
     private void BuildClass(StringBuilder builder, Class @class, bool isInNamespace)
     {
-        var singleIndent = isInNamespace ? _doubleIndent : _singleIndent;
-        var doubleIndent = isInNamespace ? _doubleIndent + _singleIndent : _doubleIndent;
+        string singleIndent = isInNamespace ? _doubleIndent : _singleIndent;
+        string doubleIndent = isInNamespace ? _doubleIndent + _singleIndent : _doubleIndent;
 
         // Ignore empty classes that are part of a relationship or in a namespace (to limit output verbosity)
         if (!isInNamespace
@@ -250,31 +250,31 @@ public class ClassDiagramBuilder
             builder.AppendLine($"{doubleIndent}<<{@class.Annotation}>>");
         }
 
-        foreach (var property in @class.Properties)
+        foreach (Property? property in @class.Properties)
         {
             builder.AppendLine($"{doubleIndent}+{EscapeGenerics(property.Type)} {property.Name}");
         }
 
-        foreach (var method in @class.Methods)
+        foreach (Method? method in @class.Methods)
         {
-            string visibilitPrefix = "";
+            string visibilityPrefix = "";
             string visibilitySuffix = "";
 
             if (method.Visibility.HasFlag(Visibilities.Public))
             {
-                visibilitPrefix += "+";
+                visibilityPrefix += "+";
             }
             if (method.Visibility.HasFlag(Visibilities.Private))
             {
-                visibilitPrefix += "-";
+                visibilityPrefix += "-";
             }
             if (method.Visibility.HasFlag(Visibilities.Protected))
             {
-                visibilitPrefix += "#";
+                visibilityPrefix += "#";
             }
             if (method.Visibility.HasFlag(Visibilities.Internal))
             {
-                visibilitPrefix += "~";
+                visibilityPrefix += "~";
             }
             if (method.Visibility.HasFlag(Visibilities.Abstract))
             {
@@ -288,7 +288,7 @@ public class ClassDiagramBuilder
             string returnTypeString = method.ReturnType is null ? "" : $" {EscapeGenerics(method.ReturnType)}";
             string parametersString = method.Parameters.Any() ? string.Join(", ", method.Parameters.Select(p => $"{EscapeGenerics(p.Type)} {p.Name}")) : "";
 
-            builder.AppendLine($"{doubleIndent}{visibilitPrefix}{method.Name}({parametersString}){visibilitySuffix}{returnTypeString}");
+            builder.AppendLine($"{doubleIndent}{visibilityPrefix}{method.Name}({parametersString}){visibilitySuffix}{returnTypeString}");
         }
 
         if (@class.Properties.Any() || @class.Methods.Any() || @class.Annotation is not null)

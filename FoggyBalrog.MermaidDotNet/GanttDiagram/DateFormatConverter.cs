@@ -6,7 +6,7 @@ internal static class DateFormatConverter
 {
     public static string ToDayjsFormat(DateTimeOffset date, string dayjsFormat)
     {
-        var format = dayjsFormat
+        string format = dayjsFormat
             .Replace("YYYY", "yyyy")
             .Replace("YY", "yy")
             .Replace("Do", "dd")
@@ -28,13 +28,13 @@ internal static class DateFormatConverter
 
         if (dayjsFormat.Contains("Do"))
         {
-            var day = date.Day;
-            var suffix = day switch
+            int day = date.Day;
+            string suffix = day switch
             {
                 1 or 21 or 31 => "st",
                 2 or 22 => "nd",
                 3 or 23 => "rd",
-                _ => "th",
+                _ => "th"
             };
             format = format.Replace("dd", $"d'{suffix}'");
         }

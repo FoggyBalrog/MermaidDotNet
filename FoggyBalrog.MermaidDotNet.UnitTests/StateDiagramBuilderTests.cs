@@ -7,10 +7,10 @@ public class StateDiagramBuilderTests
     [Fact]
     public void CanBuildSimpleStateDiagramWithTitle()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .StateDiagram("My title")
-            .AddState("State 1", out var s1)
-            .AddState("State 2", out var s2)
+            .AddState("State 1", out State s1)
+            .AddState("State 2", out State s2)
             .AddTransitionFromStart(s1)
             .AddStateTransition(s1, s2)
             .AddTransitionToEnd(s2)
@@ -30,10 +30,10 @@ stateDiagram-v2
     [Fact]
     public void CanBuildSimpleStateDiagramWithoutTitle()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .StateDiagram()
-            .AddState("State 1", out var s1)
-            .AddState("State 2", out var s2)
+            .AddState("State 1", out State s1)
+            .AddState("State 2", out State s2)
             .AddTransitionFromStart(s1)
             .AddStateTransition(s1, s2)
             .AddTransitionToEnd(s2)
@@ -50,10 +50,10 @@ stateDiagram-v2
     [Fact]
     public void CanBuildStateDiagramWithDirection()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .StateDiagram(direction: StateDiagramDirection.RightToLeft)
-            .AddState("State 1", out var s1)
-            .AddState("State 2", out var s2)
+            .AddState("State 1", out State s1)
+            .AddState("State 2", out State s2)
             .AddTransitionFromStart(s1)
             .AddStateTransition(s1, s2)
             .AddTransitionToEnd(s2)
@@ -71,10 +71,10 @@ stateDiagram-v2
     [Fact]
     public void CanBuildStateDiagramWithTransitionDescriptions()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .StateDiagram()
-            .AddState("State 1", out var s1)
-            .AddState("State 2", out var s2)
+            .AddState("State 1", out State s1)
+            .AddState("State 2", out State s2)
             .AddTransitionFromStart(s1, "foo")
             .AddStateTransition(s1, s2, "bar")
             .AddTransitionToEnd(s2, "baz")
@@ -91,23 +91,23 @@ stateDiagram-v2
     [Fact]
     public void CanBuildStateDiagramWithCompositeStates()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .StateDiagram()
-            .AddState("State 1", out var s1)
-            .AddCompositeState("Composite 1", out var c1, builder => builder
-                .AddState("State 2", out var s2)
-                .AddState("State 3", out var s3)
+            .AddState("State 1", out State s1)
+            .AddCompositeState("Composite 1", out State c1, builder => builder
+                .AddState("State 2", out State s2)
+                .AddState("State 3", out State s3)
                 .AddStateTransition(s2, s3)
                 .AddStateTransition(s1, s2)
                 .AddTransitionToEnd(s3)
-                .AddCompositeState("Composite 2", out var c2, builder2 => builder2
-                    .AddState("State 2a", out var s2a)
-                    .AddState("State 2b", out var s2b)
+                .AddCompositeState("Composite 2", out State _, builder2 => builder2
+                    .AddState("State 2a", out State s2a)
+                    .AddState("State 2b", out State s2b)
                     .AddStateTransition(s2a, s2b)
                     .AddStateTransition(s2, s2a)
                     .AddStateTransition(s1, s2b)
                     .AddTransitionToEnd(s2b)))
-            .AddState("State 4", out var s4)
+            .AddState("State 4", out State s4)
             .AddTransitionFromStart(c1)
             .AddStateTransition(s1, c1)
             .AddStateTransition(c1, s4)
@@ -141,12 +141,12 @@ stateDiagram-v2
     [Fact]
     public void CanBuildStateDiagramWithChoiceStates()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .StateDiagram()
-            .AddState("State 1", out var s1)
-            .AddChoiceState(out var c1)
-            .AddState("State 2", out var s2)
-            .AddState("State 3", out var s3)
+            .AddState("State 1", out State s1)
+            .AddChoiceState(out State c1)
+            .AddState("State 2", out State s2)
+            .AddState("State 3", out State s3)
             .AddStateTransition(s1, c1)
             .AddStateTransition(c1, s2, "foo")
             .AddStateTransition(c1, s3, "bar")
@@ -169,14 +169,14 @@ stateDiagram-v2
     [Fact]
     public void CanBuildStateDiagramWithForkAndJoinStates()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .StateDiagram()
-            .AddState("State 1", out var s1)
-            .AddForkState(out var f1)
-            .AddState("State 2", out var s2)
-            .AddState("State 3", out var s3)
-            .AddJoinState(out var j1)
-            .AddState("State 4", out var s4)
+            .AddState("State 1", out State s1)
+            .AddForkState(out State f1)
+            .AddState("State 2", out State s2)
+            .AddState("State 3", out State s3)
+            .AddJoinState(out State j1)
+            .AddState("State 4", out State s4)
             .AddStateTransition(s1, f1)
             .AddStateTransition(f1, s2)
             .AddStateTransition(f1, s3)
@@ -205,10 +205,10 @@ stateDiagram-v2
     [Fact]
     public void CanBuildStateDiagramWithNotes()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .StateDiagram()
-            .AddState("State 1", out var s1)
-            .AddState("State 2", out var s2)
+            .AddState("State 1", out State s1)
+            .AddState("State 2", out State s2)
             .AddNote(s1, NotePosition.Right, "foo")
             .AddNote(s2, NotePosition.Left, "bar")
             .AddTransitionFromStart(s1)
@@ -233,24 +233,24 @@ stateDiagram-v2
     [Fact]
     public void CanBuildStateDiagramWithConcurrency()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .StateDiagram()
-            .Concurrency("Active", out var c1,
+            .Concurrency("Active", out State c1,
                 builder1 => builder1
-                .AddState("State 2", out var s2)
-                .AddState("State 3", out var s3)
+                .AddState("State 2", out State s2)
+                .AddState("State 3", out State s3)
                 .AddTransitionFromStart(s2)
                 .AddStateTransition(s2, s3)
                 .AddTransitionToEnd(s3),
                 builder2 => builder2
-                .AddState("State 4", out var s4)
-                .AddState("State 5", out var s5)
+                .AddState("State 4", out State s4)
+                .AddState("State 5", out State s5)
                 .AddTransitionFromStart(s4)
                 .AddStateTransition(s4, s5)
                 .AddTransitionToEnd(s5),
                 builder3 => builder3
-                .AddState("State 6", out var s6)
-                .AddState("State 7", out var s7)
+                .AddState("State 6", out State s6)
+                .AddState("State 7", out State s7)
                 .AddTransitionFromStart(s6)
                 .AddStateTransition(s6, s7)
                 .AddTransitionToEnd(s7))
@@ -285,11 +285,11 @@ stateDiagram-v2
     [Fact]
     public void CanBuildStateDiagramWithCustomStyles()
     {
-        var diagram = Mermaid
+        string diagram = Mermaid
             .StateDiagram()
-            .AddState("State 1", out var s1)
-            .AddState("State 2", out var s2)
-            .AddState("State 3", out var s3)
+            .AddState("State 1", out State s1)
+            .AddState("State 2", out State s2)
+            .AddState("State 3", out State s3)
             .StyleWithRawCss(s1, "fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow")
             .StyleWithCssClass("foo", s2, s3)
             .AddTransitionFromStart(s1)

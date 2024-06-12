@@ -8,5 +8,5 @@ public enum NodeShape
     Circle,
     Bang,
     Cloud,
-    Hegaxon
+    Hexagon
 }

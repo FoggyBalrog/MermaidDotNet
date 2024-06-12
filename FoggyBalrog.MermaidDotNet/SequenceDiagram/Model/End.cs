@@ -1,3 +1,3 @@
 ﻿namespace FoggyBalrog.MermaidDotNet.SequenceDiagram.Model;
 
-internal record End() : ISequenceItem;
+internal record End : ISequenceItem;

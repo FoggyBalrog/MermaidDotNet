@@ -2,16 +2,16 @@
 
 public record Node : ILinkable
 {
-    internal Node(string id, string text, NodeShape shape, INodeClickBindind? nodeClickBindind)
+    internal Node(string id, string text, NodeShape shape, INodeClickBinding? nodeClickBinding)
     {
         Id = id;
         Text = text;
         Shape = shape;
-        NodeClickBindind = nodeClickBindind;
+        NodeClickBinding = nodeClickBinding;
     }
 
     public string Id { get; }
     public string Text { get; }
     public NodeShape Shape { get; }
-    internal INodeClickBindind? NodeClickBindind { get; set; }
+    internal INodeClickBinding? NodeClickBinding { get; set; }
 }

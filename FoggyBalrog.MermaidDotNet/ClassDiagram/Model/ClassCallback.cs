@@ -1,3 +1,3 @@
 ﻿namespace FoggyBalrog.MermaidDotNet.ClassDiagram.Model;
 
-internal record ClassCallback(string FunctionName, string? Tooltip) : IClassClickBindind;
+internal record ClassCallback(string FunctionName, string? Tooltip) : IClassClickBinding;

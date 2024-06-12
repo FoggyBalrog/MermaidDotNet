@@ -1,5 +1,5 @@
 ﻿namespace FoggyBalrog.MermaidDotNet.GanttDiagram.Model;
 
-interface IGanttItem
+internal interface IGanttItem
 {
 }

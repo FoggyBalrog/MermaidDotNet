@@ -139,13 +139,13 @@ public class GanttDiagramBuilder
 
     public GanttDiagramBuilder AddCallback(GanttTask task, string functionName)
     {
-        task.ClickBindind = new TaskCallback(functionName);
+        task.ClickBinding = new TaskCallback(functionName);
         return this;
     }
 
     public GanttDiagramBuilder AddHyperlink(GanttTask task, string uri)
     {
-        task.ClickBindind = new TaskHyperlink(uri);
+        task.ClickBinding = new TaskHyperlink(uri);
         return this;
     }
 
@@ -195,7 +195,7 @@ public class GanttDiagramBuilder
             builder.AppendLine($"{_indent}excludes {string.Join(", ", _excludes.Select(e => e.Text))}");
         }
 
-        foreach (var item in _items)
+        foreach (IGanttItem? item in _items)
         {
             switch (item)
             {
@@ -255,9 +255,9 @@ public class GanttDiagramBuilder
 
         builder.AppendLine(declaration);
 
-        if (task.ClickBindind is not null)
+        if (task.ClickBinding is not null)
         {
-            switch (task.ClickBindind)
+            switch (task.ClickBinding)
             {
                 case TaskCallback callback:
                     builder.AppendLine($"{_indent}click {task.Id} call {callback.FunctionName}()");

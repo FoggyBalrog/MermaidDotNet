@@ -36,8 +36,8 @@ public class DateFormatConverterTests
     [InlineData("x", "1704287167371", "1728778643371")]
     public void ToDayjsFormat(string dayjsFormat, string expectedFormattedDate1, string expectedFormattedDate2)
     {
-        var formattedDate1 = DateFormatConverter.ToDayjsFormat(_referenceDate1, dayjsFormat);
-        var formattedDate2 = DateFormatConverter.ToDayjsFormat(_referenceDate2, dayjsFormat);
+        string formattedDate1 = DateFormatConverter.ToDayjsFormat(_referenceDate1, dayjsFormat);
+        string formattedDate2 = DateFormatConverter.ToDayjsFormat(_referenceDate2, dayjsFormat);
 
         Assert.Equal(expectedFormattedDate1, formattedDate1);
         Assert.Equal(expectedFormattedDate2, formattedDate2);
