@@ -10,7 +10,7 @@ if ($null -eq $tag -or $tag -eq '') {
 $readmeContent = Get-Content -Path "./README.md" -Raw
 
 # Replace the relative links with absolute links
-$readmeContent = $readmeContent -replace '\(./docs', "(https://github.com/FoggyBalrog/MermaidDotNet/tree/$tag/docs"
+$readmeContent = $readmeContent -replace '\(./', "(https://github.com/FoggyBalrog/MermaidDotNet/blob/$tag/"
 
 # Write the result to NUGET_README.md
 $readmeContent | Out-File -FilePath "./NUGET_README.md"
