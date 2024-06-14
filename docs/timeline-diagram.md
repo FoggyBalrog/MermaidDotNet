@@ -2,6 +2,10 @@
 
 *Official Mermaid documentation: [Timeline](https://mermaid.js.org/syntax/timeline.html).*
 
+- [Simple timeline](#simple-timeline)
+- [Title](#title)
+- [Sections](#sections)
+
 ## Simple timeline
 
 The following code sample shows how to create a simple Mermaid timeline.

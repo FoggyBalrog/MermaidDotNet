@@ -2,6 +2,10 @@
 
 *Official Mermaid documentation: [Pie Chart](https://mermaid.js.org/syntax/pie.html).*
 
+- [Simple pie chart](#simple-pie-chart)
+- [Display values on legend](#display-values-on-legend)
+- [Title](#title)
+
 ## Simple pie chart
 
 The following code sample shows how to create a simple Mermaid pie chart.

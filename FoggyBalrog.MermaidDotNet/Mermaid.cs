@@ -8,6 +8,7 @@ using FoggyBalrog.MermaidDotNet.GitGraph;
 using FoggyBalrog.MermaidDotNet.MindMap;
 using FoggyBalrog.MermaidDotNet.PieChart;
 using FoggyBalrog.MermaidDotNet.QuadrantChart;
+using FoggyBalrog.MermaidDotNet.RequirementDiagram;
 using FoggyBalrog.MermaidDotNet.SequenceDiagram;
 using FoggyBalrog.MermaidDotNet.StateDiagram;
 using FoggyBalrog.MermaidDotNet.StateDiagram.Model;
@@ -41,6 +42,7 @@ public static class Mermaid
         string? quadrant2 = null,
         string? quadrant3 = null,
         string? quadrant4 = null) => new(title, quadrant1, quadrant2, quadrant3, quadrant4);
+    public static RequirementDiagramBuilder RequirementDiagram() => new();
     public static SequenceDiagramBuilder SequenceDiagram(bool autonumber = false) => new(autonumber);
     public static StateDiagramBuilder StateDiagram(string? title = null, StateDiagramDirection? direction = null) => new(title, direction);
     public static TimelineDiagramBuilder TimelineDiagram(string? title = null) => new(title);
