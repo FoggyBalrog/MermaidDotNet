@@ -25,6 +25,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Mind Map](#mind-map)
   - [Pie chart](#pie-chart)
   - [Quadrant chart](#quadrant-chart)
+  - [Requirement diagram](#requirement-diagram)
   - [Timeline diagram](#timeline-diagram)
 - [License](#license)
 - [Credits](#credits)
@@ -314,6 +315,36 @@ quadrantChart
 ```
 
 Read more at [docs/quadrant-chart.md](./docs/quadrant-chart.md).
+
+### Requirement diagram
+
+```csharp
+string diagram = Mermaid
+    .RequirementDiagram()
+    .AddRequirement("Requirement 1", out var requirement1)
+    .AddRequirement("Requirement 2", out var requirement2)
+    .AddElement("Element 1", out var element1)
+    .AddElement("Element 2", out var element2)
+    .AddRelationship(element1, requirement1, RelationshipType.Satisfies)
+    .AddRelationship(element2, requirement2, RelationshipType.Satisfies)
+    .Build();
+```
+
+```mermaid
+requirementDiagram
+    requirement "Requirement 1" {
+    }
+    requirement "Requirement 2" {
+    }
+    element "Element 1" {
+    }
+    element "Element 2" {
+    }
+    "Element 1" - satisfies -> "Requirement 1"
+    "Element 2" - satisfies -> "Requirement 2"
+```
+
+Read more at [docs/requirement-diagram.md](./docs/requirement-diagram.md).
 
 ### Timeline diagram
 

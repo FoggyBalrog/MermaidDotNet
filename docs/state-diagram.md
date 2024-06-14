@@ -2,6 +2,16 @@
 
 *Official Mermaid documentation: [State diagram](https://mermaid.js.org/syntax/stateDiagram.html).*
 
+- [Simple state diagram](#simple-state-diagram)
+- [Title](#title)
+- [Direction](#direction)
+- [Transition descriptions](#transition-descriptions)
+- [Choice states](#choice-states)
+- [Fork and join states](#fork-and-join-states)
+- [Notes](#notes)
+- [Concurrency](#concurrency)
+- [Custom styling](#custom-styling)
+
 ## Simple state diagram
 
 The following code sample shows how to create a simple Mermaid state diagram.

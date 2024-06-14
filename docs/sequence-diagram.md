@@ -19,7 +19,6 @@
 - [Rectangles](#rectangles)
 - [Comments](#comments)
 
-
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid sequence diagram.

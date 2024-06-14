@@ -2,7 +2,6 @@
 
 *Official Mermaid documentation: [Flowchart](https://mermaid.js.org/syntax/flowchart.html).*
 
-
 - [Simple flowchart](#simple-flowchart)
 - [Orientation](#orientation)
 - [Node shape](#node-shape)
