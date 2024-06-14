@@ -238,7 +238,7 @@ public class SequenceDiagramBuilder
 
     public string Build()
     {
-        string indent = "    ";
+        string indent = Shared.Indent;
         var builder = new StringBuilder();
 
         builder.AppendLine("sequenceDiagram");
@@ -262,6 +262,7 @@ public class SequenceDiagramBuilder
 
         foreach (ISequenceItem? item in _sequenceItems)
         {
+#pragma warning disable S1643 // Strings should not be concatenated using '+' in a loop
             switch (item)
             {
                 case Note note:
@@ -274,56 +275,56 @@ public class SequenceDiagramBuilder
 
                 case Loop loop:
                     builder.AppendLine($"{indent}loop {loop.Description}");
-                    indent = $"{indent}    ";
+                    indent += Shared.Indent;
                     break;
 
                 case Alt alt:
                     builder.AppendLine($"{indent}alt {alt.Description}");
-                    indent = $"{indent}    ";
+                    indent += Shared.Indent;
                     break;
 
                 case Or or:
                     indent = indent[..^4];
                     builder.AppendLine($"{indent}else {or.Description}");
-                    indent = $"{indent}    ";
+                    indent += Shared.Indent;
                     break;
 
                 case Opt opt:
                     builder.AppendLine($"{indent}opt {opt.Description}");
-                    indent = $"{indent}    ";
+                    indent += Shared.Indent;
                     break;
 
                 case Par par:
                     builder.AppendLine($"{indent}par {par.Description}");
-                    indent = $"{indent}    ";
+                    indent += Shared.Indent;
                     break;
 
                 case And and:
                     indent = indent[..^4];
                     builder.AppendLine($"{indent}and {and.Description}");
-                    indent = $"{indent}    ";
+                    indent += Shared.Indent;
                     break;
 
                 case Critical critical:
                     builder.AppendLine($"{indent}critical {critical.Description}");
-                    indent = $"{indent}    ";
+                    indent += Shared.Indent;
                     break;
 
                 case Option option:
                     indent = indent[..^4];
                     builder.AppendLine($"{indent}option {option.Description}");
-                    indent = $"{indent}    ";
+                    indent += Shared.Indent;
                     break;
 
                 case Break @break:
                     builder.AppendLine($"{indent}break {@break.Description}");
-                    indent = $"{indent}    ";
+                    indent += Shared.Indent;
                     break;
 
                 case Rect rect:
                     string color = BuildColorRgbaExpression(rect.Color);
                     builder.AppendLine($"{indent}rect {color}");
-                    indent = $"{indent}    ";
+                    indent += Shared.Indent;
                     break;
 
                 case Comment comment:
@@ -335,13 +336,14 @@ public class SequenceDiagramBuilder
                     break;
 
                 case End:
-                    indent = indent[..^4];
+                    indent = indent[..^Shared.Indent.Length];
                     builder.AppendLine($"{indent}end");
                     break;
 
                 default:
                     throw new InvalidOperationException($"Unknown sequence item type: {item.GetType()}");
             }
+#pragma warning restore S1643 // Strings should not be concatenated using '+' in a loop
         }
 
         // Remove the last newline
@@ -360,52 +362,23 @@ public class SequenceDiagramBuilder
     {
         foreach (Member? member in members)
         {
-            string memberType = member.Type switch
-            {
-                MemberType.Participant => "participant",
-                MemberType.Actor => "actor",
-                _ => throw new InvalidOperationException($"Unknown member type: {member.Type}")
-            };
+            string memberType = SymbolMaps.MemberTypes[member.Type];
             builder.AppendLine($"{indent}{memberType} {member.Name}");
         }
     }
 
     private static void BuildNote(string indent, StringBuilder builder, Note note)
     {
-        string notePosition = note.Position switch
-        {
-            NotePosition.RightOf => "right of",
-            NotePosition.LeftOf => "left of",
-            NotePosition.Over => "over",
-            _ => throw new InvalidOperationException($"Unknown note position: {note.Position}")
-        };
+        string notePosition = SymbolMaps.NotePositions[note.Position];
         string members = string.Join(", ", note.Members.Select(m => m.Name));
         builder.AppendLine($"{indent}note {notePosition} {members}: {note.Text}");
     }
 
     private static void BuildMessage(string indent, StringBuilder builder, Message message)
     {
-        string lineType = message.LineType switch
-        {
-            LineType.Solid => "-",
-            LineType.Dotted => "--",
-            _ => throw new InvalidOperationException($"Unknown line type: {message.LineType}")
-        };
-        string arrowType = message.ArrowType switch
-        {
-            ArrowType.None => ">",
-            ArrowType.Filled => ">>",
-            ArrowType.Open => ")",
-            ArrowType.Cross => "x",
-            _ => throw new InvalidOperationException($"Unknown arrow type: {message.ArrowType}")
-        };
-        string activation = message.ActivationType switch
-        {
-            ActivationType.None => "",
-            ActivationType.Activate => "+",
-            ActivationType.Deactivate => "-",
-            _ => throw new InvalidOperationException($"Unknown activation type: {message.ActivationType}")
-        };
+        string lineType = SymbolMaps.LineTypes[message.LineType];
+        string arrowType = SymbolMaps.ArrowTypes[message.ArrowType];
+        string activation = SymbolMaps.ActivationTypes[message.ActivationType];
 
         if (message is DestroyMessage destroyMessage)
         {
@@ -420,12 +393,7 @@ public class SequenceDiagramBuilder
 
         if (message is CreateMessage createMessage)
         {
-            string memberType = createMessage.Recipient.Type switch
-            {
-                MemberType.Participant => "participant",
-                MemberType.Actor => "actor",
-                _ => throw new InvalidOperationException($"Unknown member type: {createMessage.Recipient.Type}")
-            };
+            string memberType = SymbolMaps.MemberTypes[createMessage.Recipient.Type];
             builder.AppendLine($"{indent}create {memberType} {createMessage.Recipient.Name}");
         }
 

@@ -44,67 +44,39 @@ public class EntityRelationshipDiagramBuilder
 
     public string Build()
     {
-        const string indent = "    ";
         var builder = new StringBuilder();
 
         builder.AppendLine("erDiagram");
 
         foreach (Entity? entity in _entities.Where(e => e.Attributes.Length != 0 || !_relationships.Exists(r => r.FromEntity == e || r.ToEntity == e)))
         {
-            builder.AppendLine($"{indent}{entity.Name} {{");
+            builder.AppendLine($"{Shared.Indent}{entity.Name} {{");
 
             foreach ((string type, string name, EntityAttributeKeys keys, string comment) in entity.Attributes)
             {
                 IEnumerable<string> keyArray = Enum.GetValues(typeof(EntityAttributeKeys))
                     .Cast<EntityAttributeKeys>()
                     .Where(k => keys.HasFlag(k) && k != EntityAttributeKeys.None)
-                    .Select(k => k switch
-                    {
-                        EntityAttributeKeys.Primary => "PK",
-                        EntityAttributeKeys.Foreign => "FK",
-                        EntityAttributeKeys.Unique => "UK",
-                        _ => throw new InvalidOperationException($"Unknown key: {k}")
-                    })
+                    .Select(k => SymbolMaps.Keys[k])
                     .ToList();
 
                 string keyString = keyArray.Any() ? $" {string.Join(", ", keyArray)}" : string.Empty;
 
                 string commentString = string.IsNullOrWhiteSpace(comment) ? string.Empty : $" \"{comment}\"";
 
-                builder.AppendLine($"{indent}{indent}{type} {name}{keyString}{commentString}");
+                builder.AppendLine($"{Shared.Indent.Repeat(2)}{type} {name}{keyString}{commentString}");
             }
 
-            builder.AppendLine($"{indent}}}");
+            builder.AppendLine($"{Shared.Indent}}}");
         }
 
         foreach (Relationship? relationship in _relationships)
         {
-            string fromCardinalitySymbol = relationship.FromCardinality switch
-            {
-                Cardinality.ZeroOrOne => "|o",
-                Cardinality.ExactlyOne => "||",
-                Cardinality.ZeroOrMore => "}o",
-                Cardinality.OneOrMore => "}|",
-                _ => throw new InvalidOperationException($"Unknown cardinality: {relationship.FromCardinality}")
-            };
+            string fromCardinalitySymbol = SymbolMaps.Cardinalities[relationship.FromCardinality].From;
+            string toCardinalitySymbol = SymbolMaps.Cardinalities[relationship.ToCardinality].To;
+            string line = SymbolMaps.Relationships[relationship.Type];
 
-            string toCardinalitySymbol = relationship.ToCardinality switch
-            {
-                Cardinality.ZeroOrOne => "o|",
-                Cardinality.ExactlyOne => "||",
-                Cardinality.ZeroOrMore => "o{",
-                Cardinality.OneOrMore => "|{",
-                _ => throw new InvalidOperationException($"Unknown cardinality: {relationship.ToCardinality}")
-            };
-
-            string line = relationship.Type switch
-            {
-                RelationshipType.Identifying => "--",
-                RelationshipType.NonIdentifying => "..",
-                _ => throw new InvalidOperationException($"Unknown relationship name: {relationship.Type}")
-            };
-
-            builder.AppendLine($"{indent}{relationship.FromEntity.Name} {fromCardinalitySymbol}{line}{toCardinalitySymbol} {relationship.ToEntity.Name} : \"{relationship.Label}\"");
+            builder.AppendLine($"{Shared.Indent}{relationship.FromEntity.Name} {fromCardinalitySymbol}{line}{toCardinalitySymbol} {relationship.ToEntity.Name} : \"{relationship.Label}\"");
         }
 
         // Remove the last newline
