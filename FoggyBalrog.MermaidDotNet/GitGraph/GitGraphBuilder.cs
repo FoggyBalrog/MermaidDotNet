@@ -5,7 +5,6 @@ namespace FoggyBalrog.MermaidDotNet.GitGraph;
 
 public class GitGraphBuilder
 {
-    private const string _defaultIndent = "    ";
     private const string _mainBranchName = "main";
     private readonly string? _title;
     private readonly bool _parallelCommits;
@@ -69,8 +68,8 @@ public class GitGraphBuilder
             if (_parallelCommits)
             {
                 builder.AppendLine("config:");
-                builder.AppendLine($"{_defaultIndent}gitGraph:");
-                builder.AppendLine($"{_defaultIndent}{_defaultIndent}parallelCommits: true");
+                builder.AppendLine($"{Shared.Indent}gitGraph:");
+                builder.AppendLine($"{Shared.Indent.Repeat(2)}parallelCommits: true");
             }
 
             builder.AppendLine("---");
@@ -90,11 +89,11 @@ public class GitGraphBuilder
 
                 case Branch branch:
                     string order = branch.Order is null ? "" : $" order: {branch.Order}";
-                    builder.AppendLine($"{_defaultIndent}branch {branch.Name}{order}");
+                    builder.AppendLine($"{Shared.Indent}branch {branch.Name}{order}");
                     break;
 
                 case Checkout checkout:
-                    builder.AppendLine($"{_defaultIndent}checkout {checkout.BranchName}");
+                    builder.AppendLine($"{Shared.Indent}checkout {checkout.BranchName}");
                     break;
 
                 case Merge merge:
@@ -118,7 +117,7 @@ public class GitGraphBuilder
         string tag = commit.Tag is null ? "" : $" tag: \"{commit.Tag}\"";
         string type = commit.Type == CommitType.Normal ? "" : $" type: {commit.Type.ToString().ToUpperInvariant()}";
 
-        builder.AppendLine($"{_defaultIndent}commit{id}{type}{tag}");
+        builder.AppendLine($"{Shared.Indent}commit{id}{type}{tag}");
     }
 
     private static void BuildMerge(StringBuilder builder, Merge merge)
@@ -127,6 +126,6 @@ public class GitGraphBuilder
         string tag = merge.Tag is null ? "" : $" tag: \"{merge.Tag}\"";
         string type = merge.Type == CommitType.Normal ? "" : $" type: {merge.Type.ToString().ToUpperInvariant()}";
 
-        builder.AppendLine($"{_defaultIndent}merge {merge.BranchName}{id}{type}{tag}");
+        builder.AppendLine($"{Shared.Indent}merge {merge.BranchName}{id}{type}{tag}");
     }
 }

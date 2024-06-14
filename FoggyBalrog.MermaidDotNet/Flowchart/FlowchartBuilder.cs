@@ -95,7 +95,6 @@ public class FlowchartBuilder
 
     public string Build()
     {
-        const string indent = "    ";
         var builder = new StringBuilder();
 
         string orientation = _orientation switch
@@ -115,23 +114,23 @@ public class FlowchartBuilder
             switch (flowItem)
             {
                 case Node node:
-                    BuildNode(indent, builder, node);
+                    BuildNode(builder, node);
                     break;
 
                 case Link link:
-                    BuildLink(indent, builder, link);
+                    BuildLink(builder, link);
                     break;
 
                 case Subgraph subgraph:
-                    BuildSubgraph(indent, builder, subgraph);
+                    BuildSubgraph(builder, subgraph);
                     break;
 
                 case End:
-                    builder.AppendLine($"{indent}end");
+                    builder.AppendLine($"{Shared.Indent}end");
                     break;
 
                 case Comment comment:
-                    builder.AppendLine($"{indent}%% {comment.Text}");
+                    builder.AppendLine($"{Shared.Indent}%% {comment.Text}");
                     break;
 
                 default:
@@ -145,9 +144,9 @@ public class FlowchartBuilder
         return builder.ToString();
     }
 
-    private void BuildSubgraph(string indent, StringBuilder builder, Subgraph subgraph)
+    private void BuildSubgraph(StringBuilder builder, Subgraph subgraph)
     {
-        builder.AppendLine($"{indent}subgraph {subgraph.Id} [{subgraph.Text}]");
+        builder.AppendLine($"{Shared.Indent}subgraph {subgraph.Id} [{subgraph.Text}]");
         if (subgraph.Direction is not null)
         {
             string direction = subgraph.Direction switch
@@ -159,11 +158,11 @@ public class FlowchartBuilder
                 _ => throw new InvalidOperationException($"Unknown orientation: {_orientation}")
             };
 
-            builder.AppendLine($"{indent}direction {direction}");
+            builder.AppendLine($"{Shared.Indent}direction {direction}");
         }
     }
 
-    private static void BuildLink(string indent, StringBuilder builder, Link link)
+    private static void BuildLink(StringBuilder builder, Link link)
     {
         string text = link.Text is not null ? $"|\"{link.Text}\"|" : string.Empty;
         string line = link.LineStyle switch
@@ -196,10 +195,10 @@ public class FlowchartBuilder
         } : string.Empty;
         string from = string.Join(" & ", link.From.Select(n => n.Id));
         string to = string.Join(" & ", link.To.Select(n => n.Id));
-        builder.AppendLine($"{indent}{from} {beginning}{line}{ending}{text} {to}");
+        builder.AppendLine($"{Shared.Indent}{from} {beginning}{line}{ending}{text} {to}");
     }
 
-    private static void BuildNode(string indent, StringBuilder builder, Node node)
+    private static void BuildNode(StringBuilder builder, Node node)
     {
         (string leftBoundary, string rightBoundary) = node.Shape switch
         {
@@ -220,12 +219,12 @@ public class FlowchartBuilder
             _ => throw new InvalidOperationException($"Unknown shape: {node.Shape}")
         };
 
-        builder.AppendLine($"{indent}{node.Id}{leftBoundary}\"{node.Text}\"{rightBoundary}");
+        builder.AppendLine($"{Shared.Indent}{node.Id}{leftBoundary}\"{node.Text}\"{rightBoundary}");
 
         switch (node.NodeClickBinding)
         {
             case NodeCallback nodeCallback:
-                builder.AppendLine($"{indent}click {node.Id} {nodeCallback.FunctionName}{(nodeCallback.Tooltip is not null ? $" \"{nodeCallback.Tooltip}\"" : string.Empty)}");
+                builder.AppendLine($"{Shared.Indent}click {node.Id} {nodeCallback.FunctionName}{(nodeCallback.Tooltip is not null ? $" \"{nodeCallback.Tooltip}\"" : string.Empty)}");
                 break;
 
             case NodeHyperlink nodeHyperlink:
@@ -238,7 +237,7 @@ public class FlowchartBuilder
                     _ => throw new InvalidOperationException($"Unknown target: {nodeHyperlink.Target}")
                 };
 
-                builder.AppendLine($"{indent}click {node.Id} \"{nodeHyperlink.Uri}\"{(nodeHyperlink.Tooltip is not null ? $" \"{nodeHyperlink.Tooltip}\"" : string.Empty)} {target}");
+                builder.AppendLine($"{Shared.Indent}click {node.Id} \"{nodeHyperlink.Uri}\"{(nodeHyperlink.Tooltip is not null ? $" \"{nodeHyperlink.Tooltip}\"" : string.Empty)} {target}");
                 break;
         }
     }

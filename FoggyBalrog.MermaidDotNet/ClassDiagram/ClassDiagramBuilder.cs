@@ -5,8 +5,6 @@ namespace FoggyBalrog.MermaidDotNet.ClassDiagram;
 
 public class ClassDiagramBuilder
 {
-    private const string _doubleIndent = "        ";
-    private const string _singleIndent = "    ";
     private readonly string? _title;
     private readonly List<IClassDiagramItem> _items = [];
     private readonly List<Relationship> _relationships = [];
@@ -14,13 +12,9 @@ public class ClassDiagramBuilder
     private readonly List<IStyle> _style = [];
     private readonly ClassDiagramDirection? _direction;
 
-    internal ClassDiagramBuilder(string? title)
+    internal ClassDiagramBuilder(string? title, ClassDiagramDirection? direction)
     {
         _title = title;
-    }
-
-    public ClassDiagramBuilder(string? title, ClassDiagramDirection? direction) : this(title)
-    {
         _direction = direction;
     }
 
@@ -41,15 +35,15 @@ public class ClassDiagramBuilder
         return this;
     }
 
-    public ClassDiagramBuilder AddProperty(Class animal, string type, string name)
+    public ClassDiagramBuilder AddProperty(Class @class, string type, string name)
     {
-        animal.AddProperty(new Property(type, name));
+        @class.AddProperty(new Property(type, name));
         return this;
     }
 
-    public ClassDiagramBuilder AddMethod(Class animal, string? returnType, string name, Visibilities visibility = Visibilities.Public, (string type, string name)[]? parameters = null)
+    public ClassDiagramBuilder AddMethod(Class @class, string? returnType, string name, Visibilities visibility = Visibilities.Public, (string type, string name)[]? parameters = null)
     {
-        animal.AddMethod(new Method(returnType, name, visibility, parameters?.Select(p => new Parameter(p.type, p.name)).ToList() ?? []));
+        @class.AddMethod(new Method(returnType, name, visibility, parameters?.Select(p => new Parameter(p.type, p.name)).ToList() ?? []));
         return this;
     }
 
@@ -120,13 +114,13 @@ public class ClassDiagramBuilder
                 ClassDiagramDirection.RightToLeft => "RL",
                 _ => throw new InvalidOperationException($"Unknown direction: {_direction}")
             };
-            builder.AppendLine($"{_singleIndent}direction {directionString}");
+            builder.AppendLine($"{Shared.Indent}direction {directionString}");
         }
 
         foreach (Note? note in _notes)
         {
             string noteClassString = note.Class is null ? "" : $" for {note.Class.Name}";
-            builder.AppendLine($"{_singleIndent}note{noteClassString} \"{note.Text}\"");
+            builder.AppendLine($"{Shared.Indent}note{noteClassString} \"{note.Text}\"");
         }
 
         bool isInNamespace = false;
@@ -140,12 +134,12 @@ public class ClassDiagramBuilder
                     break;
 
                 case NamespaceStart namespaceStart:
-                    builder.AppendLine($"{_singleIndent}namespace {namespaceStart.Name} {{");
+                    builder.AppendLine($"{Shared.Indent}namespace {namespaceStart.Name} {{");
                     isInNamespace = true;
                     break;
 
                 case NamespaceEnd:
-                    builder.AppendLine($"{_singleIndent}}}");
+                    builder.AppendLine($"{Shared.Indent}}}");
                     isInNamespace = false;
                     break;
             }
@@ -181,7 +175,7 @@ public class ClassDiagramBuilder
             string fromCardinality = GetCardinalityString(relationship.FromCardinality);
             string toCardinality = GetCardinalityString(relationship.ToCardinality);
 
-            builder.AppendLine($"{_singleIndent}{relationship.From.Name} {fromCardinality}{fromArrow}{link}{toArrow}{toCardinality} {relationship.To.Name}{label}");
+            builder.AppendLine($"{Shared.Indent}{relationship.From.Name} {fromCardinality}{fromArrow}{link}{toArrow}{toCardinality} {relationship.To.Name}{label}");
         }
 
         foreach (Class? @class in _items.Where(i => i is Class { ClickBinding: not null }).Cast<Class>())
@@ -189,11 +183,11 @@ public class ClassDiagramBuilder
             switch (@class.ClickBinding)
             {
                 case ClassCallback classCallback:
-                    builder.AppendLine($"{_singleIndent}click {@class.Name} call {classCallback.FunctionName}(){(classCallback.Tooltip is not null ? $" \"{classCallback.Tooltip}\"" : string.Empty)}");
+                    builder.AppendLine($"{Shared.Indent}click {@class.Name} call {classCallback.FunctionName}(){(classCallback.Tooltip is not null ? $" \"{classCallback.Tooltip}\"" : string.Empty)}");
                     break;
 
                 case ClassHyperlink classHyperlink:
-                    builder.AppendLine($"{_singleIndent}click {@class.Name} href \"{classHyperlink.Uri}\"{(classHyperlink.Tooltip is not null ? $" \"{classHyperlink.Tooltip}\"" : string.Empty)}");
+                    builder.AppendLine($"{Shared.Indent}click {@class.Name} href \"{classHyperlink.Uri}\"{(classHyperlink.Tooltip is not null ? $" \"{classHyperlink.Tooltip}\"" : string.Empty)}");
                     break;
             }
         }
@@ -203,11 +197,11 @@ public class ClassDiagramBuilder
             switch (style)
             {
                 case RawCssStyle rawCssStyle:
-                    builder.AppendLine($"{_singleIndent}style {rawCssStyle.Class.Name} {rawCssStyle.Css}");
+                    builder.AppendLine($"{Shared.Indent}style {rawCssStyle.Class.Name} {rawCssStyle.Css}");
                     break;
 
                 case CssClassStyle cssClassStyle:
-                    builder.AppendLine($"{_singleIndent}cssClass \"{string.Join(",", cssClassStyle.Classes.Select(c => c.Name))}\" {cssClassStyle.CssClass}");
+                    builder.AppendLine($"{Shared.Indent}cssClass \"{string.Join(",", cssClassStyle.Classes.Select(c => c.Name))}\" {cssClassStyle.CssClass}");
                     break;
             }
         }
@@ -220,8 +214,8 @@ public class ClassDiagramBuilder
 
     private void BuildClass(StringBuilder builder, Class @class, bool isInNamespace)
     {
-        string singleIndent = isInNamespace ? _doubleIndent : _singleIndent;
-        string doubleIndent = isInNamespace ? _doubleIndent + _singleIndent : _doubleIndent;
+        string externalIndent = isInNamespace ? Shared.Indent.Repeat(2) : Shared.Indent;
+        string internalIndent = isInNamespace ? Shared.Indent.Repeat(3) : Shared.Indent.Repeat(2);
 
         // Ignore empty classes that are part of a relationship or in a namespace (to limit output verbosity)
         if (!isInNamespace
@@ -234,7 +228,7 @@ public class ClassDiagramBuilder
         }
 
         string classLabel = @class.Label is null ? "" : $"[\"{@class.Label}\"]";
-        builder.Append($"{singleIndent}class {@class.Name}{classLabel}");
+        builder.Append($"{externalIndent}class {@class.Name}{classLabel}");
 
         if (@class.Properties.Any() || @class.Methods.Any() || @class.Annotation is not null)
         {
@@ -247,12 +241,12 @@ public class ClassDiagramBuilder
 
         if (@class.Annotation is not null)
         {
-            builder.AppendLine($"{doubleIndent}<<{@class.Annotation}>>");
+            builder.AppendLine($"{internalIndent}<<{@class.Annotation}>>");
         }
 
         foreach (Property? property in @class.Properties)
         {
-            builder.AppendLine($"{doubleIndent}+{EscapeGenerics(property.Type)} {property.Name}");
+            builder.AppendLine($"{internalIndent}+{EscapeGenerics(property.Type)} {property.Name}");
         }
 
         foreach (Method? method in @class.Methods)
@@ -288,12 +282,12 @@ public class ClassDiagramBuilder
             string returnTypeString = method.ReturnType is null ? "" : $" {EscapeGenerics(method.ReturnType)}";
             string parametersString = method.Parameters.Any() ? string.Join(", ", method.Parameters.Select(p => $"{EscapeGenerics(p.Type)} {p.Name}")) : "";
 
-            builder.AppendLine($"{doubleIndent}{visibilityPrefix}{method.Name}({parametersString}){visibilitySuffix}{returnTypeString}");
+            builder.AppendLine($"{internalIndent}{visibilityPrefix}{method.Name}({parametersString}){visibilitySuffix}{returnTypeString}");
         }
 
         if (@class.Properties.Any() || @class.Methods.Any() || @class.Annotation is not null)
         {
-            builder.AppendLine($"{singleIndent}}}");
+            builder.AppendLine($"{externalIndent}}}");
         }
     }
 
