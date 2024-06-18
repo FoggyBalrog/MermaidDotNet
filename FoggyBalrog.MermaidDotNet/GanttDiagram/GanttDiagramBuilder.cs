@@ -5,7 +5,7 @@ namespace FoggyBalrog.MermaidDotNet.GanttDiagram;
 
 public class GanttDiagramBuilder
 {
-    private string _indent = "    ";
+    private string _indent = Shared.Indent;
     private readonly string? _title;
     private readonly bool _compactMode;
     private readonly bool _hideTodayMarker;
@@ -200,9 +200,9 @@ public class GanttDiagramBuilder
             switch (item)
             {
                 case Section section:
-                    _indent = "    ";
+                    _indent = Shared.Indent;
                     builder.AppendLine($"{_indent}section {section.Name}");
-                    _indent += "    ";
+                    _indent += Shared.Indent;
                     break;
                 case GanttTask task:
                     BuildTask(builder, task);

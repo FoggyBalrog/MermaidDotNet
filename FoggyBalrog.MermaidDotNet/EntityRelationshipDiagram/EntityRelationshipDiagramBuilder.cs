@@ -44,14 +44,13 @@ public class EntityRelationshipDiagramBuilder
 
     public string Build()
     {
-        const string indent = "    ";
         var builder = new StringBuilder();
 
         builder.AppendLine("erDiagram");
 
         foreach (Entity? entity in _entities.Where(e => e.Attributes.Length != 0 || !_relationships.Exists(r => r.FromEntity == e || r.ToEntity == e)))
         {
-            builder.AppendLine($"{indent}{entity.Name} {{");
+            builder.AppendLine($"{Shared.Indent}{entity.Name} {{");
 
             foreach ((string type, string name, EntityAttributeKeys keys, string comment) in entity.Attributes)
             {
@@ -71,10 +70,10 @@ public class EntityRelationshipDiagramBuilder
 
                 string commentString = string.IsNullOrWhiteSpace(comment) ? string.Empty : $" \"{comment}\"";
 
-                builder.AppendLine($"{indent}{indent}{type} {name}{keyString}{commentString}");
+                builder.AppendLine($"{Shared.Indent.Repeat(2)}{type} {name}{keyString}{commentString}");
             }
 
-            builder.AppendLine($"{indent}}}");
+            builder.AppendLine($"{Shared.Indent}}}");
         }
 
         foreach (Relationship? relationship in _relationships)
@@ -104,7 +103,7 @@ public class EntityRelationshipDiagramBuilder
                 _ => throw new InvalidOperationException($"Unknown relationship name: {relationship.Type}")
             };
 
-            builder.AppendLine($"{indent}{relationship.FromEntity.Name} {fromCardinalitySymbol}{line}{toCardinalitySymbol} {relationship.ToEntity.Name} : \"{relationship.Label}\"");
+            builder.AppendLine($"{Shared.Indent}{relationship.FromEntity.Name} {fromCardinalitySymbol}{line}{toCardinalitySymbol} {relationship.ToEntity.Name} : \"{relationship.Label}\"");
         }
 
         // Remove the last newline

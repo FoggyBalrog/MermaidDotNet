@@ -5,7 +5,7 @@ namespace FoggyBalrog.MermaidDotNet.StateDiagram;
 
 public class StateDiagramBuilder
 {
-    private string _indent = "    ";
+    private string _indent = Shared.Indent;
     private readonly string? _title;
     private readonly StateDiagramDirection? _direction;
     private readonly List<IStateDiagramItem> _items = [];
@@ -153,7 +153,7 @@ public class StateDiagramBuilder
 
                 case State { Kind: StateKind.Composite } state:
                     builder.AppendLine($"{_indent}state \"{state.Description}\" as {state.Id} {{");
-                    _indent += "    ";
+                    _indent += Shared.Indent;
                     break;
 
                 case State { Kind: StateKind.Simple } state:
@@ -185,7 +185,7 @@ public class StateDiagramBuilder
                         _ => throw new InvalidOperationException($"Unknown note position: {note.Position}")
                     };
                     builder.AppendLine($"{_indent}note {notePosition} of {note.State.Id}");
-                    builder.AppendLine($"{_indent}{_indent}{note.Text}");
+                    builder.AppendLine($"{_indent.Repeat(2)}{note.Text}");
                     builder.AppendLine($"{_indent}end note");
                     break;
 
