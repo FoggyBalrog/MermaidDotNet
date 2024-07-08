@@ -5,9 +5,8 @@ namespace FoggyBalrog.MermaidDotNet.RequirementDiagram;
 
 public class RequirementDiagramBuilder
 {
-    private const string _indent = "    ";
-    private readonly List<IRequirementNode> _nodes = new();
-    private readonly List<Relationship> _relationships = new();
+    private readonly List<IRequirementNode> _nodes = [];
+    private readonly List<Relationship> _relationships = [];
 
     internal RequirementDiagramBuilder()
     {
@@ -75,24 +74,24 @@ public class RequirementDiagramBuilder
 
     private void BuildRelationship(StringBuilder builder, Relationship relationship)
     {
-        builder.AppendLine($"{_indent}\"{relationship.Source.Name}\" - {relationship.Type.ToString().ToLowerInvariant()} -> \"{relationship.Target.Name}\"");
+        builder.AppendLine($"{Shared.Indent}\"{relationship.Source.Name}\" - {relationship.Type.ToString().ToLowerInvariant()} -> \"{relationship.Target.Name}\"");
     }
 
     private void BuildElement(StringBuilder builder, Element element)
     {
-        builder.AppendLine($"{_indent}element \"{element.Name}\" {{");
+        builder.AppendLine($"{Shared.Indent}element \"{element.Name}\" {{");
 
         if (element.Type is not null)
         {
-            builder.AppendLine($"{_indent}{_indent}type: \"{element.Type}\"");
+            builder.AppendLine($"{Shared.Indent.Repeat(2)}type: \"{element.Type}\"");
         }
 
         if (element.DocRef is not null)
         {
-            builder.AppendLine($"{_indent}{_indent}docRef: \"{element.DocRef}\"");
+            builder.AppendLine($"{Shared.Indent.Repeat(2)}docRef: \"{element.DocRef}\"");
         }
 
-        builder.AppendLine($"{_indent}}}");
+        builder.AppendLine($"{Shared.Indent}}}");
     }
 
     private void BuildRequirement(StringBuilder builder, Requirement requirement)
@@ -103,28 +102,28 @@ public class RequirementDiagramBuilder
             _ => $"{requirement.Type.ToString().ToLowerInvariant()}Requirement"
         };
 
-        builder.AppendLine($"{_indent}{requirementKeyword} \"{requirement.Name}\" {{");
+        builder.AppendLine($"{Shared.Indent}{requirementKeyword} \"{requirement.Name}\" {{");
 
         if (requirement.Id is not null)
         {
-            builder.AppendLine($"{_indent}{_indent}id: \"{requirement.Id}\"");
+            builder.AppendLine($"{Shared.Indent.Repeat(2)}id: \"{requirement.Id}\"");
         }
 
         if (requirement.Text is not null)
         {
-            builder.AppendLine($"{_indent}{_indent}text: \"{requirement.Text}\"");
+            builder.AppendLine($"{Shared.Indent.Repeat(2)}text: \"{requirement.Text}\"");
         }
 
         if (requirement.Risk != RequirementRisk.Undefined)
         {
-            builder.AppendLine($"{_indent}{_indent}risk: {requirement.Risk}");
+            builder.AppendLine($"{Shared.Indent.Repeat(2)}risk: {requirement.Risk}");
         }
 
         if (requirement.VerificationMethod != RequirementVerificationMethod.Undefined)
         {
-            builder.AppendLine($"{_indent}{_indent}verifyMethod: {requirement.VerificationMethod}");
+            builder.AppendLine($"{Shared.Indent.Repeat(2)}verifyMethod: {requirement.VerificationMethod}");
         }
 
-        builder.AppendLine($"{_indent}}}");
+        builder.AppendLine($"{Shared.Indent}}}");
     }
 }

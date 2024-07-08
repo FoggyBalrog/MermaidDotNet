@@ -6,7 +6,6 @@ namespace FoggyBalrog.MermaidDotNet.QuadrantChart;
 
 public class QuadrantChartBuilder
 {
-    private const string _indent = "    ";
     private readonly List<Point> _points = [];
     private readonly string? _title;
     private readonly string? _quadrant1;
@@ -65,44 +64,44 @@ public class QuadrantChartBuilder
 
         if (!string.IsNullOrWhiteSpace(_title))
         {
-            builder.AppendLine($"{_indent}title {_title}");
+            builder.AppendLine($"{Shared.Indent}title {_title}");
         }
 
         if (_axisLeft != null)
         {
-            builder.AppendLine($"{_indent}x-axis {_axisLeft}{(_axisRight != null ? $" --> {_axisRight}" : "")}");
+            builder.AppendLine($"{Shared.Indent}x-axis {_axisLeft}{(_axisRight != null ? $" --> {_axisRight}" : "")}");
         }
 
         if (_axisBottom != null)
         {
-            builder.AppendLine($"{_indent}y-axis {_axisBottom}{(_axisTop != null ? $" --> {_axisTop}" : "")}");
+            builder.AppendLine($"{Shared.Indent}y-axis {_axisBottom}{(_axisTop != null ? $" --> {_axisTop}" : "")}");
         }
 
         if (_quadrant1 != null)
         {
-            builder.AppendLine($"{_indent}quadrant-1 {_quadrant1}");
+            builder.AppendLine($"{Shared.Indent}quadrant-1 {_quadrant1}");
         }
 
         if (_quadrant2 != null)
         {
-            builder.AppendLine($"{_indent}quadrant-2 {_quadrant2}");
+            builder.AppendLine($"{Shared.Indent}quadrant-2 {_quadrant2}");
         }
 
         if (_quadrant3 != null)
         {
-            builder.AppendLine($"{_indent}quadrant-3 {_quadrant3}");
+            builder.AppendLine($"{Shared.Indent}quadrant-3 {_quadrant3}");
         }
 
         if (_quadrant4 != null)
         {
-            builder.AppendLine($"{_indent}quadrant-4 {_quadrant4}");
+            builder.AppendLine($"{Shared.Indent}quadrant-4 {_quadrant4}");
         }
 
         foreach (Point? point in _points)
         {
             string x = point.X.ToString(CultureInfo.InvariantCulture);
             string y = point.Y.ToString(CultureInfo.InvariantCulture);
-            builder.AppendLine($"{_indent}{point.Label}: [{x}, {y}]");
+            builder.AppendLine($"{Shared.Indent}{point.Label}: [{x}, {y}]");
         }
 
         // Remove the last newline

@@ -6,6 +6,8 @@ A .NET library to generate Mermaid diagrams code.
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/FoggyBalrog/MermaidDotNet/main-workflow.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FoggyBalrog_MermaidDotNet&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=FoggyBalrog_MermaidDotNet)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=FoggyBalrog_MermaidDotNet&metric=coverage)](https://sonarcloud.io/summary/new_code?id=FoggyBalrog_MermaidDotNet)
+
 [![GitHub License](https://img.shields.io/github/license/FoggyBalrog/MermaidDotNet?)](LICENSE)
 [![NuGet Version](https://img.shields.io/nuget/v/FoggyBalrog.MermaidDotNet?logo=nuget&color=blue)](https://www.nuget.org/packages/FoggyBalrog.MermaidDotNet)
 

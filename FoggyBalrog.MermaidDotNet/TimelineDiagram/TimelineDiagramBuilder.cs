@@ -5,8 +5,6 @@ namespace FoggyBalrog.MermaidDotNet.TimelineDiagram;
 
 public class TimelineDiagramBuilder
 {
-    private const string _doubleIndent = "        ";
-    private const string _singleIndent = "    ";
     private readonly string? _title;
     private readonly List<ITimelineItem> _items = [];
 
@@ -29,7 +27,7 @@ public class TimelineDiagramBuilder
 
     public string Build()
     {
-        string indent = _singleIndent;
+        string indent = Shared.Indent;
         var builder = new StringBuilder();
 
         builder.AppendLine("timeline");
@@ -53,9 +51,9 @@ public class TimelineDiagramBuilder
                     break;
 
                 case TimelineSection section:
-                    indent = _singleIndent;
+                    indent = Shared.Indent;
                     builder.AppendLine($"{indent}section {section.Title}");
-                    indent = _doubleIndent;
+                    indent = Shared.Indent.Repeat(2);
                     break;
             }
         }

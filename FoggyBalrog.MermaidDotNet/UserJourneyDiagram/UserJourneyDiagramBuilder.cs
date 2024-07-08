@@ -6,7 +6,7 @@ namespace FoggyBalrog.MermaidDotNet.UserJourneyDiagram;
 
 public class UserJourneyDiagramBuilder
 {
-    private string _indent = "    ";
+    private string _indent = Shared.Indent;
     private readonly string? _title;
     private readonly List<IUserJourneyDiagramItem> _items = [];
 
@@ -49,9 +49,9 @@ public class UserJourneyDiagramBuilder
                     builder.AppendLine($"{_indent}{task.Description}: {task.Score}{actorsString}");
                     break;
                 case Section section:
-                    _indent = "    ";
+                    _indent = Shared.Indent;
                     builder.AppendLine($"{_indent}section {section.Description}");
-                    _indent += "    ";
+                    _indent += Shared.Indent;
                     break;
             }
         }

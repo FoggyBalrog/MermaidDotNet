@@ -5,7 +5,7 @@ namespace FoggyBalrog.MermaidDotNet.StateDiagram;
 
 public class StateDiagramBuilder
 {
-    private string _indent = "    ";
+    private string _indent = Shared.Indent;
     private readonly string? _title;
     private readonly StateDiagramDirection? _direction;
     private readonly List<IStateDiagramItem> _items = [];
@@ -124,14 +124,7 @@ public class StateDiagramBuilder
 
         if (_direction is not null)
         {
-            string directionString = _direction switch
-            {
-                StateDiagramDirection.TopToBottom => "TB",
-                StateDiagramDirection.BottomToTop => "BT",
-                StateDiagramDirection.LeftToRight => "LR",
-                StateDiagramDirection.RightToLeft => "RL",
-                _ => throw new InvalidOperationException($"Unknown direction: {_direction}")
-            };
+            string directionString = SymbolMaps.Directions[_direction.Value];
             builder.AppendLine($"{_indent}direction {directionString}");
         }
 
@@ -153,7 +146,7 @@ public class StateDiagramBuilder
 
                 case State { Kind: StateKind.Composite } state:
                     builder.AppendLine($"{_indent}state \"{state.Description}\" as {state.Id} {{");
-                    _indent += "    ";
+                    _indent += Shared.Indent;
                     break;
 
                 case State { Kind: StateKind.Simple } state:
@@ -178,14 +171,9 @@ public class StateDiagramBuilder
                     break;
 
                 case Note note:
-                    string notePosition = note.Position switch
-                    {
-                        NotePosition.Right => "right",
-                        NotePosition.Left => "left",
-                        _ => throw new InvalidOperationException($"Unknown note position: {note.Position}")
-                    };
+                    string notePosition = SymbolMaps.NotePositions[note.Position];
                     builder.AppendLine($"{_indent}note {notePosition} of {note.State.Id}");
-                    builder.AppendLine($"{_indent}{_indent}{note.Text}");
+                    builder.AppendLine($"{_indent.Repeat(2)}{note.Text}");
                     builder.AppendLine($"{_indent}end note");
                     break;
 
