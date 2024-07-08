@@ -5,6 +5,9 @@ using FoggyBalrog.MermaidDotNet.SequenceDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.SequenceDiagram;
 
+/// <summary>
+/// A builder for sequence diagrams.
+/// </summary>
 public class SequenceDiagramBuilder
 {
     private readonly bool _autonumber;
@@ -17,6 +20,13 @@ public class SequenceDiagramBuilder
         _autonumber = autonumber;
     }
 
+    /// <summary>
+    /// Adds a note over two members.
+    /// </summary>
+    /// <param name="m1">The first member.</param>
+    /// <param name="m2">The second member.</param>
+    /// <param name="text">The text of the note.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder AddNoteOver(Member m1, Member m2, string text)
     {
         ThrowIfExternalMember(m1);
@@ -26,6 +36,12 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a note to the right of a member.
+    /// </summary>
+    /// <param name="m">The member.</param>
+    /// <param name="text">The text of the note.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder AddNoteRightOf(Member m, string text)
     {
         ThrowIfExternalMember(m);
@@ -34,6 +50,12 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a note to the left of a member.
+    /// </summary>
+    /// <param name="m">The member.</param>
+    /// <param name="text">The text of the note.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder AddNoteLeftOf(Member m, string text)
     {
         ThrowIfExternalMember(m);
@@ -42,6 +64,13 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a box to the diagram.
+    /// </summary>
+    /// <param name="name">The name of the box.</param>
+    /// <param name="box">The box that was created.</param>
+    /// <param name="color">An optional color for the box.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder AddBox(string name, out Box box, Color? color = null)
     {
         box = new Box(name, color ?? Color.Transparent);
@@ -49,6 +78,12 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a rectangle to the diagram.
+    /// </summary>
+    /// <param name="color">The color of the rectangle.</param>
+    /// <param name="action">An action to add items to the rectangle.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder AddRectangle(Color color, Action<SequenceDiagramBuilder> action)
     {
         _sequenceItems.Add(new Rect(color));
@@ -57,6 +92,12 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a loop to the diagram.
+    /// </summary>
+    /// <param name="description">The description of the loop.</param>
+    /// <param name="action">An action to add items to the loop.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder AddLoop(string description, Action<SequenceDiagramBuilder> action)
     {
         _sequenceItems.Add(new Loop(description));
@@ -65,6 +106,15 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a member to the diagram.
+    /// </summary>
+    /// <param name="name">The name of the member.</param>
+    /// <param name="memberType">The type of the member.</param>
+    /// <param name="member">The member that was created.</param>
+    /// <param name="box">An optional box to add the member to.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if a member with the same name already exists.</exception>
     public SequenceDiagramBuilder AddMember(string name, MemberType memberType, out Member member, Box? box = null)
     {
         if (_membersOutsideBoxes.Exists(m => m.Name == name) || _boxes.SelectMany(b => b.Members).Any(m => m.Name == name))
@@ -76,7 +126,7 @@ public class SequenceDiagramBuilder
 
         if (box is not null)
         {
-            box.Members.Add(member);
+            box.AddMember(member);
         }
         else
         {
@@ -86,16 +136,40 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a participant (member of type <see cref="MemberType.Participant"/>) to the diagram.
+    /// </summary>
+    /// <param name="name">The name of the participant.</param>
+    /// <param name="member">The participant that was created.</param>
+    /// <param name="box">An optional box to add the participant to.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder AddParticipant(string name, out Member member, Box? box = null)
     {
         return AddMember(name, MemberType.Participant, out member, box);
     }
 
+    /// <summary>
+    /// Adds an actor (member of type <see cref="MemberType.Actor"/>) to the diagram.
+    /// </summary>
+    /// <param name="name">The name of the actor.</param>
+    /// <param name="member">The actor that was created.</param>
+    /// <param name="box">An optional box to add the actor to.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder AddActor(string name, out Member member, Box? box = null)
     {
         return AddMember(name, MemberType.Actor, out member, box);
     }
 
+    /// <summary>
+    /// Sends a message between two members.
+    /// </summary>
+    /// <param name="sender">The sender of the message.</param>
+    /// <param name="recipient">The recipient of the message.</param>
+    /// <param name="description">The description of the message.</param>
+    /// <param name="lineType">The type of the line.</param>
+    /// <param name="arrowType">The type of the arrow.</param>
+    /// <param name="activationType">The type of activation.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder SendMessage(
        Member sender,
        Member recipient,
@@ -111,6 +185,18 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Sends a create message from a member to a new member.
+    /// </summary>
+    /// <param name="sender">The sender of the message.</param>
+    /// <param name="name">The name of the new member.</param>
+    /// <param name="memberType">The type of the new member.</param>
+    /// <param name="recipient">The new member that was created.</param>
+    /// <param name="description">The description of the message.</param>
+    /// <param name="lineType">The type of the line.</param>
+    /// <param name="arrowType">The type of the arrow.</param>
+    /// <param name="activationType">The type of activation.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder SendCreateMessage(
         Member sender,
         string name,
@@ -126,6 +212,17 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Sends a destroy message from a member to a member.
+    /// </summary>
+    /// <param name="sender">The sender of the message.</param>
+    /// <param name="recipient">The recipient of the message.</param>
+    /// <param name="target">The target of the destruction (sender or recipient).</param>
+    /// <param name="description">The description of the message.</param>
+    /// <param name="lineType">The type of the line.</param>
+    /// <param name="arrowType">The type of the arrow.</param>
+    /// <param name="activationType">The type of activation.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder SendDestroyMessage(
         Member sender,
         Member recipient,
@@ -142,6 +239,11 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Creates alternatives sequences in the sequence.
+    /// </summary>
+    /// <param name="alternatives">Any number of alternatives. Each alternative is a tuple with a description and an action to add items to it.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder Alternatives(params (string description, Action<SequenceDiagramBuilder> action)[] alternatives)
     {
         if (alternatives.Length == 0)
@@ -163,6 +265,11 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Creates parallel sequences in the sequence.
+    /// </summary>
+    /// <param name="parallels">Any number of parallels. Each parallel is a tuple with a description and an action to add items to it.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder Parallels(params (string description, Action<SequenceDiagramBuilder> action)[] parallels)
     {
         if (parallels.Length == 0)
@@ -184,6 +291,12 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Creates an optional sequence in the sequence.
+    /// </summary>
+    /// <param name="description">The description of the optional sequence.</param>
+    /// <param name="action">An action to add items to the optional sequence.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder Optional(string description, Action<SequenceDiagramBuilder> action)
     {
         _sequenceItems.Add(new Opt(description));
@@ -192,6 +305,13 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Creates a critical sequence in the sequence.
+    /// </summary>
+    /// <param name="description">The description of the critical sequence.</param>
+    /// <param name="action">An action to add items to the critical sequence.</param>
+    /// <param name="options">Any number of options. Each option is a tuple with a description and an action to add items to it.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder Critical(
         string description,
         Action<SequenceDiagramBuilder> action,
@@ -211,6 +331,12 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a break to the sequence.
+    /// </summary>
+    /// <param name="description">The description of the break.</param>
+    /// <param name="action">An action to add items to the break.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder Break(
         string description,
         Action<SequenceDiagramBuilder> action)
@@ -222,12 +348,24 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a comment to the sequence.
+    /// </summary>
+    /// <param name="text">The text of the comment.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder Comment(string text)
     {
         _sequenceItems.Add(new Comment(text));
         return this;
     }
 
+    /// <summary>
+    /// Adds a link to a member.
+    /// </summary>
+    /// <param name="member">The member to add the link to.</param>
+    /// <param name="title">The title of the link.</param>
+    /// <param name="uri">The URI of the link.</param>
+    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     public SequenceDiagramBuilder AddLink(Member member, string title, string uri)
     {
         ThrowIfExternalMember(member);
@@ -236,6 +374,11 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaid code for the sequence diagram.
+    /// </summary>
+    /// <returns>The Mermaid code for the sequence diagram.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when an unknown sequence item is encountered. Should never happen.</exception>
     public string Build()
     {
         string indent = Shared.Indent;
@@ -358,7 +501,7 @@ public class SequenceDiagramBuilder
         return color.IsNamedColor ? color.Name : $"rgba({color.R}, {color.G}, {color.B}, {alpha})";
     }
 
-    private static void BuildMembers(string indent, StringBuilder builder, IList<Member> members)
+    private static void BuildMembers(string indent, StringBuilder builder, IEnumerable<Member> members)
     {
         foreach (Member? member in members)
         {

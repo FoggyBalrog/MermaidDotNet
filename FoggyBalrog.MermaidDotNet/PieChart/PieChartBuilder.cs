@@ -4,6 +4,9 @@ using FoggyBalrog.MermaidDotNet.PieChart.Model;
 
 namespace FoggyBalrog.MermaidDotNet.PieChart;
 
+/// <summary>
+/// A builder for pie charts.
+/// </summary>
 public class PieChartBuilder
 {
     private readonly bool _displayValuesOnLegend;
@@ -16,12 +19,22 @@ public class PieChartBuilder
         _title = title;
     }
 
+    /// <summary>
+    /// Adds a data set to the pie chart.
+    /// </summary>
+    /// <param name="label">The label of the data set.</param>
+    /// <param name="value">The value of the data set.</param>
+    /// <returns>The current <see cref="PieChartBuilder"/> instance.</returns>
     public PieChartBuilder AddDataSet(string label, double value)
     {
         _dataSets.Add(new DataSet(label, value));
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaid code for the pie chart.
+    /// </summary>
+    /// <returns>The Mermaid code for the pie chart.</returns>
     public string Build()
     {
         var builder = new StringBuilder();

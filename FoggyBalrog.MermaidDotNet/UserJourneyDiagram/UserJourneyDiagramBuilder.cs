@@ -4,6 +4,9 @@ using Task = FoggyBalrog.MermaidDotNet.UserJourneyDiagram.Model.Task;
 
 namespace FoggyBalrog.MermaidDotNet.UserJourneyDiagram;
 
+/// <summary>
+/// A builder for creating user journey diagrams.
+/// </summary>
 public class UserJourneyDiagramBuilder
 {
     private string _indent = Shared.Indent;
@@ -15,6 +18,13 @@ public class UserJourneyDiagramBuilder
         _title = title;
     }
 
+    /// <summary>
+    /// Adds a task to the user journey diagram.
+    /// </summary>
+    /// <param name="description">The description of the task.</param>
+    /// <param name="score">The score of the task.</param>
+    /// <param name="actors">A list of actors that are involved in the task.</param>
+    /// <returns>The current instance of the <see cref="UserJourneyDiagramBuilder"/>.</returns>
     public UserJourneyDiagramBuilder AddTask(string description, int score, params string[] actors)
     {
         var task = new Task(description, score, actors);
@@ -22,6 +32,11 @@ public class UserJourneyDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a section to the user journey diagram.
+    /// </summary>
+    /// <param name="description">The description of the section.</param>
+    /// <returns>The current instance of the <see cref="UserJourneyDiagramBuilder"/>.</returns>
     public UserJourneyDiagramBuilder AddSection(string description)
     {
         var section = new Section(description);
@@ -29,6 +44,10 @@ public class UserJourneyDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaid code for the user journey diagram.
+    /// </summary>
+    /// <returns>The Mermaid code for the user journey diagram.</returns>
     public string Build()
     {
         var builder = new StringBuilder();

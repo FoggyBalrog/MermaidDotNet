@@ -1,0 +1,26 @@
+- name: Class Diagram
+  href: class-diagram.md
+- name: Entity Relationship Diagram
+  href: entity-relationship-diagram.md
+- name: Flowchart
+  href: flowchart.md
+- name: Gantt Diagram
+  href: gantt-diagram.md
+- name: Git Graph
+  href: git-graph.md
+- name: Mind Map
+  href: mind-map.md
+- name: Pie Chart
+  href: pie-chart.md
+- name: Quadrant Chart
+  href: quadrant-chart.md
+- name: Requirement Diagram
+  href: requirement-diagram.md
+- name: Sequence Diagram
+  href: sequence-diagram.md
+- name: State Diagram
+  href: state-diagram.md
+- name: Timeline Diagram
+  href: timeline-diagram.md
+- name: User Journey Diagram
+  href: user-journey-diagram.md

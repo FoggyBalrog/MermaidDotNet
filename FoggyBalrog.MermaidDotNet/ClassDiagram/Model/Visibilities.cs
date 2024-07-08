@@ -1,5 +1,8 @@
 ﻿namespace FoggyBalrog.MermaidDotNet.ClassDiagram.Model;
 
+/// <summary>
+/// The possible visibilities of a class member. Can be combined, e.g. <c>Visibilities.Public | Visibilities.Static</c>.
+/// </summary>
 [Flags]
 public enum Visibilities
 {
