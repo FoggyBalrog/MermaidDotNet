@@ -235,7 +235,7 @@ stateDiagram-v2
     {
         string diagram = Mermaid
             .StateDiagram()
-            .Concurrency("Active", out State c1,
+            .AddConcurrency("Active", out State c1,
                 builder1 => builder1
                 .AddState("State 2", out State s2)
                 .AddState("State 3", out State s3)

@@ -1,0 +1,59 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "./..",
+          "files": [
+            "**/*.csproj"
+          ],
+          "exclude": [
+            "**/*UnitTests.csproj"
+          ]
+        }
+      ],
+      "dest": "api",
+      "namespaceLayout": "nested",
+      "enumSortOrder": "declaringOrder"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "mermaid-50px.png",
+          "mermaid.ico"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern",
+      "./custom-template"
+    ],
+    "sitemap": {
+      "baseUrl": "https://foggybalrog.github.io/MermaidDotnet/"
+    },
+    "globalMetadata": {
+      "_appName": "FoggyBalrog.MermaidDotnet Documentation",
+      "_appTitle": "FoggyBalrog.MermaidDotnet Documentation",
+      "_appFooter": "See <a href='https://github.com/FoggyBalrog/MermaidDotnet' target='_blank'>FoggyBalrog.MermaidDotnet on GitHub</a>.",
+      "_enableSearch": true,
+      "_disableContribution": true,
+      "_appFaviconPath": "mermaid.ico",
+      "_appLogoPath": "mermaid-50px.png",
+      "pdf": false
+    }
+  }
+}

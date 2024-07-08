@@ -2,9 +2,6 @@
 
 *Official Mermaid documentation: [Mindmaps](https://mermaid.js.org/syntax/mindmap.html).*
 
-- [Simple diagram](#simple-diagram)
-- [Node shapes](#node-shapes)
-
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid mind map.

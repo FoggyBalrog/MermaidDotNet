@@ -2,21 +2,6 @@
 
 *Official Mermaid documentation: [Class diagram](https://mermaid.js.org/syntax/classDiagram.html).*
 
-- [Simple class diagram](#simple-class-diagram)
-- [Title](#title)
-- [Class label](#class-label)
-- [Class annotation](#class-annotation)
-- [Class properties](#class-properties)
-- [Class methods](#class-methods)
-- [Relationships](#relationships)
-- [Relationship cardinalities](#relationship-cardinalities)
-- [Relationship link style](#relationship-link-style)
-- [Namespaces](#namespaces)
-- [Direction](#direction)
-- [Interaction](#interaction)
-- [Notes](#notes)
-- [Custom styling](#custom-styling)
-
 ## Simple class diagram
 
 The following code sample shows how to create a simple Mermaid class diagram.

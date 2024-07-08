@@ -4,6 +4,9 @@ using FoggyBalrog.MermaidDotNet.QuadrantChart.Model;
 
 namespace FoggyBalrog.MermaidDotNet.QuadrantChart;
 
+/// <summary>
+/// A builder for quadrant charts.
+/// </summary>
 public class QuadrantChartBuilder
 {
     private readonly List<Point> _points = [];
@@ -31,6 +34,12 @@ public class QuadrantChartBuilder
         _quadrant4 = quadrant4;
     }
 
+    /// <summary>
+    /// Sets the labels for the X axis. If <paramref name="right"/> is not specified, the X axis will have a single label.
+    /// </summary>
+    /// <param name="left">The label for the left side of the X axis.</param>
+    /// <param name="right">The optional label for the right side of the X axis.</param>
+    /// <returns>The current <see cref="QuadrantChartBuilder"/> instance.</returns>
     public QuadrantChartBuilder SetXAxisLabel(string left, string? right = null)
     {
         _axisLeft = left;
@@ -38,6 +47,12 @@ public class QuadrantChartBuilder
         return this;
     }
 
+    /// <summary>
+    /// Sets the labels for the Y axis. If <paramref name="top"/> is not specified, the Y axis will have a single label.
+    /// </summary>
+    /// <param name="bottom">The label for the bottom of the Y axis.</param>
+    /// <param name="top">The optional label for the top of the Y axis.</param>
+    /// <returns>The current <see cref="QuadrantChartBuilder"/> instance.</returns>
     public QuadrantChartBuilder SetYAxisLabel(string bottom, string? top = null)
     {
         _axisBottom = bottom;
@@ -45,6 +60,14 @@ public class QuadrantChartBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a point to the quadrant chart.
+    /// </summary>
+    /// <param name="label">The label of the point.</param>
+    /// <param name="x">The X coordinate of the point. Must be between 0 and 1.</param>
+    /// <param name="y">The Y coordinate of the point. Must be between 0 and 1.</param>
+    /// <returns>The current <see cref="QuadrantChartBuilder"/> instance.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if <paramref name="x"/> or <paramref name="y"/> are not between 0 and 1.</exception>
     public QuadrantChartBuilder AddPoint(string label, double x, double y)
     {
         if (x < 0 || x > 1 || y < 0 || y > 1)
@@ -56,6 +79,10 @@ public class QuadrantChartBuilder
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaid code for the quadrant chart.
+    /// </summary>
+    /// <returns>The Mermaid code for the quadrant chart.</returns>
     public string Build()
     {
         var builder = new StringBuilder();

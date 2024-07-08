@@ -3,6 +3,9 @@ using FoggyBalrog.MermaidDotNet.MindMap.Model;
 
 namespace FoggyBalrog.MermaidDotNet.MindMap;
 
+/// <summary>
+/// A builder for creating a mind map diagram.
+/// </summary>
 public class MindMapBuilder
 {
     private readonly Node _root;
@@ -12,6 +15,14 @@ public class MindMapBuilder
         _root = new Node(rootText, rootShape);
     }
 
+    /// <summary>
+    /// Adds a node to the mind map.
+    /// </summary>
+    /// <param name="text">The text of the node.</param>
+    /// <param name="node">The node that was created.</param>
+    /// <param name="parent">The parent node of the node. If not specified, the node will be added to the root.</param>
+    /// <param name="shape">The shape of the node.</param>
+    /// <returns>The current <see cref="MindMapBuilder"/> instance.</returns>
     public MindMapBuilder AddNode(string text, out Node node, Node? parent = null, NodeShape shape = NodeShape.Default)
     {
         node = new Node(text, shape);
@@ -19,6 +30,10 @@ public class MindMapBuilder
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaid code for the mind map.
+    /// </summary>
+    /// <returns>The Mermaid code for the mind map.</returns>
     public string Build()
     {
         var builder = new StringBuilder();

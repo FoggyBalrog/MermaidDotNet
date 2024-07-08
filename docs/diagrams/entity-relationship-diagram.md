@@ -2,11 +2,6 @@
 
 *Official Mermaid documentation: [Entity Relationship Diagram](https://mermaid.js.org/syntax/entityRelationshipDiagram.html).*
 
-- [Simple diagram](#simple-diagram)
-- [Cardinality](#cardinality)
-- [Attributes](#attributes)
-- [Identification](#identification)
-
 ## Simple diagram
 
 The following code sample shows how to create a simple entity relationship diagram.

@@ -2,11 +2,6 @@
 
 *Official Mermaid documentation: [Requirement diagram](https://mermaid.js.org/syntax/requirementDiagram.html).*
 
-- [Simple diagram](#simple-diagram)
-- [Relationship types](#relationship-types)
-- [Requirement details](#requirement-details)
-- [Elements details](#elements-details)
-
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid requirement diagram.

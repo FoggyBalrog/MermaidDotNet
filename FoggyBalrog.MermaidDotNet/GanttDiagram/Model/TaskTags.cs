@@ -1,5 +1,8 @@
 ﻿namespace FoggyBalrog.MermaidDotNet.GanttDiagram.Model;
 
+/// <summary>
+/// Tags for tasks.
+/// </summary>
 [Flags]
 public enum TaskTags
 {
