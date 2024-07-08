@@ -2,23 +2,6 @@
 
 *Official Mermaid documentation: [Sequence Diagram](https://mermaid.js.org/syntax/sequenceDiagram.html).*
 
-- [Simple diagram](#simple-diagram)
-- [Autonumbering](#autonumbering)
-- [Arrow and line types](#arrow-and-line-types)
-- [Member types](#member-types)
-- [Member links](#member-links)
-- [Member creation and destruction](#member-creation-and-destruction)
-- [Boxes](#boxes)
-- [Activation and deactivation](#activation-and-deactivation)
-- [Notes](#notes)
-- [Loops](#loops)
-- [Alternative paths](#alternative-paths)
-- [Parallel actions](#parallel-actions)
-- [Critical regions](#critical-regions)
-- [Breaks](#breaks)
-- [Rectangles](#rectangles)
-- [Comments](#comments)
-
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid sequence diagram.

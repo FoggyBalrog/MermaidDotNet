@@ -1,3 +1,3 @@
 ﻿namespace FoggyBalrog.MermaidDotNet.StateDiagram.Model;
 
-public record CompositeStateEnd : IStateDiagramItem;
+internal record CompositeStateEnd : IStateDiagramItem;

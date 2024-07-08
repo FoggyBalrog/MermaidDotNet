@@ -2,9 +2,6 @@
 
 *Official Mermaid documentation: [User journey](https://mermaid.js.org/syntax/userJourney.html).*
 
-- [Simple user journey diagram](#simple-user-journey-diagram)
-- [Title](#title)
-
 ## Simple user journey diagram
 
 The following code sample shows how to create a simple Mermaid user journey diagram.

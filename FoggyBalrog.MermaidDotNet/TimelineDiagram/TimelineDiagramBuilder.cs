@@ -3,6 +3,9 @@ using FoggyBalrog.MermaidDotNet.TimelineDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.TimelineDiagram;
 
+/// <summary>
+/// A builder for creating timeline diagrams.
+/// </summary>
 public class TimelineDiagramBuilder
 {
     private readonly string? _title;
@@ -13,18 +16,36 @@ public class TimelineDiagramBuilder
         _title = title;
     }
 
+    /// <summary>
+    /// Adds events to the timeline.
+    /// </summary>
+    /// <param name="timePeriod">The time period for the events.</param>
+    /// <param name="events">The events to add.</param>
+    /// <returns>The current instance of the <see cref="TimelineDiagramBuilder"/>.</returns>
     public TimelineDiagramBuilder AddEvents(string timePeriod, params string[] events)
     {
         _items.Add(new TimelineRecord(timePeriod, events));
         return this;
     }
 
+    /// <summary>
+    /// Adds a section to the timeline. Events added after this will be in the section, until another section is added.
+    /// </summary>
+    /// <remarks>
+    /// In Mermaid timeline diagram, when adding sections, all events added before the first section are ignored.
+    /// </remarks>
+    /// <param name="title">The title of the section.</param>
+    /// <returns>The current instance of the <see cref="TimelineDiagramBuilder"/>.</returns>
     public TimelineDiagramBuilder AddSection(string title)
     {
         _items.Add(new TimelineSection(title));
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaid code for the timeline diagram.
+    /// </summary>
+    /// <returns>The Mermaid code for the timeline diagram.</returns>
     public string Build()
     {
         string indent = Shared.Indent;

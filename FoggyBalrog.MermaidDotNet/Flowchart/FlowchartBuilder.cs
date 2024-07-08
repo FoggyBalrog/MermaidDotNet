@@ -3,6 +3,9 @@ using FoggyBalrog.MermaidDotNet.Flowchart.Model;
 
 namespace FoggyBalrog.MermaidDotNet.Flowchart;
 
+/// <summary>
+/// A builder for creating flowchart diagrams.
+/// </summary>
 public class FlowchartBuilder
 {
     private readonly List<IFlowItem> _items = [];
@@ -13,6 +16,13 @@ public class FlowchartBuilder
         _orientation = orientation;
     }
 
+    /// <summary>
+    /// Adds a simple text node to the flowchart.
+    /// </summary>
+    /// <param name="text">The text of the node.</param>
+    /// <param name="node">The node that was added.</param>
+    /// <param name="shape">The shape of the node.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
     public FlowchartBuilder AddNode(string text, out Node node, NodeShape shape = NodeShape.Rectangle)
     {
         node = new Node($"id{_items.Count + 1}", text, shape, null);
@@ -20,11 +30,31 @@ public class FlowchartBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a markdown node to the flowchart.
+    /// </summary>
+    /// <param name="markdown">The markdown text of the node.</param>
+    /// <param name="node">The node that was added.</param>
+    /// <param name="shape">The shape of the node.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
     public FlowchartBuilder AddMarkdownNode(string markdown, out Node node, NodeShape shape = NodeShape.Rectangle)
     {
         return AddNode($"`{markdown}`", out node, shape);
     }
 
+    /// <summary>
+    /// Adds a link between two nodes in the flowchart.
+    /// </summary>
+    /// <param name="from">The node to link from.</param>
+    /// <param name="to">The node to link to.</param>
+    /// <param name="text">An optional text to display on the link.</param>
+    /// <param name="lineStyle">The style of the link line.</param>
+    /// <param name="ending">The ending of the link.</param>
+    /// <param name="multidirectional">Specifies whether the link should be multidirectional, i.e. have an arrow on both ends.</param>
+    /// <param name="extraLength">Optional extra length to add to the link.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when either <paramref name="from"/> or <paramref name="to"/> is not defined in the diagram.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="extraLength"/> is less than 0.</exception>
     public FlowchartBuilder AddLink(
         ILinkable from,
         ILinkable to,
@@ -46,6 +76,18 @@ public class FlowchartBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a link chain between multiple nodes in the flowchart.
+    /// </summary>
+    /// <param name="from">The nodes to link from.</param>
+    /// <param name="to">The nodes to link to.</param>
+    /// <param name="text">An optional text to display on the link chain.</param>
+    /// <param name="lineStyle">The style of the link line.</param>
+    /// <param name="ending">The ending of the link.</param>
+    /// <param name="multidirectional">Specifies whether the link should be multidirectional, i.e. have an arrow on both ends.</param>
+    /// <param name="extraLength">Optional extra length to add to the link.</param>
+    /// <exception cref="InvalidOperationException">Thrown when any of the <paramref name="from"/> or <paramref name="to"/> nodes are not defined in the diagram.</exception>"
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
     public FlowchartBuilder AddLinkChain(
         ILinkable[] from,
         ILinkable[] to,
@@ -62,6 +104,14 @@ public class FlowchartBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a callback to a node in the flowchart.
+    /// </summary>
+    /// <param name="node">The node to add the callback to.</param>
+    /// <param name="functionName">The name of the function to call when the node is clicked.</param>
+    /// <param name="tooltip">An optional tooltip to display when the node is hovered over.</param>
+    /// <exception cref="InvalidOperationException">Thrown when <paramref name="node"/> is not defined in the diagram.</exception>"
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
     public FlowchartBuilder AddCallback(Node node, string functionName, string? tooltip = null)
     {
         ThrowIfExternalItem(node);
@@ -70,6 +120,15 @@ public class FlowchartBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a hyperlink to a node in the flowchart.
+    /// </summary>
+    /// <param name="node">The node to add the hyperlink to.</param>
+    /// <param name="uri">The URI to navigate to when the node is clicked.</param>
+    /// <param name="tooltip">An optional tooltip to display when the node is hovered over.</param>
+    /// <param name="target">The target of the hyperlink.</param>
+    /// <exception cref="InvalidOperationException">Thrown when <paramref name="node"/> is not defined in the diagram.</exception>""
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
     public FlowchartBuilder AddHyperlink(Node node, string uri, string? tooltip = null, HyperlinkTarget target = HyperlinkTarget.Self)
     {
         ThrowIfExternalItem(node);
@@ -78,6 +137,14 @@ public class FlowchartBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a subgraph to the flowchart, in which you can add nodes and links using the provided action. The subgraph will be ended automatically when the action is completed.
+    /// </summary>
+    /// <param name="text">The text of the subgraph.</param>
+    /// <param name="subgraph">The subgraph that was added.</param>
+    /// <param name="action">The action to perform within the subgraph.</param>
+    /// <param name="direction">An optional direction for the subgraph. If not specified, the default direction from Mermaid will be used on rendering.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
     public FlowchartBuilder AddSubgraph(string text, out Subgraph subgraph, Action<FlowchartBuilder> action, FlowchartOrientation? direction = null)
     {
         subgraph = new Subgraph($"sub{_items.Count + 1}", text, direction);
@@ -87,12 +154,22 @@ public class FlowchartBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a comment to the flowchart.
+    /// </summary>
+    /// <param name="text">The text of the comment.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
     public FlowchartBuilder Comment(string text)
     {
         _items.Add(new Comment(text));
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaid code for the flowchart.
+    /// </summary>
+    /// <returns>The Mermaid code for the flowchart.</returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public string Build()
     {
         var builder = new StringBuilder();

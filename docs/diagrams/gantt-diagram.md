@@ -2,13 +2,6 @@
 
 *Official Mermaid documentation: [Gantt diagrams](https://mermaid.js.org/syntax/gantt.html).*
 
-- [Simple diagram](#simple-diagram)
-- [Task bounds](#task-bounds)
-- [Task tags](#task-tags)
-- [Sections](#sections)
-- [Interaction](#interaction)
-- [Customization](#customization)
-
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid Gantt diagram.

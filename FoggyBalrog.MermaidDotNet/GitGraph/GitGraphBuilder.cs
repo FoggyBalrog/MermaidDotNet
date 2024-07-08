@@ -3,6 +3,9 @@ using FoggyBalrog.MermaidDotNet.GitGraph.Model;
 
 namespace FoggyBalrog.MermaidDotNet.GitGraph;
 
+/// <summary>
+/// A builder for creating a Git graph.
+/// </summary>
 public class GitGraphBuilder
 {
     private const string _mainBranchName = "main";
@@ -21,12 +24,26 @@ public class GitGraphBuilder
         _vertical = vertical;
     }
 
+    /// <summary>
+    /// Adds a commit to the graph.
+    /// </summary>
+    /// <param name="id">An optional identifier for the commit. If not specified, the commit will be assigned an auto-generated identifier.</param>
+    /// <param name="type">The type of the commit.</param>
+    /// <param name="tag">An optional tag for the commit.</param>
+    /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>"/>
     public GitGraphBuilder Commit(string? id = null, CommitType type = CommitType.Normal, string? tag = null)
     {
         _commands.Add(new Commit(id, type, tag));
         return this;
     }
 
+    /// <summary>
+    /// Creates a new branch in the graph.
+    /// </summary>
+    /// <param name="name">The name of the branch.</param>
+    /// <param name="branch">The branch that was created.</param>
+    /// <param name="order">An optional order for the branch. If not specified, the branch will be ordered based on the order in which it was created.</param>
+    /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>
     public GitGraphBuilder Branch(string name, out Branch branch, int? order = null)
     {
         branch = new Branch(name, order);
@@ -34,24 +51,46 @@ public class GitGraphBuilder
         return this;
     }
 
+    /// <summary>
+    /// Checks out a branch in the graph.
+    /// </summary>
+    /// <param name="branch">The branch to check out.</param>
+    /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>
     public GitGraphBuilder Checkout(Branch branch)
     {
         _commands.Add(new Checkout(branch.Name));
         return this;
     }
 
+    /// <summary>
+    /// Checks out the main branch in the graph.
+    /// </summary>
+    /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>
     public GitGraphBuilder CheckoutMain()
     {
         _commands.Add(new Checkout(_mainBranchName));
         return this;
     }
 
+    /// <summary>
+    /// Merges a branch into the current branch.
+    /// </summary>
+    /// <param name="branch">The branch to merge into the current branch.</param>
+    /// <param name="id">An optional identifier for the merge commit. If not specified, the merge commit will be assigned an auto-generated identifier.</param>
+    /// <param name="type">The type of the merge commit.</param>
+    /// <param name="tag">An optional tag for the merge commit.</param>
+    /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>
     public GitGraphBuilder Merge(Branch branch, string? id = null, CommitType type = CommitType.Normal, string? tag = null)
     {
         _commands.Add(new Merge(branch.Name, id, type, tag));
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaod code for the Git graph.
+    /// </summary>
+    /// <returns>The Mermaid code for the Git graph.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when an unknown command is encountered. Should never happen.</exception>
     public string Build()
     {
         var builder = new StringBuilder();

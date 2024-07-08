@@ -1,0 +1,6 @@
+- name: Home
+  href: /
+- name: Diagrams
+  href: diagrams/
+- name: API
+  href: api/
