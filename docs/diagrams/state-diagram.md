@@ -2,16 +2,6 @@
 
 *Official Mermaid documentation: [State diagram](https://mermaid.js.org/syntax/stateDiagram.html).*
 
-- [Simple state diagram](#simple-state-diagram)
-- [Title](#title)
-- [Direction](#direction)
-- [Transition descriptions](#transition-descriptions)
-- [Choice states](#choice-states)
-- [Fork and join states](#fork-and-join-states)
-- [Notes](#notes)
-- [Concurrency](#concurrency)
-- [Custom styling](#custom-styling)
-
 ## Simple state diagram
 
 The following code sample shows how to create a simple Mermaid state diagram.
@@ -377,7 +367,7 @@ Example:
 ```csharp
 var diagram = Mermaid
     .StateDiagram()
-    .Concurrency("Active", out var c1,
+    .AddConcurrency("Active", out var c1,
         builder1 => builder1
         .AddState("State 2", out var s2)
         .AddState("State 3", out var s3)

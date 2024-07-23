@@ -8,13 +8,15 @@ A .NET library to generate Mermaid diagrams code.
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FoggyBalrog_MermaidDotNet&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=FoggyBalrog_MermaidDotNet)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=FoggyBalrog_MermaidDotNet&metric=coverage)](https://sonarcloud.io/summary/new_code?id=FoggyBalrog_MermaidDotNet)
 
-[![GitHub License](https://img.shields.io/github/license/FoggyBalrog/MermaidDotNet?)](LICENSE)
+[![GitHub License](https://img.shields.io/github/license/FoggyBalrog/MermaidDotNet?)](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/LICENSE)
 [![NuGet Version](https://img.shields.io/nuget/v/FoggyBalrog.MermaidDotNet?logo=nuget&color=blue)](https://www.nuget.org/packages/FoggyBalrog.MermaidDotNet)
 
 > [!WARNING]  
 > Still under development. Not ready for production.
 
+- [Add the library to your project](#add-the-library-to-your-project)
 - [Compatibility](#compatibility)
+- [About documentation](#about-documentation)
 - [Quick Start](#quick-start)
   - [Flowchart](#flowchart)
   - [Sequence diagram](#sequence-diagram)
@@ -32,15 +34,25 @@ A .NET library to generate Mermaid diagrams code.
 - [License](#license)
 - [Credits](#credits)
 
+## Add the library to your project
+
+Install the [FoggyBalrog.MermaidDotNet NuGet package from nuget.org](https://www.nuget.org/packages/FoggyBalrog.MermaidDotNet), or download [the *nupkg* file from the latest release on GitHub](https://github.com/FoggyBalrog/MermaidDotNet/releases/latest).
+
 ## Compatibility
 
 The library targets **.NET Standard 2.1**, that is notably compatible with .NET Core 3.0 and later, .NET 5.0 and later, and Mono 6.4 and later.
 
 See details [on the package _frameworks_ tab on nuget.org](https://www.nuget.org/packages/FoggyBalrog.MermaidDotNet#supportedframeworks-body-tab) or [on Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/standard/net-standard?tabs=net-standard-2-1#select-net-standard-version).
 
-## Quick Start
+## About documentation
 
-The following code samples show how to create a simple Mermaid diagram of each implemented diagram type.
+To read the documentation for the latest published version, go to <https://foggybalrog.github.io/MermaidDotNet>.
+
+The current README is valid for the commit you are currently viewing. This may differ from the latest published version, or the version you have installed.
+
+To see the documentation for a specific version, checkout the corresponding tag on GitHub and read the files in the `docs` folder. Optionally, you can view the generated the documentation locally using DocFX by running `docfx ./docs/docfx.json --serve` in the root of the repository.
+
+## Quick Start
 
 ### Flowchart
 
@@ -64,7 +76,7 @@ flowchart TB
     id2 --> id3
 ```
 
-Read more at [docs/flowchart.md](./docs/flowchart.md).
+Read more at [flowchart.md](./docs/diagrams/flowchart.md).
 
 ### Sequence diagram
 
@@ -86,7 +98,7 @@ sequenceDiagram
     Bob->>Alice: Hello Alice!
 ```
 
-Read more at [docs/sequence-diagram.md](./docs/sequence-diagram.md).
+Read more at [sequence-diagram.md](./docs/diagrams/sequence-diagram.md).
 
 ### Class diagram
 
@@ -123,7 +135,7 @@ classDiagram
     Animal <|-- Dog : A dog is an animal
 ```
 
-Read more at [docs/class-diagram.md](./docs/class-diagram.md).
+Read more at [class-diagram.md](./docs/diagrams/class-diagram.md).
 
 ### State diagram
 
@@ -147,7 +159,7 @@ stateDiagram-v2
     s2 --> [*]
 ```
 
-Read more at [docs/state-diagram.md](./docs/state-diagram.md).
+Read more at [state-diagram.md](./docs/diagrams/state-diagram.md).
 
 ### Entity relationship diagram
 
@@ -168,7 +180,7 @@ erDiagram
     Order ||--|{ Product : "contains"
 ```
 
-Read more at [docs/entity-relationship-diagram.md](./docs/entity-relationship-diagram.md).
+Read more at [entity-relationship-diagram.md](./docs/diagrams/entity-relationship-diagram.md).
 
 ### User journey diagram
 
@@ -198,7 +210,7 @@ journey
         Task 6: 6: Actor 2
 ```
 
-Read more at [docs/user-journey-diagram.md](./docs/user-journey-diagram.md).
+Read more at [user-journey-diagram.md](./docs/diagrams/user-journey-diagram.md).
 
 ### Gantt diagram
 
@@ -217,7 +229,7 @@ gantt
     Bar: task2, 2024-05-03, 2024-05-08
 ```
 
-Read more at [docs/gantt-diagram.md](./docs/gantt-diagram.md).
+Read more at [gantt-diagram.md](./docs/diagrams/gantt-diagram.md).
 
 ### Git graph
 
@@ -251,7 +263,7 @@ gitGraph
     commit
 ```
 
-Read more at [docs/git-graph.md](./docs/git-graph.md).
+Read more at [git-graph.md](./docs/diagrams/git-graph.md).
 
 ### Mind Map
 
@@ -280,7 +292,7 @@ mindmap
                 Node 7
 ```
 
-Read more at [docs/mind-map.md](./docs/mind-map.md).
+Read more at [mind-map.md](./docs/diagrams/mind-map.md).
 
 ### Pie chart
 
@@ -298,7 +310,7 @@ pie
     "Label2": 57.3
 ```
 
-Read more at [docs/pie-chart.md](./docs/pie-chart.md).
+Read more at [pie-chart.md](./docs/diagrams/pie-chart.md).
 
 ### Quadrant chart
 
@@ -316,7 +328,7 @@ quadrantChart
     B: [0.3, 0.4]
 ```
 
-Read more at [docs/quadrant-chart.md](./docs/quadrant-chart.md).
+Read more at [quadrant-chart.md](./docs/diagrams/quadrant-chart.md).
 
 ### Requirement diagram
 
@@ -346,7 +358,7 @@ requirementDiagram
     "Element 2" - satisfies -> "Requirement 2"
 ```
 
-Read more at [docs/requirement-diagram.md](./docs/requirement-diagram.md).
+Read more at [requirement-diagram.md](./docs/diagrams/requirement-diagram.md).
 
 ### Timeline diagram
 
@@ -367,11 +379,11 @@ timeline
     2023 : Event 4 : Event 5 : Event 6
 ```
 
-Read more at [docs/timeline-diagram.md](./docs/timeline-diagram.md).
+Read more at [timeline-diagram.md](./docs/diagrams/timeline-diagram.md).
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/LICENSE) file for details.
 
 ## Credits
 

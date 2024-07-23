@@ -3,6 +3,9 @@ using FoggyBalrog.MermaidDotNet.RequirementDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.RequirementDiagram;
 
+/// <summary>
+/// A builder for requirement diagrams.
+/// </summary>
 public class RequirementDiagramBuilder
 {
     private readonly List<IRequirementNode> _nodes = [];
@@ -12,6 +15,17 @@ public class RequirementDiagramBuilder
     {
     }
 
+    /// <summary>
+    /// Adds a requirement to the diagram.
+    /// </summary>
+    /// <param name="name">The name of the requirement.</param>
+    /// <param name="requirement">The requirement that was created.</param>
+    /// <param name="id">An optional identifier for the requirement.</param>
+    /// <param name="text">An optional text for the requirement.</param>
+    /// <param name="type">The type of the requirement.</param>
+    /// <param name="risk">The risk of the requirement.</param>
+    /// <param name="verificationMethod">The verification method of the requirement.</param>
+    /// <returns>The current <see cref="RequirementDiagramBuilder"/> instance.</returns>
     public RequirementDiagramBuilder AddRequirement(
         string name,
         out Requirement requirement,
@@ -26,6 +40,14 @@ public class RequirementDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds an element to the diagram.
+    /// </summary>
+    /// <param name="name">The name of the element.</param>
+    /// <param name="element">The element that was created.</param>
+    /// <param name="type">An optional type for the element.</param>
+    /// <param name="docRef">An optional documentation reference for the element.</param>
+    /// <returns>The current <see cref="RequirementDiagramBuilder"/> instance.</returns>
     public RequirementDiagramBuilder AddElement(
         string name,
         out Element element,
@@ -37,12 +59,23 @@ public class RequirementDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a relationship between two nodes in the diagram.
+    /// </summary>
+    /// <param name="source">The source node of the relationship.</param>
+    /// <param name="target">The target node of the relationship.</param>
+    /// <param name="type">The type of the relationship.</param>
+    /// <returns>The current <see cref="RequirementDiagramBuilder"/> instance.</returns>
     public RequirementDiagramBuilder AddRelationship(IRequirementNode source, IRequirementNode target, RelationshipType type)
     {
         _relationships.Add(new Relationship(source, target, type));
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaid code for the requirement diagram.
+    /// </summary>
+    /// <returns></returns>
     public string Build()
     {
         var builder = new StringBuilder();

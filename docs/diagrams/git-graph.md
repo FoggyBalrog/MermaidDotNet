@@ -2,14 +2,6 @@
 
 *Official Mermaid documentation: [Git Graphs](https://mermaid.js.org/syntax/gitgraph.html).*
 
-- [Simple diagram](#simple-diagram)
-- [Branch ordering](#branch-ordering)
-- [Commit types](#commit-types)
-- [Commit tags](#commit-tags)
-- [Commit id](#commit-id)
-- [Title](#title)
-- [Parallel commits](#parallel-commits)
-
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid git graph.

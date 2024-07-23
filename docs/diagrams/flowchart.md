@@ -2,13 +2,6 @@
 
 *Official Mermaid documentation: [Flowchart](https://mermaid.js.org/syntax/flowchart.html).*
 
-- [Simple flowchart](#simple-flowchart)
-- [Orientation](#orientation)
-- [Node shape](#node-shape)
-- [Links](#links)
-- [Subgraphs](#subgraphs)
-- [Interaction](#interaction)
-
 ## Simple flowchart
 
 The following code sample shows how to create a simple Mermaid flowchart.

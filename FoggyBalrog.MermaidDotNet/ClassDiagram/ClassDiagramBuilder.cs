@@ -3,6 +3,9 @@ using FoggyBalrog.MermaidDotNet.ClassDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.ClassDiagram;
 
+/// <summary>
+/// A builder for creating class diagrams.
+/// </summary>
 public class ClassDiagramBuilder
 {
     private readonly string? _title;
@@ -18,6 +21,14 @@ public class ClassDiagramBuilder
         _direction = direction;
     }
 
+    /// <summary>
+    /// Adds a class to the diagram.
+    /// </summary>
+    /// <param name="name">The name of the class.</param>
+    /// <param name="class">The class object that is created.</param>
+    /// <param name="label">An optional label for the class.</param>
+    /// <param name="annotation">An optional annotation for the class.</param>
+    /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
     public ClassDiagramBuilder AddClass(string name, out Class @class, string? label = null, string? annotation = null)
     {
         @class = new Class(name, label, annotation, null);
@@ -26,6 +37,12 @@ public class ClassDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a namespace to the diagram, in which classes and relationships can be added. The namespace will be closed automatically when the <paramref name="action"/> is finished.
+    /// </summary>
+    /// <param name="name">The name of the namespace.</param>
+    /// <param name="action">An action that will be executed to add classes and relationships to the namespace.</param>
+    /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
     public ClassDiagramBuilder AddNamespace(string name, Action<ClassDiagramBuilder> action)
     {
         _items.Add(new NamespaceStart(name));
@@ -35,18 +52,46 @@ public class ClassDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a property to a class.
+    /// </summary>
+    /// <param name="class">The class to add the property to.</param>
+    /// <param name="type">The type of the property.</param>
+    /// <param name="name">The name of the property.</param>
+    /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
     public ClassDiagramBuilder AddProperty(Class @class, string type, string name)
     {
         @class.AddProperty(new Property(type, name));
         return this;
     }
 
+    /// <summary>
+    /// Adds a method to a class.
+    /// </summary>
+    /// <param name="class">The class to add the method to.</param>
+    /// <param name="returnType">The return type of the method.</param>
+    /// <param name="name">The name of the method.</param>
+    /// <param name="visibility">The visibility of the method.</param>
+    /// <param name="parameters">Optional parameters for the method.</param>
+    /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
     public ClassDiagramBuilder AddMethod(Class @class, string? returnType, string name, Visibilities visibility = Visibilities.Public, (string type, string name)[]? parameters = null)
     {
         @class.AddMethod(new Method(returnType, name, visibility, parameters?.Select(p => new Parameter(p.type, p.name)).ToList() ?? []));
         return this;
     }
 
+    /// <summary>
+    /// Adds a relationship between two classes.
+    /// </summary>
+    /// <param name="from">The class that the relationship starts from.</param>
+    /// <param name="to">The class that the relationship goes to.</param>
+    /// <param name="fromRelationshipType">The type of the relationship relative to the <paramref name="from"/> class.</param>
+    /// <param name="fromCardinality">The cardinality of the relationship relative to the <paramref name="from"/> class.</param>
+    /// <param name="toRelationshipType">The type of the relationship relative to the <paramref name="to"/> class.</param>
+    /// <param name="toCardinality">The cardinality of the relationship relative to the <paramref name="to"/> class.</param>
+    /// <param name="linkStyle">The style of the link between the classes.</param>
+    /// <param name="label">An optional label for the relationship.</param>
+    /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
     public ClassDiagramBuilder AddRelationship(
         Class from,
         Class to,
@@ -61,36 +106,72 @@ public class ClassDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a note to the diagram.
+    /// </summary>
+    /// <param name="text">The text of the note.</param>
+    /// <param name="class">An optional class that the note is for.</param>
+    /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
     public ClassDiagramBuilder AddNote(string text, Class? @class = null)
     {
         _notes.Add(new Note(text, @class));
         return this;
     }
 
+    /// <summary>
+    /// Adds a callback to a class that will be executed when clicked on the rendered diagram.
+    /// </summary>
+    /// <param name="class">The class to add the callback to.</param>
+    /// <param name="functionName">The name of the function to call when the class is clicked.</param>
+    /// <param name="tooltip">An optional tooltip for the callback.</param>
+    /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
     public ClassDiagramBuilder AddCallback(Class @class, string functionName, string? tooltip = null)
     {
         @class.ClickBinding = new ClassCallback(functionName, tooltip);
         return this;
     }
 
+    /// <summary>
+    /// Adds a hyperlink to a class that will be opened when clicked on the rendered diagram.
+    /// </summary>
+    /// <param name="class">The class to add the hyperlink to.</param>
+    /// <param name="uri">The URI to open when the class is clicked.</param>
+    /// <param name="tooltip">An optional tooltip for the hyperlink.</param>
+    /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
     public ClassDiagramBuilder AddHyperlink(Class @class, string uri, string? tooltip = null)
     {
         @class.ClickBinding = new ClassHyperlink(uri, tooltip);
         return this;
     }
 
+    /// <summary>
+    /// Adds a style to a class using raw CSS.
+    /// </summary>
+    /// <param name="class">The class to add the style to.</param>
+    /// <param name="css">The raw CSS to apply to the class.</param>
+    /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
     public ClassDiagramBuilder StyleWithRawCss(Class @class, string css)
     {
         _style.Add(new RawCssStyle(@class, css));
         return this;
     }
 
+    /// <summary>
+    /// Adds a style to one or more classes using a CSS class.
+    /// </summary>
+    /// <param name="cssClass">The CSS class to apply to the classes.</param>
+    /// <param name="classes">The classes to apply the CSS class to.</param>
+    /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
     public ClassDiagramBuilder StyleWithCssClass(string cssClass, params Class[] classes)
     {
         _style.Add(new CssClassStyle(cssClass, classes));
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaid code for the class diagram.
+    /// </summary>
+    /// <returns>The Mermaid code for the class diagram.</returns>
     public string Build()
     {
         var builder = new StringBuilder();

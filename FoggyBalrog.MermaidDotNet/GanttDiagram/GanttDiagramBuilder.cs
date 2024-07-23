@@ -3,6 +3,9 @@ using FoggyBalrog.MermaidDotNet.GanttDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.GanttDiagram;
 
+/// <summary>
+/// A builder for creating a Gantt diagram.
+/// </summary>
 public class GanttDiagramBuilder
 {
     private string _indent = Shared.Indent;
@@ -35,60 +38,106 @@ public class GanttDiagramBuilder
         _weekIntervalStartDay = weekIntervalStartDay;
     }
 
+    /// <summary>
+    /// Excludes Monday from the Gantt diagram.
+    /// </summary>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder ExcludeMonday()
     {
         _excludes.Add(Exclude.Monday);
         return this;
     }
 
+    /// <summary>
+    /// Excludes Tuesday from the Gantt diagram.
+    /// </summary>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder ExcludeTuesday()
     {
         _excludes.Add(Exclude.Tuesday);
         return this;
     }
 
+    /// <summary>
+    /// Excludes Wednesday from the Gantt diagram.
+    /// </summary>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder ExcludeWednesday()
     {
         _excludes.Add(Exclude.Wednesday);
         return this;
     }
 
+    /// <summary>
+    /// Excludes Thursday from the Gantt diagram.
+    /// </summary>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder ExcludeThursday()
     {
         _excludes.Add(Exclude.Thursday);
         return this;
     }
 
+    /// <summary>
+    /// Excludes Friday from the Gantt diagram.
+    /// </summary>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder ExcludeFriday()
     {
         _excludes.Add(Exclude.Friday);
         return this;
     }
 
+    /// <summary>
+    /// Excludes Saturday from the Gantt diagram.
+    /// </summary>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder ExcludeSaturday()
     {
         _excludes.Add(Exclude.Saturday);
         return this;
     }
 
+    /// <summary>
+    /// Excludes Sunday from the Gantt diagram.
+    /// </summary>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder ExcludeSunday()
     {
         _excludes.Add(Exclude.Sunday);
         return this;
     }
 
+    /// <summary>
+    /// Excludes weekends from the Gantt diagram.
+    /// </summary>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder ExcludeWeekends()
     {
         _excludes.Add(Exclude.Weekends);
         return this;
     }
 
-    public GanttDiagramBuilder ExcludeDates(params DateTimeOffset[] date)
+    /// <summary>
+    /// Excludes the specified dates from the Gantt diagram.
+    /// </summary>
+    /// <param name="dates">One or more dates to exclude.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    public GanttDiagramBuilder ExcludeDates(params DateTimeOffset[] dates)
     {
-        _excludes.AddRange(date.Select(d => Exclude.Date(d, _dateFormat)));
+        _excludes.AddRange(dates.Select(d => Exclude.Date(d, _dateFormat)));
         return this;
     }
 
+    /// <summary>
+    /// Adds a task to the Gantt diagram, by specifying the start and end dates.
+    /// </summary>
+    /// <param name="name">The name of the task.</param>
+    /// <param name="start">The start date of the task.</param>
+    /// <param name="end">The end date of the task.</param>
+    /// <param name="task">The created task.</param>
+    /// <param name="tags">The tags of the task.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder AddTask(string name, DateTimeOffset start, DateTimeOffset end, out GanttTask task, TaskTags tags = TaskTags.None)
     {
         task = new StartEndGanttTask($"task{_taskCounter++}", name, start, end, tags);
@@ -96,6 +145,15 @@ public class GanttDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a task to the Gantt diagram, by specifying the start date and duration.
+    /// </summary>
+    /// <param name="name">The name of the task.</param>
+    /// <param name="start">The start date of the task.</param>
+    /// <param name="duration">The duration of the task.</param>
+    /// <param name="task">The created task.</param>
+    /// <param name="tags">The tags of the task.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder AddTask(string name, DateTimeOffset start, TimeSpan duration, out GanttTask task, TaskTags tags = TaskTags.None)
     {
         task = new StartDurationGanttTask($"task{_taskCounter++}", name, start, duration, tags);
@@ -103,6 +161,15 @@ public class GanttDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a task to the Gantt diagram, by specifying a task that it should start after, and the end date.
+    /// </summary>
+    /// <param name="name">The name of the task.</param>
+    /// <param name="afterTask">The task that this task should start after.</param>
+    /// <param name="end">The end date of the task.</param>
+    /// <param name="task">The created task.</param>
+    /// <param name="tags">The tags of the task.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder AddTask(string name, GanttTask afterTask, DateTimeOffset end, out GanttTask task, TaskTags tags = TaskTags.None)
     {
         task = new AfterEndGanttTask($"task{_taskCounter++}", name, afterTask, end, tags);
@@ -110,6 +177,15 @@ public class GanttDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a task to the Gantt diagram, by specifying a task that it should start after, and the duration.
+    /// </summary>
+    /// <param name="name">The name of the task.</param>
+    /// <param name="afterTask">The task that this task should start after.</param>
+    /// <param name="duration">The duration of the task.</param>
+    /// <param name="task">The created task.</param>
+    /// <param name="tags">The tags of the task.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder AddTask(string name, GanttTask afterTask, TimeSpan duration, out GanttTask task, TaskTags tags = TaskTags.None)
     {
         task = new AfterDurationGanttTask($"task{_taskCounter++}", name, afterTask, duration, tags);
@@ -117,6 +193,15 @@ public class GanttDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a task to the Gantt diagram, by specifying the start date and a task that it should end until.
+    /// </summary>
+    /// <param name="name">The name of the task.</param>
+    /// <param name="start">The start date of the task.</param>
+    /// <param name="untilTask">The task that this task should end until.</param>
+    /// <param name="task">The created task.</param>
+    /// <param name="tags">The tags of the task.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder AddTask(string name, DateTimeOffset start, GanttTask untilTask, out GanttTask task, TaskTags tags = TaskTags.None)
     {
         task = new StartUntilGanttTask($"task{_taskCounter++}", name, start, untilTask, tags);
@@ -124,6 +209,15 @@ public class GanttDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a task to the Gantt diagram, by specifying a task that it should start after, and a task that it should end until.
+    /// </summary>
+    /// <param name="name">The name of the task.</param>
+    /// <param name="afterTask">The task that this task should start after.</param>
+    /// <param name="untilTask">The task that this task should end until.</param>
+    /// <param name="task">The created task.</param>
+    /// <param name="tags">The tags of the task.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder AddTask(string name, GanttTask afterTask, GanttTask untilTask, out GanttTask task, TaskTags tags = TaskTags.None)
     {
         task = new AfterUntilGanttTask($"task{_taskCounter++}", name, afterTask, untilTask, tags);
@@ -131,24 +225,46 @@ public class GanttDiagramBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a section to the Gantt diagram.
+    /// </summary>
+    /// <param name="name">The name of the section.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder AddSection(string name)
     {
         _items.Add(new Section(name));
         return this;
     }
 
+    /// <summary>
+    /// Adds a callback to a task in the Gantt diagram.
+    /// </summary>
+    /// <param name="task">The task to add the callback to.</param>
+    /// <param name="functionName">The name of the function to call when the task is clicked.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder AddCallback(GanttTask task, string functionName)
     {
         task.ClickBinding = new TaskCallback(functionName);
         return this;
     }
 
+    /// <summary>
+    /// Adds a hyperlink to a task in the Gantt diagram.
+    /// </summary>
+    /// <param name="task">The task to add the hyperlink to.</param>
+    /// <param name="uri">The URI to navigate to when the task is clicked.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
     public GanttDiagramBuilder AddHyperlink(GanttTask task, string uri)
     {
         task.ClickBinding = new TaskHyperlink(uri);
         return this;
     }
 
+    /// <summary>
+    /// Builds the Mermaid code for the Gantt diagram.
+    /// </summary>
+    /// <returns>The Mermaid code for the Gantt diagram.</returns>
+    /// <exception cref="NotSupportedException">Thrown when an item type is not supported. Should never happen.</exception>
     public string Build()
     {
         var builder = new StringBuilder();

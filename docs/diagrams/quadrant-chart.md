@@ -2,11 +2,6 @@
 
 *Official Mermaid documentation: [Quadrant chart](https://mermaid.js.org/syntax/quadrantChart.html).*
 
-- [Simple diagram](#simple-diagram)
-- [Title](#title)
-- [Quadrant labels](#quadrant-labels)
-- [Axis labels](#axis-labels)
-
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid quadrant chart.
