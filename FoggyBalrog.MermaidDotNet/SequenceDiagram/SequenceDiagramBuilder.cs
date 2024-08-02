@@ -27,10 +27,13 @@ public class SequenceDiagramBuilder
     /// <param name="m2">The second member.</param>
     /// <param name="text">The text of the note.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="m1"/> or <paramref name="m2"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddNoteOver(Member m1, Member m2, string text)
     {
-        ThrowIfExternalMember(m1);
-        ThrowIfExternalMember(m2);
+        ThrowIfForeign(m1);
+        ThrowIfForeign(m2);
+        text.ThrowIfWhiteSpace();
 
         _sequenceItems.Add(new Note(text, NotePosition.Over, [m1, m2]));
         return this;
@@ -42,9 +45,12 @@ public class SequenceDiagramBuilder
     /// <param name="m">The member.</param>
     /// <param name="text">The text of the note.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="m"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddNoteRightOf(Member m, string text)
     {
-        ThrowIfExternalMember(m);
+        ThrowIfForeign(m);
+        text.ThrowIfWhiteSpace();
 
         _sequenceItems.Add(new Note(text, NotePosition.RightOf, [m]));
         return this;
@@ -56,9 +62,12 @@ public class SequenceDiagramBuilder
     /// <param name="m">The member.</param>
     /// <param name="text">The text of the note.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="m"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddNoteLeftOf(Member m, string text)
     {
-        ThrowIfExternalMember(m);
+        ThrowIfForeign(m);
+        text.ThrowIfWhiteSpace();
 
         _sequenceItems.Add(new Note(text, NotePosition.LeftOf, [m]));
         return this;
@@ -71,8 +80,11 @@ public class SequenceDiagramBuilder
     /// <param name="box">The box that was created.</param>
     /// <param name="color">An optional color for the box.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddBox(string name, out Box box, Color? color = null)
     {
+        name.ThrowIfWhiteSpace();
+
         box = new Box(name, color ?? Color.Transparent);
         _boxes.Add(box);
         return this;
@@ -98,8 +110,11 @@ public class SequenceDiagramBuilder
     /// <param name="description">The description of the loop.</param>
     /// <param name="action">An action to add items to the loop.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddLoop(string description, Action<SequenceDiagramBuilder> action)
     {
+        description.ThrowIfWhiteSpace();
+
         _sequenceItems.Add(new Loop(description));
         action(this);
         _sequenceItems.Add(new End());
@@ -114,13 +129,14 @@ public class SequenceDiagramBuilder
     /// <param name="member">The member that was created.</param>
     /// <param name="box">An optional box to add the member to.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if a member with the same name already exists.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when a member with the same name already exists in the diagram, with the reason <see cref="MermaidExceptionReason.DuplicateValue"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="box"/> is not null and not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public SequenceDiagramBuilder AddMember(string name, MemberType memberType, out Member member, Box? box = null)
     {
-        if (_membersOutsideBoxes.Exists(m => m.Name == name) || _boxes.SelectMany(b => b.Members).Any(m => m.Name == name))
-        {
-            throw new InvalidOperationException($"Member with name '{name}' already exists.");
-        }
+        name.ThrowIfWhiteSpace();
+        _membersOutsideBoxes.Union(_boxes.SelectMany(b => b.Members)).ThrowIfDuplicate(name, m => m.Name);
+        box?.ThrowIfForeignTo(_boxes);
 
         member = new Member(name, memberType);
 
@@ -143,6 +159,9 @@ public class SequenceDiagramBuilder
     /// <param name="member">The participant that was created.</param>
     /// <param name="box">An optional box to add the participant to.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when a member with the same name already exists in the diagram, with the reason <see cref="MermaidExceptionReason.DuplicateValue"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="box"/> is not null and not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public SequenceDiagramBuilder AddParticipant(string name, out Member member, Box? box = null)
     {
         return AddMember(name, MemberType.Participant, out member, box);
@@ -155,6 +174,9 @@ public class SequenceDiagramBuilder
     /// <param name="member">The actor that was created.</param>
     /// <param name="box">An optional box to add the actor to.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when a member with the same name already exists in the diagram, with the reason <see cref="MermaidExceptionReason.DuplicateValue"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="box"/> is not null and not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public SequenceDiagramBuilder AddActor(string name, out Member member, Box? box = null)
     {
         return AddMember(name, MemberType.Actor, out member, box);
@@ -170,6 +192,8 @@ public class SequenceDiagramBuilder
     /// <param name="arrowType">The type of the arrow.</param>
     /// <param name="activationType">The type of activation.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="sender"/> or <paramref name="recipient"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder SendMessage(
        Member sender,
        Member recipient,
@@ -178,8 +202,9 @@ public class SequenceDiagramBuilder
        ArrowType arrowType = ArrowType.Filled,
        ActivationType activationType = ActivationType.None)
     {
-        ThrowIfExternalMember(sender);
-        ThrowIfExternalMember(recipient);
+        ThrowIfForeign(sender);
+        ThrowIfForeign(recipient);
+        description.ThrowIfWhiteSpace();
 
         _sequenceItems.Add(new Message(sender, recipient, description, lineType, arrowType, activationType));
         return this;
@@ -197,6 +222,8 @@ public class SequenceDiagramBuilder
     /// <param name="arrowType">The type of the arrow.</param>
     /// <param name="activationType">The type of activation.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="sender"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> or <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder SendCreateMessage(
         Member sender,
         string name,
@@ -207,6 +234,10 @@ public class SequenceDiagramBuilder
         ArrowType arrowType = ArrowType.Filled,
         ActivationType activationType = ActivationType.None)
     {
+        ThrowIfForeign(sender);
+        name.ThrowIfWhiteSpace();
+        description.ThrowIfWhiteSpace();
+
         recipient = new Member(name, memberType);
         _sequenceItems.Add(new CreateMessage(sender, recipient, description, lineType, arrowType, activationType));
         return this;
@@ -223,6 +254,8 @@ public class SequenceDiagramBuilder
     /// <param name="arrowType">The type of the arrow.</param>
     /// <param name="activationType">The type of activation.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="sender"/> or <paramref name="recipient"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder SendDestroyMessage(
         Member sender,
         Member recipient,
@@ -232,8 +265,9 @@ public class SequenceDiagramBuilder
         ArrowType arrowType = ArrowType.Filled,
         ActivationType activationType = ActivationType.None)
     {
-        ThrowIfExternalMember(sender);
-        ThrowIfExternalMember(recipient);
+        ThrowIfForeign(sender);
+        ThrowIfForeign(recipient);
+        description.ThrowIfWhiteSpace();
 
         _sequenceItems.Add(new DestroyMessage(sender, recipient, description, lineType, arrowType, target, activationType));
         return this;
@@ -244,12 +278,15 @@ public class SequenceDiagramBuilder
     /// </summary>
     /// <param name="alternatives">Any number of alternatives. Each alternative is a tuple with a description and an action to add items to it.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when any of the descriptions in <paramref name="alternatives"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder Alternatives(params (string description, Action<SequenceDiagramBuilder> action)[] alternatives)
     {
         if (alternatives.Length == 0)
         {
             return this;
         }
+
+        alternatives.Select(a => a.description).ThrowIfAnyWhitespace();
 
         _sequenceItems.Add(new Alt(alternatives[0].description));
         alternatives[0].action(this);
@@ -270,12 +307,15 @@ public class SequenceDiagramBuilder
     /// </summary>
     /// <param name="parallels">Any number of parallels. Each parallel is a tuple with a description and an action to add items to it.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when any of the descriptions in <paramref name="parallels"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder Parallels(params (string description, Action<SequenceDiagramBuilder> action)[] parallels)
     {
         if (parallels.Length == 0)
         {
             return this;
         }
+
+        parallels.Select(p => p.description).ThrowIfAnyWhitespace();
 
         _sequenceItems.Add(new Par(parallels[0].description));
         parallels[0].action(this);
@@ -297,8 +337,11 @@ public class SequenceDiagramBuilder
     /// <param name="description">The description of the optional sequence.</param>
     /// <param name="action">An action to add items to the optional sequence.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder Optional(string description, Action<SequenceDiagramBuilder> action)
     {
+        description.ThrowIfWhiteSpace();
+
         _sequenceItems.Add(new Opt(description));
         action(this);
         _sequenceItems.Add(new End());
@@ -312,11 +355,16 @@ public class SequenceDiagramBuilder
     /// <param name="action">An action to add items to the critical sequence.</param>
     /// <param name="options">Any number of options. Each option is a tuple with a description and an action to add items to it.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when any of the descriptions in <paramref name="options"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder Critical(
         string description,
         Action<SequenceDiagramBuilder> action,
         params (string description, Action<SequenceDiagramBuilder> action)[] options)
     {
+        description.ThrowIfWhiteSpace();
+        options.Select(o => o.description).ThrowIfAnyWhitespace();
+
         _sequenceItems.Add(new Critical(description));
         action(this);
 
@@ -337,10 +385,13 @@ public class SequenceDiagramBuilder
     /// <param name="description">The description of the break.</param>
     /// <param name="action">An action to add items to the break.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder Break(
         string description,
         Action<SequenceDiagramBuilder> action)
     {
+        description.ThrowIfWhiteSpace();
+
         _sequenceItems.Add(new Break(description));
         action(this);
         _sequenceItems.Add(new End());
@@ -353,8 +404,11 @@ public class SequenceDiagramBuilder
     /// </summary>
     /// <param name="text">The text of the comment.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder Comment(string text)
     {
+        text.ThrowIfWhiteSpace();
+
         _sequenceItems.Add(new Comment(text));
         return this;
     }
@@ -366,9 +420,13 @@ public class SequenceDiagramBuilder
     /// <param name="title">The title of the link.</param>
     /// <param name="uri">The URI of the link.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="member"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/> or <paramref name="uri"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddLink(Member member, string title, string uri)
     {
-        ThrowIfExternalMember(member);
+        ThrowIfForeign(member);
+        title.ThrowIfWhiteSpace();
+        uri.ThrowIfWhiteSpace();
 
         _sequenceItems.Add(new Link(member, title, uri));
         return this;
@@ -543,13 +601,11 @@ public class SequenceDiagramBuilder
         builder.AppendLine($"{indent}{message.Sender.Name} {lineType}{arrowType}{activation} {message.Recipient.Name}: {message.Description}");
     }
 
-    private void ThrowIfExternalMember(Member member)
+    private void ThrowIfForeign(Member member)
     {
-        if (!_membersOutsideBoxes.Contains(member)
-            && !_boxes.SelectMany(b => b.Members).Contains(member)
-            && _sequenceItems.OfType<CreateMessage>().All(m => m.Recipient != member))
-        {
-            throw new InvalidOperationException($"Member '{member.Name}' is not defined in the diagram.");
-        }
+        member.ThrowIfForeignToAll([
+            _boxes.SelectMany(b => b.Members),
+            _membersOutsideBoxes,
+            _sequenceItems.OfType<CreateMessage>().Select(m => m.Recipient)]);
     }
 }

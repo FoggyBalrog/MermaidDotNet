@@ -1,6 +1,6 @@
 ﻿using FoggyBalrog.MermaidDotNet.MindMap.Model;
 
-namespace FoggyBalrog.MermaidDotNet.UnitTests;
+namespace FoggyBalrog.MermaidDotNet.UnitTests.MindMap;
 
 public class MindMapBuilderTests
 {

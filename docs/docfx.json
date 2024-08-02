@@ -43,12 +43,12 @@
       "./custom-template"
     ],
     "sitemap": {
-      "baseUrl": "https://foggybalrog.github.io/MermaidDotnet/"
+      "baseUrl": "https://foggybalrog.github.io/MermaidDotNet/"
     },
     "globalMetadata": {
-      "_appName": "FoggyBalrog.MermaidDotnet Documentation",
-      "_appTitle": "FoggyBalrog.MermaidDotnet Documentation",
-      "_appFooter": "See <a href='https://github.com/FoggyBalrog/MermaidDotnet' target='_blank'>FoggyBalrog.MermaidDotnet on GitHub</a>.",
+      "_appName": "FoggyBalrog.MermaidDotNet Documentation",
+      "_appTitle": "FoggyBalrog.MermaidDotNet Documentation",
+      "_appFooter": "See <a href='https://github.com/FoggyBalrog/MermaidDotNet' target='_blank'>FoggyBalrog.MermaidDotNet on GitHub</a>.",
       "_enableSearch": true,
       "_disableContribution": true,
       "_appFaviconPath": "mermaid.ico",

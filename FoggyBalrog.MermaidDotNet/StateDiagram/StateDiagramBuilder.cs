@@ -15,6 +15,8 @@ public class StateDiagramBuilder
 
     internal StateDiagramBuilder(string? title, StateDiagramDirection? direction)
     {
+        title?.ThrowIfWhiteSpace();
+
         _title = title;
         _direction = direction;
     }
@@ -25,8 +27,11 @@ public class StateDiagramBuilder
     /// <param name="description">The description of the state.</param>
     /// <param name="state">The state that was added.</param>
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddState(string description, out State state)
     {
+        description.ThrowIfWhiteSpace();
+
         state = new State($"s{_items.Count + 1}", description, StateKind.Simple);
         _items.Add(state);
         return this;
@@ -39,8 +44,11 @@ public class StateDiagramBuilder
     /// <param name="state">The state that was added.</param>
     /// <param name="action">An action that will be executed to add other items to the composite state.</param>
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddCompositeState(string description, out State state, Action<StateDiagramBuilder> action)
     {
+        description.ThrowIfWhiteSpace();
+
         state = new State($"s{_items.Count + 1}", description, StateKind.Composite);
         _items.Add(state);
         action(this);
@@ -91,8 +99,13 @@ public class StateDiagramBuilder
     /// <param name="position">The position of the note.</param>
     /// <param name="text">The text of the note.</param>
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="state"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddNote(State state, NotePosition position, string text)
     {
+        state.ThrowIfForeignTo(_items);
+        text.ThrowIfWhiteSpace();
+
         _items.Add(new Note(state, position, text));
         return this;
     }
@@ -104,8 +117,14 @@ public class StateDiagramBuilder
     /// <param name="to">The state to transition to.</param>
     /// <param name="description">An optional description of the transition.</param>
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="from"/> or <paramref name="to"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddStateTransition(State from, State to, string? description = null)
     {
+        from.ThrowIfForeignTo(_items);
+        to.ThrowIfForeignTo(_items);
+        description.ThrowIfWhiteSpace();
+
         _items.Add(new StateTransition(from, to, description));
         return this;
     }
@@ -116,8 +135,13 @@ public class StateDiagramBuilder
     /// <param name="to">The state to transition to.</param>
     /// <param name="description">An optional description of the transition.</param>
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="to"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddTransitionFromStart(State to, string? description = null)
     {
+        to.ThrowIfForeignTo(_items);
+        description.ThrowIfWhiteSpace();
+
         _items.Add(new TransitionFromStart(to, description));
         return this;
     }
@@ -128,8 +152,13 @@ public class StateDiagramBuilder
     /// <param name="from">The state to transition from.</param>
     /// <param name="description">An optional description of the transition.</param>
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="from"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddTransitionToEnd(State from, string? description = null)
     {
+        from.ThrowIfForeignTo(_items);
+        description.ThrowIfWhiteSpace();
+
         _items.Add(new TransitionToEnd(from, description));
         return this;
     }
@@ -141,8 +170,11 @@ public class StateDiagramBuilder
     /// <param name="state">The composite state that was added.</param>
     /// <param name="actions">Concurrent actions that will be executed to add other items to the composite state.</param>
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddConcurrency(string description, out State state, params Action<StateDiagramBuilder>[] actions)
     {
+        description.ThrowIfWhiteSpace();
+
         state = new State($"s{_items.Count + 1}", description, StateKind.Composite);
         _items.Add(state);
 
@@ -167,8 +199,13 @@ public class StateDiagramBuilder
     /// <param name="state">The state to style.</param>
     /// <param name="css">The raw CSS to apply to the state.</param>
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="state"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder StyleWithRawCss(State state, string css)
     {
+        state.ThrowIfForeignTo(_items);
+        css.ThrowIfWhiteSpace();
+
         _items.Add(new RawCssStyle(state, css));
         return this;
     }
@@ -181,6 +218,9 @@ public class StateDiagramBuilder
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
     public StateDiagramBuilder StyleWithCssClass(string cssClass, params State[] states)
     {
+        cssClass.ThrowIfWhiteSpace();
+        states.ThrowIfAnyForeignTo(_items);
+
         _items.Add(new CssClassStyle(states, cssClass));
         return this;
     }

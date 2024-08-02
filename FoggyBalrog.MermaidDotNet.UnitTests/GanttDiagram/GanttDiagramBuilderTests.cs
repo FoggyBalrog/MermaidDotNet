@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using FoggyBalrog.MermaidDotNet.GanttDiagram.Model;
 
-namespace FoggyBalrog.MermaidDotNet.UnitTests;
+namespace FoggyBalrog.MermaidDotNet.UnitTests.GanttDiagram;
 
 public class GanttDiagramBuilderTests
 {

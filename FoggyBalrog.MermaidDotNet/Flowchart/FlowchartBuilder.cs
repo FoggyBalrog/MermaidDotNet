@@ -23,8 +23,11 @@ public class FlowchartBuilder
     /// <param name="node">The node that was added.</param>
     /// <param name="shape">The shape of the node.</param>
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddNode(string text, out Node node, NodeShape shape = NodeShape.Rectangle)
     {
+        text.ThrowIfWhiteSpace();
+
         node = new Node($"id{_items.Count + 1}", text, shape, null);
         _items.Add(node);
         return this;
@@ -37,8 +40,11 @@ public class FlowchartBuilder
     /// <param name="node">The node that was added.</param>
     /// <param name="shape">The shape of the node.</param>
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="markdown"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddMarkdownNode(string markdown, out Node node, NodeShape shape = NodeShape.Rectangle)
     {
+        markdown.ThrowIfWhiteSpace();
+
         return AddNode($"`{markdown}`", out node, shape);
     }
 
@@ -53,8 +59,9 @@ public class FlowchartBuilder
     /// <param name="multidirectional">Specifies whether the link should be multidirectional, i.e. have an arrow on both ends.</param>
     /// <param name="extraLength">Optional extra length to add to the link.</param>
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when either <paramref name="from"/> or <paramref name="to"/> is not defined in the diagram.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="extraLength"/> is less than 0.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="from"/> or <paramref name="to"/> are not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="extraLength"/> is strictly negative, with a reason of <see cref="MermaidExceptionReason.StrictlyNegative"/>.</exception>
     public FlowchartBuilder AddLink(
         ILinkable from,
         ILinkable to,
@@ -64,13 +71,10 @@ public class FlowchartBuilder
         bool multidirectional = false,
         int extraLength = 0)
     {
-        ThrowIfExternalItem(from);
-        ThrowIfExternalItem(to);
-
-        if (extraLength < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(extraLength), "Extra length must be greater than or equal to 0");
-        }
+        from.ThrowIfForeignTo(_items);
+        to.ThrowIfForeignTo(_items);
+        text.ThrowIfWhiteSpace();
+        extraLength.ThrowIfStrictlyNegative();
 
         _items.Add(new Link([from], [to], text, lineStyle, ending, multidirectional, extraLength));
         return this;
@@ -86,8 +90,10 @@ public class FlowchartBuilder
     /// <param name="ending">The ending of the link.</param>
     /// <param name="multidirectional">Specifies whether the link should be multidirectional, i.e. have an arrow on both ends.</param>
     /// <param name="extraLength">Optional extra length to add to the link.</param>
-    /// <exception cref="InvalidOperationException">Thrown when any of the <paramref name="from"/> or <paramref name="to"/> nodes are not defined in the diagram.</exception>"
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when any of the nodes in <paramref name="from"/> or <paramref name="to"/> are not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="extraLength"/> is strictly negative, with a reason of <see cref="MermaidExceptionReason.StrictlyNegative"/>.</exception>
     public FlowchartBuilder AddLinkChain(
         ILinkable[] from,
         ILinkable[] to,
@@ -97,8 +103,10 @@ public class FlowchartBuilder
         bool multidirectional = false,
         int extraLength = 0)
     {
-        ThrowIfExternalItem(from);
-        ThrowIfExternalItem(to);
+        from.ThrowIfAnyForeignTo(_items);
+        to.ThrowIfAnyForeignTo(_items);
+        text.ThrowIfWhiteSpace();
+        extraLength.ThrowIfStrictlyNegative();
 
         _items.Add(new Link(from, to, text, lineStyle, ending, multidirectional, extraLength));
         return this;
@@ -110,11 +118,15 @@ public class FlowchartBuilder
     /// <param name="node">The node to add the callback to.</param>
     /// <param name="functionName">The name of the function to call when the node is clicked.</param>
     /// <param name="tooltip">An optional tooltip to display when the node is hovered over.</param>
-    /// <exception cref="InvalidOperationException">Thrown when <paramref name="node"/> is not defined in the diagram.</exception>"
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="node"/> is not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="functionName"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddCallback(Node node, string functionName, string? tooltip = null)
     {
-        ThrowIfExternalItem(node);
+        node.ThrowIfForeignTo(_items);
+        functionName.ThrowIfWhiteSpace();
+        tooltip.ThrowIfWhiteSpace();
 
         node.NodeClickBinding = new NodeCallback(functionName, tooltip);
         return this;
@@ -127,11 +139,15 @@ public class FlowchartBuilder
     /// <param name="uri">The URI to navigate to when the node is clicked.</param>
     /// <param name="tooltip">An optional tooltip to display when the node is hovered over.</param>
     /// <param name="target">The target of the hyperlink.</param>
-    /// <exception cref="InvalidOperationException">Thrown when <paramref name="node"/> is not defined in the diagram.</exception>""
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="node"/> is not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="uri"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddHyperlink(Node node, string uri, string? tooltip = null, HyperlinkTarget target = HyperlinkTarget.Self)
     {
-        ThrowIfExternalItem(node);
+        node.ThrowIfForeignTo(_items);
+        uri.ThrowIfWhiteSpace();
+        tooltip.ThrowIfWhiteSpace();
 
         node.NodeClickBinding = new NodeHyperlink(uri, tooltip, target);
         return this;
@@ -145,8 +161,11 @@ public class FlowchartBuilder
     /// <param name="action">The action to perform within the subgraph.</param>
     /// <param name="direction">An optional direction for the subgraph. If not specified, the default direction from Mermaid will be used on rendering.</param>
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddSubgraph(string text, out Subgraph subgraph, Action<FlowchartBuilder> action, FlowchartOrientation? direction = null)
     {
+        text.ThrowIfWhiteSpace();
+
         subgraph = new Subgraph($"sub{_items.Count + 1}", text, direction);
         _items.Add(subgraph);
         action(this);
@@ -159,8 +178,11 @@ public class FlowchartBuilder
     /// </summary>
     /// <param name="text">The text of the comment.</param>
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder Comment(string text)
     {
+        text.ThrowIfWhiteSpace();
+
         _items.Add(new Comment(text));
         return this;
     }
@@ -169,7 +191,6 @@ public class FlowchartBuilder
     /// Builds the Mermaid code for the flowchart.
     /// </summary>
     /// <returns>The Mermaid code for the flowchart.</returns>
-    /// <exception cref="InvalidOperationException"></exception>
     public string Build()
     {
         var builder = new StringBuilder();
@@ -249,22 +270,6 @@ public class FlowchartBuilder
                 string target = SymbolMaps.HyperlinksTargets[nodeHyperlink.Target];
                 builder.AppendLine($"{Shared.Indent}click {node.Id} \"{nodeHyperlink.Uri}\"{(nodeHyperlink.Tooltip is not null ? $" \"{nodeHyperlink.Tooltip}\"" : string.Empty)} {target}");
                 break;
-        }
-    }
-
-    private void ThrowIfExternalItem(IFlowItem item)
-    {
-        if (!_items.Contains(item))
-        {
-            throw new InvalidOperationException($"Item '{item}' is not defined in the diagram.");
-        }
-    }
-
-    private void ThrowIfExternalItem(ILinkable[] items)
-    {
-        foreach (ILinkable item in items)
-        {
-            ThrowIfExternalItem(item);
         }
     }
 }

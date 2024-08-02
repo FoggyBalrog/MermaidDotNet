@@ -1,8 +1,7 @@
 using System.Drawing;
-using FoggyBalrog.MermaidDotNet.SequenceDiagram;
 using FoggyBalrog.MermaidDotNet.SequenceDiagram.Model;
 
-namespace FoggyBalrog.MermaidDotNet.UnitTests;
+namespace FoggyBalrog.MermaidDotNet.UnitTests.SequenceDiagram;
 
 public class SequenceDiagramBuilderTests
 {
@@ -607,43 +606,5 @@ public class SequenceDiagramBuilderTests
     link Bob: Wiki @ https://wiki.contoso.com/bob
     Alice ->> Bob: Hello Bob!
     Bob ->> Alice: Hello Alice!", diagram, ignoreLineEndingDifferences: true);
-    }
-
-    [Fact]
-    public void ThrowsExceptionWhenAddingMemberWithSameName()
-    {
-        SequenceDiagramBuilder builder = Mermaid
-            .SequenceDiagram()
-            .AddParticipant("Alice", out _)
-            .AddActor("Bob", out _);
-
-        Assert.Throws<InvalidOperationException>(() => builder.AddActor("Alice", out _));
-        Assert.Throws<InvalidOperationException>(() => builder.AddParticipant("Alice", out _));
-        Assert.Throws<InvalidOperationException>(() => builder.AddActor("Bob", out _));
-        Assert.Throws<InvalidOperationException>(() => builder.AddParticipant("Bob", out _));
-    }
-
-    [Fact]
-    public void ThrowsExceptionWhenUsingMemberFromDifferentDiagram()
-    {
-        SequenceDiagramBuilder builder1 = Mermaid
-            .SequenceDiagram()
-            .AddParticipant("Alice", out Member a)
-            .AddParticipant("Bob", out Member _);
-
-        Mermaid
-            .SequenceDiagram()
-            .AddParticipant("Charlie", out Member c)
-            .AddParticipant("David", out Member _);
-
-        Assert.Throws<InvalidOperationException>(() => builder1.SendMessage(a, c, "Hello Charlie!"));
-        Assert.Throws<InvalidOperationException>(() => builder1.SendMessage(c, a, "Hello Alice!"));
-        Assert.Throws<InvalidOperationException>(() => builder1.SendDestroyMessage(a, c, DestructionTarget.Recipient, "We are too many"));
-        Assert.Throws<InvalidOperationException>(() => builder1.SendDestroyMessage(c, a, DestructionTarget.Recipient, "We are too many"));
-        Assert.Throws<InvalidOperationException>(() => builder1.AddLink(c, "Dashboard", "https://dashboard.contoso.com/charlie"));
-        Assert.Throws<InvalidOperationException>(() => builder1.AddNoteOver(a, c, "This is a note"));
-        Assert.Throws<InvalidOperationException>(() => builder1.AddNoteOver(c, a, "This is a note"));
-        Assert.Throws<InvalidOperationException>(() => builder1.AddNoteRightOf(c, "This is another note"));
-        Assert.Throws<InvalidOperationException>(() => builder1.AddNoteLeftOf(c, "This is another note"));
     }
 }

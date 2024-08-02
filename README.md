@@ -1,4 +1,4 @@
-# MermaidDotNet <!-- omit from toc -->
+# FoggyBalrog.MermaidDotNet <!-- omit from toc -->
 
 <img src="https://raw.githubusercontent.com/FoggyBalrog/MermaidDotNet/main/mermaid.png" alt="Mermaid icon" width="100"/>
 
@@ -50,7 +50,7 @@ To read the documentation for the latest published version, go to <https://foggy
 
 The current README is valid for the commit you are currently viewing. This may differ from the latest published version, or the version you have installed.
 
-To see the documentation for a specific version, checkout the corresponding tag on GitHub and read the files in the `docs` folder. Optionally, you can view the generated the documentation locally using DocFX by running `docfx ./docs/docfx.json --serve` in the root of the repository.
+To see the documentation for a specific version, checkout the corresponding tag on GitHub and read the files in the `docs` folder. Optionally, you can view the generated documentation locally using DocFX by running `docfx ./docs/docfx.json --serve` in the root of the repository.
 
 ## Quick Start
 

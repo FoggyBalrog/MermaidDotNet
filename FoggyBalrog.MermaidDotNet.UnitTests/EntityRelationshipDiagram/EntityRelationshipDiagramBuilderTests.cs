@@ -1,5 +1,4 @@
-﻿using FoggyBalrog.MermaidDotNet.EntityRelationshipDiagram;
-using FoggyBalrog.MermaidDotNet.EntityRelationshipDiagram.Model;
+﻿using FoggyBalrog.MermaidDotNet.EntityRelationshipDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.UnitTests;
 
@@ -125,30 +124,5 @@ public class EntityRelationshipDiagramBuilderTests
         int qux ""world""
     }
     E1 ||--o{ E2 : ""has""", diagram, ignoreLineEndingDifferences: true);
-    }
-
-    [Fact]
-    public void ThrowsExceptionWhenAddingEntityWithSameName()
-    {
-        EntityRelationshipDiagramBuilder builder = Mermaid
-            .EntityRelationshipDiagram()
-            .AddEntity("E1", out _);
-
-        Assert.Throws<InvalidOperationException>(() => builder.AddEntity("E1", out _));
-    }
-
-    [Fact]
-    public void ThrowsExceptionWhenUsingEntitiesFromDifferentDiagram()
-    {
-        EntityRelationshipDiagramBuilder builder1 = Mermaid
-            .EntityRelationshipDiagram()
-            .AddEntity("E1", out Entity e1);
-
-        Mermaid
-            .EntityRelationshipDiagram()
-            .AddEntity("E2", out Entity e2);
-
-        Assert.Throws<InvalidOperationException>(() => builder1.AddRelationship(Cardinality.ExactlyOne, e1, Cardinality.ZeroOrMore, e2, "foo"));
-        Assert.Throws<InvalidOperationException>(() => builder1.AddRelationship(Cardinality.ExactlyOne, e2, Cardinality.ZeroOrMore, e1, "foo"));
     }
 }

@@ -28,6 +28,7 @@ public static class Mermaid
     /// <param name="title">An optional title for the diagram.</param>
     /// <param name="direction">An optional direction for the diagram. If not specified, the default direction from Mermaid will be used on rendering.</param>
     /// <returns>A new <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static ClassDiagramBuilder ClassDiagram(string? title = null, ClassDiagramDirection? direction = null) => new(title, direction);
 
     /// <summary>
@@ -54,6 +55,11 @@ public static class Mermaid
     /// <param name="tickInterval">An optional tick interval for the diagram. If not specified, the default interval from Mermaid will be used on rendering. Refer to the Mermaid documentation for supported intervals.</param>
     /// <param name="weekIntervalStartDay">An optional start day for the week interval. If not specified, the default start day from Mermaid will be used on rendering. Refer to the Mermaid documentation for supported start days.</param>
     /// <returns>A new <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="dateFormat"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="axisFormat"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="tickInterval"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="weekIntervalStartDay"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static GanttDiagramBuilder GanttDiagram(
         string? title = null,
         bool compactMode = false,
@@ -70,6 +76,7 @@ public static class Mermaid
     /// <param name="parallelCommits">Specifies whether to display commits in parallel.</param>
     /// <param name="vertical">Specifies whether to display the graph vertically.</param>
     /// <returns>A new <see cref="GitGraphBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static GitGraphBuilder GitGraph(
         string? title = null,
         bool parallelCommits = false,
@@ -81,6 +88,7 @@ public static class Mermaid
     /// <param name="rootText">The text for the root node.</param>
     /// <param name="rootShape">The shape for the root node. If not specified, the default shape from Mermaid will be used on rendering.</param>
     /// <returns>A new <see cref="MindMapBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="rootText"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static MindMapBuilder MindMap(string rootText, MindMap.Model.NodeShape rootShape = MermaidDotNet.MindMap.Model.NodeShape.Default) => new(rootText, rootShape);
 
     /// <summary>
@@ -89,6 +97,7 @@ public static class Mermaid
     /// <param name="displayValuesOnLegend">Specifies whether to display values on the legend.</param>
     /// <param name="title">An optional title for the diagram.</param>
     /// <returns>A new <see cref="PieChartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static PieChartBuilder PieChart(bool displayValuesOnLegend = false, string? title = null) => new(displayValuesOnLegend, title);
 
     /// <summary>
@@ -100,6 +109,7 @@ public static class Mermaid
     /// <param name="quadrant3">An optional label for the third quadrant.</param>
     /// <param name="quadrant4">An optional label for the fourth quadrant.</param>
     /// <returns>A new <see cref="QuadrantChartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/>, <paramref name="quadrant1"/>, <paramref name="quadrant2"/>, <paramref name="quadrant3"/>, or <paramref name="quadrant4"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static QuadrantChartBuilder QuadrantChart(
         string? title = null,
         string? quadrant1 = null,
@@ -126,6 +136,7 @@ public static class Mermaid
     /// <param name="title">An optional title for the diagram.</param>
     /// <param name="direction">An optional direction for the diagram. If not specified, the default direction from Mermaid will be used on rendering.</param>
     /// <returns>A new <see cref="StateDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static StateDiagramBuilder StateDiagram(string? title = null, StateDiagramDirection? direction = null) => new(title, direction);
 
     /// <summary>
@@ -133,6 +144,7 @@ public static class Mermaid
     /// </summary>
     /// <param name="title">An optional title for the diagram.</param>
     /// <returns>A new <see cref="TimelineDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static TimelineDiagramBuilder TimelineDiagram(string? title = null) => new(title);
 
     /// <summary>
@@ -140,5 +152,6 @@ public static class Mermaid
     /// </summary>
     /// <param name="title">An optional title for the diagram.</param>
     /// <returns>A new <see cref="UserJourneyDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static UserJourneyDiagramBuilder UserJourneyDiagram(string? title = null) => new(title);
 }

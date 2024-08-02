@@ -26,6 +26,7 @@ public class RequirementDiagramBuilder
     /// <param name="risk">The risk of the requirement.</param>
     /// <param name="verificationMethod">The verification method of the requirement.</param>
     /// <returns>The current <see cref="RequirementDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/>, <paramref name="id"/>, or <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public RequirementDiagramBuilder AddRequirement(
         string name,
         out Requirement requirement,
@@ -35,6 +36,10 @@ public class RequirementDiagramBuilder
         RequirementRisk risk = RequirementRisk.Undefined,
         RequirementVerificationMethod verificationMethod = RequirementVerificationMethod.Undefined)
     {
+        name.ThrowIfWhiteSpace();
+        id.ThrowIfWhiteSpace();
+        text.ThrowIfWhiteSpace();
+
         requirement = new Requirement(name, id, text, type, risk, verificationMethod);
         _nodes.Add(requirement);
         return this;
@@ -48,12 +53,17 @@ public class RequirementDiagramBuilder
     /// <param name="type">An optional type for the element.</param>
     /// <param name="docRef">An optional documentation reference for the element.</param>
     /// <returns>The current <see cref="RequirementDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/>, <paramref name="type"/>, or <paramref name="docRef"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public RequirementDiagramBuilder AddElement(
         string name,
         out Element element,
         string? type = null,
         string? docRef = null)
     {
+        name.ThrowIfWhiteSpace();
+        type.ThrowIfWhiteSpace();
+        docRef.ThrowIfWhiteSpace();
+
         element = new Element(name, type, docRef);
         _nodes.Add(element);
         return this;
@@ -66,8 +76,12 @@ public class RequirementDiagramBuilder
     /// <param name="target">The target node of the relationship.</param>
     /// <param name="type">The type of the relationship.</param>
     /// <returns>The current <see cref="RequirementDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="source"/> or <paramref name="target"/> is not part of the current diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public RequirementDiagramBuilder AddRelationship(IRequirementNode source, IRequirementNode target, RelationshipType type)
     {
+        source.ThrowIfForeignTo(_nodes);
+        target.ThrowIfForeignTo(_nodes);
+
         _relationships.Add(new Relationship(source, target, type));
         return this;
     }

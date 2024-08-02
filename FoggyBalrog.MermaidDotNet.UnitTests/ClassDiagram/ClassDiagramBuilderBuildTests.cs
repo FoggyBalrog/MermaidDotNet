@@ -1,8 +1,8 @@
 ﻿using FoggyBalrog.MermaidDotNet.ClassDiagram.Model;
 
-namespace FoggyBalrog.MermaidDotNet.UnitTests;
+namespace FoggyBalrog.MermaidDotNet.UnitTests.ClassDiagram;
 
-public class ClassDiagramBuilderTests
+public class ClassDiagramBuilderBuildTests
 {
     [Fact]
     public void CanBuildSimpleClassDiagramWithTitle()

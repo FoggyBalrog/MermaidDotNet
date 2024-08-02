@@ -15,6 +15,8 @@ public class PieChartBuilder
 
     internal PieChartBuilder(bool displayValuesOnLegend, string? title)
     {
+        title.ThrowIfWhiteSpace();
+
         _displayValuesOnLegend = displayValuesOnLegend;
         _title = title;
     }
@@ -25,8 +27,13 @@ public class PieChartBuilder
     /// <param name="label">The label of the data set.</param>
     /// <param name="value">The value of the data set.</param>
     /// <returns>The current <see cref="PieChartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="label"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="value"/> is strictly negative, with the reason <see cref="MermaidExceptionReason.StrictlyNegative"/>.</exception>
     public PieChartBuilder AddDataSet(string label, double value)
     {
+        label.ThrowIfWhiteSpace();
+        value.ThrowIfStrictlyNegative();
+
         _dataSets.Add(new DataSet(label, value));
         return this;
     }

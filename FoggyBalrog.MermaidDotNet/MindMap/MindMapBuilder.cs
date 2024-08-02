@@ -10,9 +10,14 @@ public class MindMapBuilder
 {
     private readonly Node _root;
 
+    private readonly HashSet<Node> _nodes;
+
     internal MindMapBuilder(string rootText, NodeShape rootShape)
     {
+        rootText.ThrowIfWhiteSpace();
+
         _root = new Node(rootText, rootShape);
+        _nodes = [_root];
     }
 
     /// <summary>
@@ -23,10 +28,16 @@ public class MindMapBuilder
     /// <param name="parent">The parent node of the node. If not specified, the node will be added to the root.</param>
     /// <param name="shape">The shape of the node.</param>
     /// <returns>The current <see cref="MindMapBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="parent"/> is not null and not part of the mind map, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public MindMapBuilder AddNode(string text, out Node node, Node? parent = null, NodeShape shape = NodeShape.Default)
     {
+        text.ThrowIfWhiteSpace();
+        parent?.ThrowIfForeignTo(_nodes);
+
         node = new Node(text, shape);
         (parent ?? _root).AddChild(node);
+        _nodes.Add(node);
         return this;
     }
 

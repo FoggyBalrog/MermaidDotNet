@@ -15,6 +15,8 @@ public class UserJourneyDiagramBuilder
 
     internal UserJourneyDiagramBuilder(string? title)
     {
+        title.ThrowIfWhiteSpace();
+
         _title = title;
     }
 
@@ -25,8 +27,12 @@ public class UserJourneyDiagramBuilder
     /// <param name="score">The score of the task.</param>
     /// <param name="actors">A list of actors that are involved in the task.</param>
     /// <returns>The current instance of the <see cref="UserJourneyDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> or any of <paramref name="actors"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public UserJourneyDiagramBuilder AddTask(string description, int score, params string[] actors)
     {
+        description.ThrowIfWhiteSpace();
+        actors.ThrowIfAnyWhitespace();
+
         var task = new Task(description, score, actors);
         _items.Add(task);
         return this;
@@ -37,8 +43,11 @@ public class UserJourneyDiagramBuilder
     /// </summary>
     /// <param name="description">The description of the section.</param>
     /// <returns>The current instance of the <see cref="UserJourneyDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public UserJourneyDiagramBuilder AddSection(string description)
     {
+        description.ThrowIfWhiteSpace();
+
         var section = new Section(description);
         _items.Add(section);
         return this;

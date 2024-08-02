@@ -1,4 +1,4 @@
-﻿namespace FoggyBalrog.MermaidDotNet.UnitTests;
+﻿namespace FoggyBalrog.MermaidDotNet.UnitTests.UserJourneyDiagram;
 
 public class UserJourneyDiagramBuilderTests
 {

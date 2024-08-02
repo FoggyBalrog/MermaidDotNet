@@ -1,6 +1,6 @@
 ﻿using FoggyBalrog.MermaidDotNet.GanttDiagram;
 
-namespace FoggyBalrog.MermaidDotNet.UnitTests;
+namespace FoggyBalrog.MermaidDotNet.UnitTests.GanttDiagram;
 
 public class DateFormatConverterTests
 {

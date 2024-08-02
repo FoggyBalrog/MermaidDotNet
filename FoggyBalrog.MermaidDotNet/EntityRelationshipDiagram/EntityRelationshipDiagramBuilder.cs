@@ -22,13 +22,11 @@ public class EntityRelationshipDiagramBuilder
     /// <param name="entity">The entity that was added.</param>
     /// <param name="attributes">Optional attributes for the entity.</param>
     /// <returns>The current <see cref="EntityRelationshipDiagramBuilder"/> instance.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when an entity with the same name already exists in the diagram.</exception>
+    /// <exception cref="MermaidException">Thrown when an entity with the same name already exists in the diagram, with reason <see cref="MermaidExceptionReason.DuplicateValue"/>.</exception>
     public EntityRelationshipDiagramBuilder AddEntity(string name, out Entity entity, params EntityAttribute[] attributes)
     {
-        if (_entities.Exists(e => e.Name == name))
-        {
-            throw new InvalidOperationException($"Entity {name} already exists in the diagram");
-        }
+        name.ThrowIfWhiteSpace();
+        _entities.ThrowIfDuplicate(name, e => e.Name);
 
         entity = new Entity(name, attributes);
         _entities.Add(entity);
@@ -45,7 +43,7 @@ public class EntityRelationshipDiagramBuilder
     /// <param name="label">The label of the relationship.</param>
     /// <param name="type">The type of the relationship.</param>
     /// <returns>The current <see cref="EntityRelationshipDiagramBuilder"/> instance.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when either <paramref name="fromEntity"/> or <paramref name="toEntity"/> does not exist in the diagram.</exception>
+    /// <exception cref="MermaidException">Thrown when either <paramref name="fromEntity"/> or <paramref name="toEntity"/> are not part of the diagram, with reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public EntityRelationshipDiagramBuilder AddRelationship(
         Cardinality fromCardinality,
         Entity fromEntity,
@@ -54,15 +52,9 @@ public class EntityRelationshipDiagramBuilder
         string label,
         RelationshipType type = RelationshipType.Identifying)
     {
-        if (!_entities.Contains(fromEntity))
-        {
-            throw new InvalidOperationException($"Entity {fromEntity.Name} does not exist in the diagram");
-        }
-
-        if (!_entities.Contains(toEntity))
-        {
-            throw new InvalidOperationException($"Entity {toEntity.Name} does not exist in the diagram");
-        }
+        fromEntity.ThrowIfForeignTo(_entities);
+        toEntity.ThrowIfForeignTo(_entities);
+        label.ThrowIfWhiteSpace();
 
         _relationships.Add(new Relationship(fromCardinality, fromEntity, toCardinality, toEntity, label, type));
         return this;

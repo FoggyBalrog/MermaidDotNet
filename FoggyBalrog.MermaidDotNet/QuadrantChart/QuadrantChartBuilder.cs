@@ -27,6 +27,12 @@ public class QuadrantChartBuilder
         string? quadrant3,
         string? quadrant4)
     {
+        title.ThrowIfWhiteSpace();
+        quadrant1.ThrowIfWhiteSpace();
+        quadrant2.ThrowIfWhiteSpace();
+        quadrant3.ThrowIfWhiteSpace();
+        quadrant4.ThrowIfWhiteSpace();
+
         _title = title;
         _quadrant1 = quadrant1;
         _quadrant2 = quadrant2;
@@ -40,8 +46,12 @@ public class QuadrantChartBuilder
     /// <param name="left">The label for the left side of the X axis.</param>
     /// <param name="right">The optional label for the right side of the X axis.</param>
     /// <returns>The current <see cref="QuadrantChartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="left"/> or <paramref name="right"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public QuadrantChartBuilder SetXAxisLabel(string left, string? right = null)
     {
+        left.ThrowIfWhiteSpace();
+        right.ThrowIfWhiteSpace();
+
         _axisLeft = left;
         _axisRight = right;
         return this;
@@ -53,8 +63,12 @@ public class QuadrantChartBuilder
     /// <param name="bottom">The label for the bottom of the Y axis.</param>
     /// <param name="top">The optional label for the top of the Y axis.</param>
     /// <returns>The current <see cref="QuadrantChartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="bottom"/> or <paramref name="top"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public QuadrantChartBuilder SetYAxisLabel(string bottom, string? top = null)
     {
+        bottom.ThrowIfWhiteSpace();
+        top.ThrowIfWhiteSpace();
+
         _axisBottom = bottom;
         _axisTop = top;
         return this;
@@ -67,13 +81,13 @@ public class QuadrantChartBuilder
     /// <param name="x">The X coordinate of the point. Must be between 0 and 1.</param>
     /// <param name="y">The Y coordinate of the point. Must be between 0 and 1.</param>
     /// <returns>The current <see cref="QuadrantChartBuilder"/> instance.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if <paramref name="x"/> or <paramref name="y"/> are not between 0 and 1.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="label"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="x"/> or <paramref name="y"/> is out of [0, 1] range, with the reason <see cref="MermaidExceptionReason.OutOfRange"/>.</exception>
     public QuadrantChartBuilder AddPoint(string label, double x, double y)
     {
-        if (x < 0 || x > 1 || y < 0 || y > 1)
-        {
-            throw new InvalidOperationException($"X and Y must be between 0 and 1 (actual {x}, {y})");
-        }
+        label.ThrowIfWhiteSpace();
+        x.ThrowIfOutOfRange(0, 1);
+        y.ThrowIfOutOfRange(0, 1);
 
         _points.Add(new Point(label, x, y));
         return this;

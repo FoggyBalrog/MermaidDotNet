@@ -19,6 +19,8 @@ public class GitGraphBuilder
         bool parallelCommits,
         bool vertical)
     {
+        title.ThrowIfWhiteSpace();
+
         _title = title;
         _parallelCommits = parallelCommits;
         _vertical = vertical;
@@ -31,8 +33,12 @@ public class GitGraphBuilder
     /// <param name="type">The type of the commit.</param>
     /// <param name="tag">An optional tag for the commit.</param>
     /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>"/>
+    /// <exception cref="MermaidException">Thrown when <paramref name="id"/> or <paramref name="tag"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GitGraphBuilder Commit(string? id = null, CommitType type = CommitType.Normal, string? tag = null)
     {
+        id.ThrowIfWhiteSpace();
+        tag.ThrowIfWhiteSpace();
+
         _commands.Add(new Commit(id, type, tag));
         return this;
     }
@@ -44,8 +50,11 @@ public class GitGraphBuilder
     /// <param name="branch">The branch that was created.</param>
     /// <param name="order">An optional order for the branch. If not specified, the branch will be ordered based on the order in which it was created.</param>
     /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GitGraphBuilder Branch(string name, out Branch branch, int? order = null)
     {
+        name.ThrowIfWhiteSpace();
+
         branch = new Branch(name, order);
         _commands.Add(branch);
         return this;
@@ -56,8 +65,11 @@ public class GitGraphBuilder
     /// </summary>
     /// <param name="branch">The branch to check out.</param>
     /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="branch"/> is not part of the current diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public GitGraphBuilder Checkout(Branch branch)
     {
+        branch.ThrowIfForeignTo(_commands);
+
         _commands.Add(new Checkout(branch.Name));
         return this;
     }
@@ -80,8 +92,14 @@ public class GitGraphBuilder
     /// <param name="type">The type of the merge commit.</param>
     /// <param name="tag">An optional tag for the merge commit.</param>
     /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="branch"/> is not part of the current diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="id"/> or <paramref name="tag"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GitGraphBuilder Merge(Branch branch, string? id = null, CommitType type = CommitType.Normal, string? tag = null)
     {
+        branch.ThrowIfForeignTo(_commands);
+        id.ThrowIfWhiteSpace();
+        tag.ThrowIfWhiteSpace();
+
         _commands.Add(new Merge(branch.Name, id, type, tag));
         return this;
     }

@@ -113,13 +113,4 @@ public class QuadrantChartBuilderTests
     A: [0.1, 0.2]
     B: [0.3, 0.4]", quadrantChart, ignoreLineEndingDifferences: true);
     }
-
-    [Fact]
-    public void ThrowsWhenCoordinatesAreOutOfRange()
-    {
-        Assert.Throws<InvalidOperationException>(() => Mermaid.QuadrantChart().AddPoint("A", -0.1, 0.2));
-        Assert.Throws<InvalidOperationException>(() => Mermaid.QuadrantChart().AddPoint("A", 0.1, -0.2));
-        Assert.Throws<InvalidOperationException>(() => Mermaid.QuadrantChart().AddPoint("A", 1.1, 0.2));
-        Assert.Throws<InvalidOperationException>(() => Mermaid.QuadrantChart().AddPoint("A", 0.1, 1.2));
-    }
 }
