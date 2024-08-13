@@ -1,6 +1,6 @@
 ﻿using FoggyBalrog.MermaidDotNet.RequirementDiagram.Model;
 
-namespace FoggyBalrog.MermaidDotNet.UnitTests;
+namespace FoggyBalrog.MermaidDotNet.UnitTests.RequirementDiagram;
 
 public class RequirementDiagramBuilderTests
 {

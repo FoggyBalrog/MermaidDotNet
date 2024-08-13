@@ -29,6 +29,12 @@ public class GanttDiagramBuilder
         string? tickInterval,
         string? weekIntervalStartDay)
     {
+        title.ThrowIfWhiteSpace();
+        dateFormat.ThrowIfWhiteSpace();
+        axisFormat.ThrowIfWhiteSpace();
+        tickInterval.ThrowIfWhiteSpace();
+        weekIntervalStartDay.ThrowIfWhiteSpace();
+
         _title = title;
         _compactMode = compactMode;
         _hideTodayMarker = hideTodayMarker;
@@ -138,8 +144,11 @@ public class GanttDiagramBuilder
     /// <param name="task">The created task.</param>
     /// <param name="tags">The tags of the task.</param>
     /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, DateTimeOffset start, DateTimeOffset end, out GanttTask task, TaskTags tags = TaskTags.None)
     {
+        name.ThrowIfWhiteSpace();
+
         task = new StartEndGanttTask($"task{_taskCounter++}", name, start, end, tags);
         _items.Add(task);
         return this;
@@ -154,8 +163,11 @@ public class GanttDiagramBuilder
     /// <param name="task">The created task.</param>
     /// <param name="tags">The tags of the task.</param>
     /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, DateTimeOffset start, TimeSpan duration, out GanttTask task, TaskTags tags = TaskTags.None)
     {
+        name.ThrowIfWhiteSpace();
+
         task = new StartDurationGanttTask($"task{_taskCounter++}", name, start, duration, tags);
         _items.Add(task);
         return this;
@@ -170,8 +182,13 @@ public class GanttDiagramBuilder
     /// <param name="task">The created task.</param>
     /// <param name="tags">The tags of the task.</param>
     /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="afterTask"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, GanttTask afterTask, DateTimeOffset end, out GanttTask task, TaskTags tags = TaskTags.None)
     {
+        name.ThrowIfWhiteSpace();
+        afterTask.ThrowIfForeignTo(_items);
+
         task = new AfterEndGanttTask($"task{_taskCounter++}", name, afterTask, end, tags);
         _items.Add(task);
         return this;
@@ -186,8 +203,13 @@ public class GanttDiagramBuilder
     /// <param name="task">The created task.</param>
     /// <param name="tags">The tags of the task.</param>
     /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="afterTask"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, GanttTask afterTask, TimeSpan duration, out GanttTask task, TaskTags tags = TaskTags.None)
     {
+        name.ThrowIfWhiteSpace();
+        afterTask.ThrowIfForeignTo(_items);
+
         task = new AfterDurationGanttTask($"task{_taskCounter++}", name, afterTask, duration, tags);
         _items.Add(task);
         return this;
@@ -202,8 +224,13 @@ public class GanttDiagramBuilder
     /// <param name="task">The created task.</param>
     /// <param name="tags">The tags of the task.</param>
     /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="untilTask"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, DateTimeOffset start, GanttTask untilTask, out GanttTask task, TaskTags tags = TaskTags.None)
     {
+        name.ThrowIfWhiteSpace();
+        untilTask.ThrowIfForeignTo(_items);
+
         task = new StartUntilGanttTask($"task{_taskCounter++}", name, start, untilTask, tags);
         _items.Add(task);
         return this;
@@ -218,8 +245,15 @@ public class GanttDiagramBuilder
     /// <param name="task">The created task.</param>
     /// <param name="tags">The tags of the task.</param>
     /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="afterTask"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="untilTask"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, GanttTask afterTask, GanttTask untilTask, out GanttTask task, TaskTags tags = TaskTags.None)
     {
+        name.ThrowIfWhiteSpace();
+        afterTask.ThrowIfForeignTo(_items);
+        untilTask.ThrowIfForeignTo(_items);
+
         task = new AfterUntilGanttTask($"task{_taskCounter++}", name, afterTask, untilTask, tags);
         _items.Add(task);
         return this;
@@ -230,8 +264,11 @@ public class GanttDiagramBuilder
     /// </summary>
     /// <param name="name">The name of the section.</param>
     /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GanttDiagramBuilder AddSection(string name)
     {
+        name.ThrowIfWhiteSpace();
+
         _items.Add(new Section(name));
         return this;
     }
@@ -242,8 +279,13 @@ public class GanttDiagramBuilder
     /// <param name="task">The task to add the callback to.</param>
     /// <param name="functionName">The name of the function to call when the task is clicked.</param>
     /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="task"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="functionName"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GanttDiagramBuilder AddCallback(GanttTask task, string functionName)
     {
+        task.ThrowIfForeignTo(_items);
+        functionName.ThrowIfWhiteSpace();
+
         task.ClickBinding = new TaskCallback(functionName);
         return this;
     }
@@ -254,8 +296,13 @@ public class GanttDiagramBuilder
     /// <param name="task">The task to add the hyperlink to.</param>
     /// <param name="uri">The URI to navigate to when the task is clicked.</param>
     /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="task"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="uri"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GanttDiagramBuilder AddHyperlink(GanttTask task, string uri)
     {
+        task.ThrowIfForeignTo(_items);
+        uri.ThrowIfWhiteSpace();
+
         task.ClickBinding = new TaskHyperlink(uri);
         return this;
     }

@@ -13,6 +13,8 @@ public class TimelineDiagramBuilder
 
     internal TimelineDiagramBuilder(string? title)
     {
+        title?.ThrowIfWhiteSpace();
+
         _title = title;
     }
 
@@ -22,8 +24,12 @@ public class TimelineDiagramBuilder
     /// <param name="timePeriod">The time period for the events.</param>
     /// <param name="events">The events to add.</param>
     /// <returns>The current instance of the <see cref="TimelineDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="timePeriod"/> or any of the <paramref name="events"/> is whitespace, with reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public TimelineDiagramBuilder AddEvents(string timePeriod, params string[] events)
     {
+        timePeriod.ThrowIfWhiteSpace();
+        events.ThrowIfAnyWhitespace();
+
         _items.Add(new TimelineRecord(timePeriod, events));
         return this;
     }
@@ -36,8 +42,11 @@ public class TimelineDiagramBuilder
     /// </remarks>
     /// <param name="title">The title of the section.</param>
     /// <returns>The current instance of the <see cref="TimelineDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public TimelineDiagramBuilder AddSection(string title)
     {
+        title.ThrowIfWhiteSpace();
+
         _items.Add(new TimelineSection(title));
         return this;
     }

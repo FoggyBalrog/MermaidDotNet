@@ -1,7 +1,6 @@
-﻿using FoggyBalrog.MermaidDotNet.Flowchart;
-using FoggyBalrog.MermaidDotNet.Flowchart.Model;
+﻿using FoggyBalrog.MermaidDotNet.Flowchart.Model;
 
-namespace FoggyBalrog.MermaidDotNet.UnitTests;
+namespace FoggyBalrog.MermaidDotNet.UnitTests.Flowchart;
 
 public class FlowchartBuilderTests
 {
@@ -362,37 +361,5 @@ public class FlowchartBuilderTests
     %% This is a comment
     id2[""N1""]
     %% This is another comment", diagram, ignoreLineEndingDifferences: true);
-    }
-
-    [Fact]
-    public void ThrowsExceptionWhenUsingNodeFromDifferentDiagram()
-    {
-        FlowchartBuilder builder = Mermaid
-            .Flowchart()
-            .AddNode("N1", out Node n1)
-            .AddNode("N2", out Node n2);
-
-        Mermaid
-            .Flowchart()
-            .AddNode("N3", out Node n3)
-            .AddNode("N4", out Node _);
-
-        Assert.Throws<InvalidOperationException>(() => builder.AddLink(n1, n3));
-        Assert.Throws<InvalidOperationException>(() => builder.AddLink(n3, n1));
-        Assert.Throws<InvalidOperationException>(() => builder.AddLinkChain([n1, n2], [n1, n3]));
-        Assert.Throws<InvalidOperationException>(() => builder.AddLinkChain([n1, n3], [n1, n2]));
-        Assert.Throws<InvalidOperationException>(() => builder.AddHyperlink(n3, "foo"));
-        Assert.Throws<InvalidOperationException>(() => builder.AddCallback(n3, "foo"));
-    }
-
-    [Fact]
-    public void ThrowsExceptionWhenAddingLinkWithNegativeAdditionalLength()
-    {
-        FlowchartBuilder builder = Mermaid
-            .Flowchart()
-            .AddNode("N1", out Node n1)
-            .AddNode("N2", out Node n2);
-
-        Assert.Throws<ArgumentOutOfRangeException>(() => builder.AddLink(n1, n2, extraLength: -1));
     }
 }

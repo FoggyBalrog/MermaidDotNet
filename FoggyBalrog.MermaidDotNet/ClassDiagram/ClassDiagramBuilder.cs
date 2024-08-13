@@ -17,6 +17,8 @@ public class ClassDiagramBuilder
 
     internal ClassDiagramBuilder(string? title, ClassDiagramDirection? direction)
     {
+        title.ThrowIfWhiteSpace();
+
         _title = title;
         _direction = direction;
     }
@@ -29,8 +31,15 @@ public class ClassDiagramBuilder
     /// <param name="label">An optional label for the class.</param>
     /// <param name="annotation">An optional annotation for the class.</param>
     /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="label"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="annotation"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddClass(string name, out Class @class, string? label = null, string? annotation = null)
     {
+        name.ThrowIfWhiteSpace();
+        label.ThrowIfWhiteSpace();
+        annotation.ThrowIfWhiteSpace();
+
         @class = new Class(name, label, annotation, null);
         _items.Add(@class);
 
@@ -38,13 +47,16 @@ public class ClassDiagramBuilder
     }
 
     /// <summary>
-    /// Adds a namespace to the diagram, in which classes and relationships can be added. The namespace will be closed automatically when the <paramref name="action"/> is finished.
+    /// Adds a namespace to the diagram, in which classes and relationships can be added. The namespace will be closed automatically when <paramref name="action"/> is finished.
     /// </summary>
     /// <param name="name">The name of the namespace.</param>
     /// <param name="action">An action that will be executed to add classes and relationships to the namespace.</param>
     /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddNamespace(string name, Action<ClassDiagramBuilder> action)
     {
+        name.ThrowIfWhiteSpace();
+
         _items.Add(new NamespaceStart(name));
         action(this);
         _items.Add(new NamespaceEnd());
@@ -59,8 +71,15 @@ public class ClassDiagramBuilder
     /// <param name="type">The type of the property.</param>
     /// <param name="name">The name of the property.</param>
     /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="class"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="type"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddProperty(Class @class, string type, string name)
     {
+        @class.ThrowIfForeignTo(_items);
+        type.ThrowIfWhiteSpace();
+        name.ThrowIfWhiteSpace();
+
         @class.AddProperty(new Property(type, name));
         return this;
     }
@@ -74,8 +93,22 @@ public class ClassDiagramBuilder
     /// <param name="visibility">The visibility of the method.</param>
     /// <param name="parameters">Optional parameters for the method.</param>
     /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="class"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="returnType"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when a type or name in <paramref name="parameters"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddMethod(Class @class, string? returnType, string name, Visibilities visibility = Visibilities.Public, (string type, string name)[]? parameters = null)
     {
+        @class.ThrowIfForeignTo(_items);
+        returnType.ThrowIfWhiteSpace();
+        name.ThrowIfWhiteSpace();
+
+        foreach (var (type, parameterName) in parameters ?? [])
+        {
+            type.ThrowIfWhiteSpace();
+            parameterName.ThrowIfWhiteSpace();
+        }
+
         @class.AddMethod(new Method(returnType, name, visibility, parameters?.Select(p => new Parameter(p.type, p.name)).ToList() ?? []));
         return this;
     }
@@ -92,6 +125,9 @@ public class ClassDiagramBuilder
     /// <param name="linkStyle">The style of the link between the classes.</param>
     /// <param name="label">An optional label for the relationship.</param>
     /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="from"/> class is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="to"/> class is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="label"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddRelationship(
         Class from,
         Class to,
@@ -102,6 +138,10 @@ public class ClassDiagramBuilder
         LinkStyle linkStyle = LinkStyle.Solid,
         string? label = null)
     {
+        @from.ThrowIfForeignTo(_items);
+        to.ThrowIfForeignTo(_items);
+        label.ThrowIfWhiteSpace();
+
         _relationships.Add(new Relationship(from, to, fromRelationshipType, fromCardinality, toRelationshipType, toCardinality, linkStyle, label));
         return this;
     }
@@ -112,8 +152,13 @@ public class ClassDiagramBuilder
     /// <param name="text">The text of the note.</param>
     /// <param name="class">An optional class that the note is for.</param>
     /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="class"/> is not <c>null</c> and is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public ClassDiagramBuilder AddNote(string text, Class? @class = null)
     {
+        text.ThrowIfWhiteSpace();
+        @class?.ThrowIfForeignTo(_items);
+
         _notes.Add(new Note(text, @class));
         return this;
     }
@@ -125,8 +170,15 @@ public class ClassDiagramBuilder
     /// <param name="functionName">The name of the function to call when the class is clicked.</param>
     /// <param name="tooltip">An optional tooltip for the callback.</param>
     /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="class"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="functionName"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddCallback(Class @class, string functionName, string? tooltip = null)
     {
+        @class.ThrowIfForeignTo(_items);
+        functionName.ThrowIfWhiteSpace();
+        tooltip.ThrowIfWhiteSpace();
+
         @class.ClickBinding = new ClassCallback(functionName, tooltip);
         return this;
     }
@@ -138,8 +190,15 @@ public class ClassDiagramBuilder
     /// <param name="uri">The URI to open when the class is clicked.</param>
     /// <param name="tooltip">An optional tooltip for the hyperlink.</param>
     /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="class"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="uri"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddHyperlink(Class @class, string uri, string? tooltip = null)
     {
+        @class.ThrowIfForeignTo(_items);
+        uri.ThrowIfWhiteSpace();
+        tooltip.ThrowIfWhiteSpace();
+
         @class.ClickBinding = new ClassHyperlink(uri, tooltip);
         return this;
     }
@@ -150,8 +209,13 @@ public class ClassDiagramBuilder
     /// <param name="class">The class to add the style to.</param>
     /// <param name="css">The raw CSS to apply to the class.</param>
     /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="class"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder StyleWithRawCss(Class @class, string css)
     {
+        @class.ThrowIfForeignTo(_items);
+        css.ThrowIfWhiteSpace();
+
         _style.Add(new RawCssStyle(@class, css));
         return this;
     }
@@ -162,8 +226,15 @@ public class ClassDiagramBuilder
     /// <param name="cssClass">The CSS class to apply to the classes.</param>
     /// <param name="classes">The classes to apply the CSS class to.</param>
     /// <returns>The current <see cref="ClassDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="cssClass"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="class"/>es collection is empty, with the reason <see cref="MermaidExceptionReason.EmptyCollection"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when any of <paramref name="classes"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public ClassDiagramBuilder StyleWithCssClass(string cssClass, params Class[] classes)
     {
+        cssClass.ThrowIfWhiteSpace();
+        classes.ThrowIfEmpty();
+        classes.ForEach(c => c.ThrowIfForeignTo(_items));
+
         _style.Add(new CssClassStyle(cssClass, classes));
         return this;
     }

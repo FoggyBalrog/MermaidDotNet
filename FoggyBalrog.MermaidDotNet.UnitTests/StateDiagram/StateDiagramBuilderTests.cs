@@ -1,6 +1,6 @@
 ﻿using FoggyBalrog.MermaidDotNet.StateDiagram.Model;
 
-namespace FoggyBalrog.MermaidDotNet.UnitTests;
+namespace FoggyBalrog.MermaidDotNet.UnitTests.StateDiagram;
 
 public class StateDiagramBuilderTests
 {
