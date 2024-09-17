@@ -11,13 +11,18 @@ public class UserJourneyDiagramBuilder
 {
     private string _indent = Shared.Indent;
     private readonly string? _title;
+    private readonly bool _isSafe;
     private readonly List<IUserJourneyDiagramItem> _items = [];
 
-    internal UserJourneyDiagramBuilder(string? title)
+    internal UserJourneyDiagramBuilder(string? title, bool isSafe)
     {
-        title.ThrowIfWhiteSpace();
+        if (isSafe)
+        {
+            title.ThrowIfWhiteSpace();
+        }
 
         _title = title;
+        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -30,8 +35,11 @@ public class UserJourneyDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> or any of <paramref name="actors"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public UserJourneyDiagramBuilder AddTask(string description, int score, params string[] actors)
     {
-        description.ThrowIfWhiteSpace();
-        actors.ThrowIfAnyWhitespace();
+        if (_isSafe)
+        {
+            description.ThrowIfWhiteSpace();
+            actors.ThrowIfAnyWhitespace();
+        }
 
         var task = new Task(description, score, actors);
         _items.Add(task);
@@ -46,7 +54,10 @@ public class UserJourneyDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public UserJourneyDiagramBuilder AddSection(string description)
     {
-        description.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            description.ThrowIfWhiteSpace();
+        }
 
         var section = new Section(description);
         _items.Add(section);

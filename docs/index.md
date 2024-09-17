@@ -348,6 +348,26 @@ timeline
 
 Read more on [timeline-diagram](~/diagrams/timeline-diagram.md).
 
+## Unsafe mode
+
+By default, the library uses safe mode, which means that it will throw an exception if the arguments passed to the methods are invalid.
+
+You can disable this behavior by accessing the buiders through the `Unsafe` property in the `Mermaid` class.
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .Unsafe
+    .Flowchart()
+    .AddNode("N1", out var n1)
+    .AddNode("N2", out var n2)
+    .AddNode("N3", out var n3)
+    .AddLink(n1, n2, "some text")
+    .AddLink(n2, n3)
+    .Build();
+```
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/FoggyBalrog/MermaidDotNet/blob/main/LICENSE) file for details.

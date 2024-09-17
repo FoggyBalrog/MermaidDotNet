@@ -10,9 +10,11 @@ public class EntityRelationshipDiagramBuilder
 {
     private readonly List<Entity> _entities = [];
     private readonly List<Relationship> _relationships = [];
+    private readonly bool _isSafe;
 
-    internal EntityRelationshipDiagramBuilder()
+    internal EntityRelationshipDiagramBuilder(bool isSafe)
     {
+        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -25,8 +27,11 @@ public class EntityRelationshipDiagramBuilder
     /// <exception cref="MermaidException">Thrown when an entity with the same name already exists in the diagram, with reason <see cref="MermaidExceptionReason.DuplicateValue"/>.</exception>
     public EntityRelationshipDiagramBuilder AddEntity(string name, out Entity entity, params EntityAttribute[] attributes)
     {
-        name.ThrowIfWhiteSpace();
-        _entities.ThrowIfDuplicate(name, e => e.Name);
+        if (_isSafe)
+        {
+            name.ThrowIfWhiteSpace();
+            _entities.ThrowIfDuplicate(name, e => e.Name);
+        }
 
         entity = new Entity(name, attributes);
         _entities.Add(entity);
@@ -52,9 +57,12 @@ public class EntityRelationshipDiagramBuilder
         string label,
         RelationshipType type = RelationshipType.Identifying)
     {
-        fromEntity.ThrowIfForeignTo(_entities);
-        toEntity.ThrowIfForeignTo(_entities);
-        label.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            fromEntity.ThrowIfForeignTo(_entities);
+            toEntity.ThrowIfForeignTo(_entities);
+            label.ThrowIfWhiteSpace();
+        }
 
         _relationships.Add(new Relationship(fromCardinality, fromEntity, toCardinality, toEntity, label, type));
         return this;

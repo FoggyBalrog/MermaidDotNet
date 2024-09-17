@@ -11,14 +11,19 @@ public class StateDiagramBuilder
     private string _indent = Shared.Indent;
     private readonly string? _title;
     private readonly StateDiagramDirection? _direction;
+    private readonly bool _isSafe;
     private readonly List<IStateDiagramItem> _items = [];
 
-    internal StateDiagramBuilder(string? title, StateDiagramDirection? direction)
+    internal StateDiagramBuilder(string? title, StateDiagramDirection? direction, bool isSafe)
     {
-        title?.ThrowIfWhiteSpace();
+        if (isSafe)
+        {
+            title?.ThrowIfWhiteSpace();
+        }
 
         _title = title;
         _direction = direction;
+        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -30,7 +35,10 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddState(string description, out State state)
     {
-        description.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            description.ThrowIfWhiteSpace();
+        }
 
         state = new State($"s{_items.Count + 1}", description, StateKind.Simple);
         _items.Add(state);
@@ -47,7 +55,10 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddCompositeState(string description, out State state, Action<StateDiagramBuilder> action)
     {
-        description.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            description.ThrowIfWhiteSpace();
+        }
 
         state = new State($"s{_items.Count + 1}", description, StateKind.Composite);
         _items.Add(state);
@@ -103,8 +114,11 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddNote(State state, NotePosition position, string text)
     {
-        state.ThrowIfForeignTo(_items);
-        text.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            state.ThrowIfForeignTo(_items);
+            text.ThrowIfWhiteSpace();
+        }
 
         _items.Add(new Note(state, position, text));
         return this;
@@ -121,9 +135,12 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddStateTransition(State from, State to, string? description = null)
     {
-        from.ThrowIfForeignTo(_items);
-        to.ThrowIfForeignTo(_items);
-        description.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            from.ThrowIfForeignTo(_items);
+            to.ThrowIfForeignTo(_items);
+            description.ThrowIfWhiteSpace();
+        }
 
         _items.Add(new StateTransition(from, to, description));
         return this;
@@ -139,8 +156,11 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddTransitionFromStart(State to, string? description = null)
     {
-        to.ThrowIfForeignTo(_items);
-        description.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            to.ThrowIfForeignTo(_items);
+            description.ThrowIfWhiteSpace();
+        }
 
         _items.Add(new TransitionFromStart(to, description));
         return this;
@@ -156,8 +176,11 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddTransitionToEnd(State from, string? description = null)
     {
-        from.ThrowIfForeignTo(_items);
-        description.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            from.ThrowIfForeignTo(_items);
+            description.ThrowIfWhiteSpace();
+        }
 
         _items.Add(new TransitionToEnd(from, description));
         return this;
@@ -173,7 +196,10 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddConcurrency(string description, out State state, params Action<StateDiagramBuilder>[] actions)
     {
-        description.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            description.ThrowIfWhiteSpace();
+        }
 
         state = new State($"s{_items.Count + 1}", description, StateKind.Composite);
         _items.Add(state);
@@ -203,8 +229,11 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder StyleWithRawCss(State state, string css)
     {
-        state.ThrowIfForeignTo(_items);
-        css.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            state.ThrowIfForeignTo(_items);
+            css.ThrowIfWhiteSpace();
+        }
 
         _items.Add(new RawCssStyle(state, css));
         return this;
@@ -218,8 +247,11 @@ public class StateDiagramBuilder
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
     public StateDiagramBuilder StyleWithCssClass(string cssClass, params State[] states)
     {
-        cssClass.ThrowIfWhiteSpace();
-        states.ThrowIfAnyForeignTo(_items);
+        if (_isSafe)
+        {
+            cssClass.ThrowIfWhiteSpace();
+            states.ThrowIfAnyForeignTo(_items);
+        }
 
         _items.Add(new CssClassStyle(states, cssClass));
         return this;

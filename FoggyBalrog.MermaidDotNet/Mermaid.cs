@@ -23,26 +23,166 @@ namespace FoggyBalrog.MermaidDotNet;
 public static class Mermaid
 {
     /// <summary>
+    /// Disables the safe mode for creating diagrams. In unsafe mode, no validation is performed on the diagram data.
+    /// </summary>
+    public static class Unsafe
+    {
+        /// <summary>
+        /// Starts creating a class diagram, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <param name="direction">An optional direction for the diagram. If not specified, the default direction from Mermaid will be used on rendering.</param>
+        /// <returns>A new <see cref="ClassDiagramBuilder"/> instance.</returns>
+        /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        public static ClassDiagramBuilder ClassDiagram(string? title = null, ClassDiagramDirection? direction = null) => new(title, direction, isSafe: false);
+
+        /// <summary>
+        /// Starts creating an entity relationship diagram, in unsafe mode.
+        /// </summary>
+        /// <returns>A new <see cref="EntityRelationshipDiagramBuilder"/> instance.</returns>
+        public static EntityRelationshipDiagramBuilder EntityRelationshipDiagram() => new(isSafe: false);
+
+        /// <summary>
+        /// Starts creating a flowchart, in unsafe mode.
+        /// </summary>
+        /// <param name="orientation">An optional orientation for the flowchart. If not specified, the default orientation from Mermaid will be used on rendering.</param>
+        /// <returns>A new <see cref="FlowchartBuilder"/> instance.</returns>
+        public static FlowchartBuilder Flowchart(FlowchartOrientation orientation = FlowchartOrientation.TopToBottom) => new(orientation, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a Gantt diagram, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <param name="compactMode">Specifies whether the compact mode should be used.</param>
+        /// <param name="hideTodayMarker">Specifies whether the today marker should be hidden.</param>
+        /// <param name="dateFormat">Specifies the date format to use. Refer to the Mermaid documentation for supported formats.</param>
+        /// <param name="axisFormat">An optional format for the axis. If not specified, the default format from Mermaid will be used on rendering. Refer to the Mermaid documentation for supported formats.</param>
+        /// <param name="tickInterval">An optional tick interval for the diagram. If not specified, the default interval from Mermaid will be used on rendering. Refer to the Mermaid documentation for supported intervals.</param>
+        /// <param name="weekIntervalStartDay">An optional start day for the week interval. If not specified, the default start day from Mermaid will be used on rendering. Refer to the Mermaid documentation for supported start days.</param>
+        /// <returns>A new <see cref="GanttDiagramBuilder"/> instance.</returns>
+        /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        /// <exception cref="MermaidException">Thrown when <paramref name="dateFormat"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        /// <exception cref="MermaidException">Thrown when <paramref name="axisFormat"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        /// <exception cref="MermaidException">Thrown when <paramref name="tickInterval"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        /// <exception cref="MermaidException">Thrown when <paramref name="weekIntervalStartDay"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        public static GanttDiagramBuilder GanttDiagram(
+            string? title = null,
+            bool compactMode = false,
+            bool hideTodayMarker = false,
+            string dateFormat = "YYYY-MM-DD",
+            string? axisFormat = null,
+            string? tickInterval = null,
+            string? weekIntervalStartDay = null) => new(title, compactMode, hideTodayMarker, dateFormat, axisFormat, tickInterval, weekIntervalStartDay, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a Git graph, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <param name="parallelCommits">Specifies whether to display commits in parallel.</param>
+        /// <param name="vertical">Specifies whether to display the graph vertically.</param>
+        /// <returns>A new <see cref="GitGraphBuilder"/> instance.</returns>
+        /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        public static GitGraphBuilder GitGraph(
+            string? title = null,
+            bool parallelCommits = false,
+            bool vertical = false) => new(title, parallelCommits, vertical, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a mind map, in unsafe mode.
+        /// </summary>
+        /// <param name="rootText">The text for the root node.</param>
+        /// <param name="rootShape">The shape for the root node. If not specified, the default shape from Mermaid will be used on rendering.</param>
+        /// <returns>A new <see cref="MindMapBuilder"/> instance.</returns>
+        /// <exception cref="MermaidException">Thrown when <paramref name="rootText"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        public static MindMapBuilder MindMap(string rootText, MindMap.Model.NodeShape rootShape = MermaidDotNet.MindMap.Model.NodeShape.Default) => new(rootText, rootShape, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a pie chart, in unsafe mode.
+        /// </summary>
+        /// <param name="displayValuesOnLegend">Specifies whether to display values on the legend.</param>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <returns>A new <see cref="PieChartBuilder"/> instance.</returns>
+        /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        public static PieChartBuilder PieChart(bool displayValuesOnLegend = false, string? title = null) => new(displayValuesOnLegend, title, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a quadrant chart, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <param name="quadrant1">An optional label for the first quadrant.</param>
+        /// <param name="quadrant2">An optional label for the second quadrant.</param>
+        /// <param name="quadrant3">An optional label for the third quadrant.</param>
+        /// <param name="quadrant4">An optional label for the fourth quadrant.</param>
+        /// <returns>A new <see cref="QuadrantChartBuilder"/> instance.</returns>
+        /// <exception cref="MermaidException">Thrown when <paramref name="title"/>, <paramref name="quadrant1"/>, <paramref name="quadrant2"/>, <paramref name="quadrant3"/>, or <paramref name="quadrant4"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        public static QuadrantChartBuilder QuadrantChart(
+            string? title = null,
+            string? quadrant1 = null,
+            string? quadrant2 = null,
+            string? quadrant3 = null,
+            string? quadrant4 = null) => new(title, quadrant1, quadrant2, quadrant3, quadrant4, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a requirement diagram, in unsafe mode.
+        /// </summary>
+        /// <returns>A new <see cref="RequirementDiagramBuilder"/> instance.</returns>
+        public static RequirementDiagramBuilder RequirementDiagram() => new(isSafe: false);
+
+        /// <summary>
+        /// Starts creating a sequence diagram, in unsafe mode.
+        /// </summary>
+        /// <param name="autonumber">Specifies whether to automatically number the sequence items.</param>
+        /// <returns>A new <see cref="SequenceDiagramBuilder"/> instance.</returns>
+        public static SequenceDiagramBuilder SequenceDiagram(bool autonumber = false) => new(autonumber, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a state diagram, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <param name="direction">An optional direction for the diagram. If not specified, the default direction from Mermaid will be used on rendering.</param>
+        /// <returns>A new <see cref="StateDiagramBuilder"/> instance.</returns>
+        /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        public static StateDiagramBuilder StateDiagram(string? title = null, StateDiagramDirection? direction = null) => new(title, direction, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a timeline diagram, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <returns>A new <see cref="TimelineDiagramBuilder"/> instance.</returns>
+        /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        public static TimelineDiagramBuilder TimelineDiagram(string? title = null) => new(title, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a user journey diagram, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <returns>A new <see cref="UserJourneyDiagramBuilder"/> instance.</returns>
+        /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        public static UserJourneyDiagramBuilder UserJourneyDiagram(string? title = null) => new(title, isSafe: false);
+    }
+
+
+    /// <summary>
     /// Starts creating a class diagram.
     /// </summary>
     /// <param name="title">An optional title for the diagram.</param>
     /// <param name="direction">An optional direction for the diagram. If not specified, the default direction from Mermaid will be used on rendering.</param>
     /// <returns>A new <see cref="ClassDiagramBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-    public static ClassDiagramBuilder ClassDiagram(string? title = null, ClassDiagramDirection? direction = null) => new(title, direction);
+    public static ClassDiagramBuilder ClassDiagram(string? title = null, ClassDiagramDirection? direction = null) => new(title, direction, isSafe: true);
 
     /// <summary>
     /// Starts creating an entity relationship diagram.
     /// </summary>
     /// <returns>A new <see cref="EntityRelationshipDiagramBuilder"/> instance.</returns>
-    public static EntityRelationshipDiagramBuilder EntityRelationshipDiagram() => new();
+    public static EntityRelationshipDiagramBuilder EntityRelationshipDiagram() => new(isSafe: true);
 
     /// <summary>
     /// Starts creating a flowchart.
     /// </summary>
     /// <param name="orientation">An optional orientation for the flowchart. If not specified, the default orientation from Mermaid will be used on rendering.</param>
     /// <returns>A new <see cref="FlowchartBuilder"/> instance.</returns>
-    public static FlowchartBuilder Flowchart(FlowchartOrientation orientation = FlowchartOrientation.TopToBottom) => new(orientation);
+    public static FlowchartBuilder Flowchart(FlowchartOrientation orientation = FlowchartOrientation.TopToBottom) => new(orientation, isSafe: true);
 
     /// <summary>
     /// Starts creating a Gantt diagram.
@@ -67,7 +207,7 @@ public static class Mermaid
         string dateFormat = "YYYY-MM-DD",
         string? axisFormat = null,
         string? tickInterval = null,
-        string? weekIntervalStartDay = null) => new(title, compactMode, hideTodayMarker, dateFormat, axisFormat, tickInterval, weekIntervalStartDay);
+        string? weekIntervalStartDay = null) => new(title, compactMode, hideTodayMarker, dateFormat, axisFormat, tickInterval, weekIntervalStartDay, isSafe: true);
 
     /// <summary>
     /// Starts creating a Git graph.
@@ -80,7 +220,7 @@ public static class Mermaid
     public static GitGraphBuilder GitGraph(
         string? title = null,
         bool parallelCommits = false,
-        bool vertical = false) => new(title, parallelCommits, vertical);
+        bool vertical = false) => new(title, parallelCommits, vertical, isSafe: true);
 
     /// <summary>
     /// Starts creating a mind map.
@@ -89,7 +229,7 @@ public static class Mermaid
     /// <param name="rootShape">The shape for the root node. If not specified, the default shape from Mermaid will be used on rendering.</param>
     /// <returns>A new <see cref="MindMapBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="rootText"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-    public static MindMapBuilder MindMap(string rootText, MindMap.Model.NodeShape rootShape = MermaidDotNet.MindMap.Model.NodeShape.Default) => new(rootText, rootShape);
+    public static MindMapBuilder MindMap(string rootText, MindMap.Model.NodeShape rootShape = MermaidDotNet.MindMap.Model.NodeShape.Default) => new(rootText, rootShape, isSafe: true);
 
     /// <summary>
     /// Starts creating a pie chart.
@@ -98,7 +238,7 @@ public static class Mermaid
     /// <param name="title">An optional title for the diagram.</param>
     /// <returns>A new <see cref="PieChartBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-    public static PieChartBuilder PieChart(bool displayValuesOnLegend = false, string? title = null) => new(displayValuesOnLegend, title);
+    public static PieChartBuilder PieChart(bool displayValuesOnLegend = false, string? title = null) => new(displayValuesOnLegend, title, isSafe: true);
 
     /// <summary>
     /// Starts creating a quadrant chart.
@@ -115,20 +255,20 @@ public static class Mermaid
         string? quadrant1 = null,
         string? quadrant2 = null,
         string? quadrant3 = null,
-        string? quadrant4 = null) => new(title, quadrant1, quadrant2, quadrant3, quadrant4);
+        string? quadrant4 = null) => new(title, quadrant1, quadrant2, quadrant3, quadrant4, isSafe: true);
 
     /// <summary>
     /// Starts creating a requirement diagram.
     /// </summary>
     /// <returns>A new <see cref="RequirementDiagramBuilder"/> instance.</returns>
-    public static RequirementDiagramBuilder RequirementDiagram() => new();
+    public static RequirementDiagramBuilder RequirementDiagram() => new(isSafe: true);
 
     /// <summary>
     /// Starts creating a sequence diagram.
     /// </summary>
     /// <param name="autonumber">Specifies whether to automatically number the sequence items.</param>
     /// <returns>A new <see cref="SequenceDiagramBuilder"/> instance.</returns>
-    public static SequenceDiagramBuilder SequenceDiagram(bool autonumber = false) => new(autonumber);
+    public static SequenceDiagramBuilder SequenceDiagram(bool autonumber = false) => new(autonumber, isSafe: true);
 
     /// <summary>
     /// Starts creating a state diagram.
@@ -137,7 +277,7 @@ public static class Mermaid
     /// <param name="direction">An optional direction for the diagram. If not specified, the default direction from Mermaid will be used on rendering.</param>
     /// <returns>A new <see cref="StateDiagramBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-    public static StateDiagramBuilder StateDiagram(string? title = null, StateDiagramDirection? direction = null) => new(title, direction);
+    public static StateDiagramBuilder StateDiagram(string? title = null, StateDiagramDirection? direction = null) => new(title, direction, isSafe: true);
 
     /// <summary>
     /// Starts creating a timeline diagram.
@@ -145,7 +285,7 @@ public static class Mermaid
     /// <param name="title">An optional title for the diagram.</param>
     /// <returns>A new <see cref="TimelineDiagramBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-    public static TimelineDiagramBuilder TimelineDiagram(string? title = null) => new(title);
+    public static TimelineDiagramBuilder TimelineDiagram(string? title = null) => new(title, isSafe: true);
 
     /// <summary>
     /// Starts creating a user journey diagram.
@@ -153,5 +293,5 @@ public static class Mermaid
     /// <param name="title">An optional title for the diagram.</param>
     /// <returns>A new <see cref="UserJourneyDiagramBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-    public static UserJourneyDiagramBuilder UserJourneyDiagram(string? title = null) => new(title);
+    public static UserJourneyDiagramBuilder UserJourneyDiagram(string? title = null) => new(title, isSafe: true);
 }

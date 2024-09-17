@@ -15,6 +15,7 @@ public class QuadrantChartBuilder
     private readonly string? _quadrant2;
     private readonly string? _quadrant3;
     private readonly string? _quadrant4;
+    private readonly bool _isSafe;
     private string? _axisLeft;
     private string? _axisRight;
     private string? _axisBottom;
@@ -25,19 +26,24 @@ public class QuadrantChartBuilder
         string? quadrant1,
         string? quadrant2,
         string? quadrant3,
-        string? quadrant4)
+        string? quadrant4,
+        bool isSafe)
     {
-        title.ThrowIfWhiteSpace();
-        quadrant1.ThrowIfWhiteSpace();
-        quadrant2.ThrowIfWhiteSpace();
-        quadrant3.ThrowIfWhiteSpace();
-        quadrant4.ThrowIfWhiteSpace();
+        if (isSafe)
+        {
+            title.ThrowIfWhiteSpace();
+            quadrant1.ThrowIfWhiteSpace();
+            quadrant2.ThrowIfWhiteSpace();
+            quadrant3.ThrowIfWhiteSpace();
+            quadrant4.ThrowIfWhiteSpace();
+        }
 
         _title = title;
         _quadrant1 = quadrant1;
         _quadrant2 = quadrant2;
         _quadrant3 = quadrant3;
         _quadrant4 = quadrant4;
+        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -49,8 +55,11 @@ public class QuadrantChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="left"/> or <paramref name="right"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public QuadrantChartBuilder SetXAxisLabel(string left, string? right = null)
     {
-        left.ThrowIfWhiteSpace();
-        right.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            left.ThrowIfWhiteSpace();
+            right.ThrowIfWhiteSpace();
+        }
 
         _axisLeft = left;
         _axisRight = right;
@@ -66,8 +75,11 @@ public class QuadrantChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="bottom"/> or <paramref name="top"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public QuadrantChartBuilder SetYAxisLabel(string bottom, string? top = null)
     {
-        bottom.ThrowIfWhiteSpace();
-        top.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            bottom.ThrowIfWhiteSpace();
+            top.ThrowIfWhiteSpace();
+        }
 
         _axisBottom = bottom;
         _axisTop = top;
@@ -85,9 +97,12 @@ public class QuadrantChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="x"/> or <paramref name="y"/> is out of [0, 1] range, with the reason <see cref="MermaidExceptionReason.OutOfRange"/>.</exception>
     public QuadrantChartBuilder AddPoint(string label, double x, double y)
     {
-        label.ThrowIfWhiteSpace();
-        x.ThrowIfOutOfRange(0, 1);
-        y.ThrowIfOutOfRange(0, 1);
+        if (_isSafe)
+        {
+            label.ThrowIfWhiteSpace();
+            x.ThrowIfOutOfRange(0, 1);
+            y.ThrowIfOutOfRange(0, 1);
+        }
 
         _points.Add(new Point(label, x, y));
         return this;

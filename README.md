@@ -31,6 +31,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Quadrant chart](#quadrant-chart)
   - [Requirement diagram](#requirement-diagram)
   - [Timeline diagram](#timeline-diagram)
+- [Unsafe mode](#unsafe-mode)
 - [License](#license)
 - [Credits](#credits)
 
@@ -380,6 +381,26 @@ timeline
 ```
 
 Read more at [timeline-diagram.md](./docs/diagrams/timeline-diagram.md).
+
+## Unsafe mode
+
+By default, the library uses safe mode, which means that it will throw an exception if the arguments passed to the methods are invalid.
+
+You can disable this behavior by accessing the buiders through the `Unsafe` property in the `Mermaid` class.
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .Unsafe
+    .Flowchart()
+    .AddNode("N1", out var n1)
+    .AddNode("N2", out var n2)
+    .AddNode("N3", out var n3)
+    .AddLink(n1, n2, "some text")
+    .AddLink(n2, n3)
+    .Build();
+```
 
 ## License
 
