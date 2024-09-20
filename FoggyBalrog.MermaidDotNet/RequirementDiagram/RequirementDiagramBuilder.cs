@@ -10,9 +10,11 @@ public class RequirementDiagramBuilder
 {
     private readonly List<IRequirementNode> _nodes = [];
     private readonly List<Relationship> _relationships = [];
+    private bool _isSafe;
 
-    internal RequirementDiagramBuilder()
+    internal RequirementDiagramBuilder(bool isSafe)
     {
+        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -36,9 +38,12 @@ public class RequirementDiagramBuilder
         RequirementRisk risk = RequirementRisk.Undefined,
         RequirementVerificationMethod verificationMethod = RequirementVerificationMethod.Undefined)
     {
-        name.ThrowIfWhiteSpace();
-        id.ThrowIfWhiteSpace();
-        text.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            name.ThrowIfWhiteSpace();
+            id.ThrowIfWhiteSpace();
+            text.ThrowIfWhiteSpace();
+        }
 
         requirement = new Requirement(name, id, text, type, risk, verificationMethod);
         _nodes.Add(requirement);
@@ -60,9 +65,12 @@ public class RequirementDiagramBuilder
         string? type = null,
         string? docRef = null)
     {
-        name.ThrowIfWhiteSpace();
-        type.ThrowIfWhiteSpace();
-        docRef.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            name.ThrowIfWhiteSpace();
+            type.ThrowIfWhiteSpace();
+            docRef.ThrowIfWhiteSpace();
+        }
 
         element = new Element(name, type, docRef);
         _nodes.Add(element);
@@ -79,8 +87,11 @@ public class RequirementDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="source"/> or <paramref name="target"/> is not part of the current diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public RequirementDiagramBuilder AddRelationship(IRequirementNode source, IRequirementNode target, RelationshipType type)
     {
-        source.ThrowIfForeignTo(_nodes);
-        target.ThrowIfForeignTo(_nodes);
+        if (_isSafe)
+        {
+            source.ThrowIfForeignTo(_nodes);
+            target.ThrowIfForeignTo(_nodes);
+        }
 
         _relationships.Add(new Relationship(source, target, type));
         return this;

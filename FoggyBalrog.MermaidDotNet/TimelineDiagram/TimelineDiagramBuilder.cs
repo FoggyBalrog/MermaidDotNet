@@ -9,13 +9,18 @@ namespace FoggyBalrog.MermaidDotNet.TimelineDiagram;
 public class TimelineDiagramBuilder
 {
     private readonly string? _title;
+    private readonly bool _isSafe;
     private readonly List<ITimelineItem> _items = [];
 
-    internal TimelineDiagramBuilder(string? title)
+    internal TimelineDiagramBuilder(string? title, bool isSafe)
     {
-        title?.ThrowIfWhiteSpace();
+        if (isSafe)
+        {
+            title?.ThrowIfWhiteSpace();
+        }
 
         _title = title;
+        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -27,8 +32,11 @@ public class TimelineDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="timePeriod"/> or any of the <paramref name="events"/> is whitespace, with reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public TimelineDiagramBuilder AddEvents(string timePeriod, params string[] events)
     {
-        timePeriod.ThrowIfWhiteSpace();
-        events.ThrowIfAnyWhitespace();
+        if (_isSafe)
+        {
+            timePeriod.ThrowIfWhiteSpace();
+            events.ThrowIfAnyWhitespace();
+        }
 
         _items.Add(new TimelineRecord(timePeriod, events));
         return this;
@@ -45,7 +53,10 @@ public class TimelineDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public TimelineDiagramBuilder AddSection(string title)
     {
-        title.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            title.ThrowIfWhiteSpace();
+        }
 
         _items.Add(new TimelineSection(title));
         return this;

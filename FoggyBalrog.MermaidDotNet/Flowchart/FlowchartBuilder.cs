@@ -10,10 +10,12 @@ public class FlowchartBuilder
 {
     private readonly List<IFlowItem> _items = [];
     private readonly FlowchartOrientation _orientation;
+    private readonly bool _isSafe;
 
-    internal FlowchartBuilder(FlowchartOrientation orientation)
+    internal FlowchartBuilder(FlowchartOrientation orientation, bool isSafe)
     {
         _orientation = orientation;
+        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -26,7 +28,10 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddNode(string text, out Node node, NodeShape shape = NodeShape.Rectangle)
     {
-        text.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            text.ThrowIfWhiteSpace();
+        }
 
         node = new Node($"id{_items.Count + 1}", text, shape, null);
         _items.Add(node);
@@ -43,7 +48,10 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="markdown"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddMarkdownNode(string markdown, out Node node, NodeShape shape = NodeShape.Rectangle)
     {
-        markdown.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            markdown.ThrowIfWhiteSpace();
+        }
 
         return AddNode($"`{markdown}`", out node, shape);
     }
@@ -71,10 +79,13 @@ public class FlowchartBuilder
         bool multidirectional = false,
         int extraLength = 0)
     {
-        from.ThrowIfForeignTo(_items);
-        to.ThrowIfForeignTo(_items);
-        text.ThrowIfWhiteSpace();
-        extraLength.ThrowIfStrictlyNegative();
+        if (_isSafe)
+        {
+            from.ThrowIfForeignTo(_items);
+            to.ThrowIfForeignTo(_items);
+            text.ThrowIfWhiteSpace();
+            extraLength.ThrowIfStrictlyNegative();
+        }
 
         _items.Add(new Link([from], [to], text, lineStyle, ending, multidirectional, extraLength));
         return this;
@@ -103,10 +114,13 @@ public class FlowchartBuilder
         bool multidirectional = false,
         int extraLength = 0)
     {
-        from.ThrowIfAnyForeignTo(_items);
-        to.ThrowIfAnyForeignTo(_items);
-        text.ThrowIfWhiteSpace();
-        extraLength.ThrowIfStrictlyNegative();
+        if (_isSafe)
+        {
+            from.ThrowIfAnyForeignTo(_items);
+            to.ThrowIfAnyForeignTo(_items);
+            text.ThrowIfWhiteSpace();
+            extraLength.ThrowIfStrictlyNegative();
+        }
 
         _items.Add(new Link(from, to, text, lineStyle, ending, multidirectional, extraLength));
         return this;
@@ -124,9 +138,12 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddCallback(Node node, string functionName, string? tooltip = null)
     {
-        node.ThrowIfForeignTo(_items);
-        functionName.ThrowIfWhiteSpace();
-        tooltip.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            node.ThrowIfForeignTo(_items);
+            functionName.ThrowIfWhiteSpace();
+            tooltip.ThrowIfWhiteSpace();
+        }
 
         node.NodeClickBinding = new NodeCallback(functionName, tooltip);
         return this;
@@ -145,9 +162,12 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddHyperlink(Node node, string uri, string? tooltip = null, HyperlinkTarget target = HyperlinkTarget.Self)
     {
-        node.ThrowIfForeignTo(_items);
-        uri.ThrowIfWhiteSpace();
-        tooltip.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            node.ThrowIfForeignTo(_items);
+            uri.ThrowIfWhiteSpace();
+            tooltip.ThrowIfWhiteSpace();
+        }
 
         node.NodeClickBinding = new NodeHyperlink(uri, tooltip, target);
         return this;
@@ -164,7 +184,10 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddSubgraph(string text, out Subgraph subgraph, Action<FlowchartBuilder> action, FlowchartOrientation? direction = null)
     {
-        text.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            text.ThrowIfWhiteSpace();
+        }
 
         subgraph = new Subgraph($"sub{_items.Count + 1}", text, direction);
         _items.Add(subgraph);
@@ -181,7 +204,10 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder Comment(string text)
     {
-        text.ThrowIfWhiteSpace();
+        if (_isSafe)
+        {
+            text.ThrowIfWhiteSpace();
+        }
 
         _items.Add(new Comment(text));
         return this;

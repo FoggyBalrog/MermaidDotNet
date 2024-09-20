@@ -40,12 +40,14 @@ internal static class SymbolMaps
 
     public static (string Start, string Line, string End) Links(Link link)
     {
+        int extraLength = Math.Max(0, link.ExtraLength);
+
         string line = link.LineStyle switch
         {
-            LinkLineStyle.Solid => $"--{new string('-', link.ExtraLength)}",
-            LinkLineStyle.Dotted => $"-{new string('.', 1 + link.ExtraLength)}-",
-            LinkLineStyle.Thick => $"=={new string('=', link.ExtraLength)}",
-            LinkLineStyle.Invisible => $"~~~{new string('~', link.ExtraLength)}",
+            LinkLineStyle.Solid => $"--{new string('-', extraLength)}",
+            LinkLineStyle.Dotted => $"-{new string('.', 1 + extraLength)}-",
+            LinkLineStyle.Thick => $"=={new string('=', extraLength)}",
+            LinkLineStyle.Invisible => $"~~~{new string('~', extraLength)}",
             _ => throw new InvalidOperationException($"Unknown line style: {link.LineStyle}")
         };
 

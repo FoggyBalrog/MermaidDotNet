@@ -11,13 +11,18 @@ public class MindMapBuilder
     private readonly Node _root;
 
     private readonly HashSet<Node> _nodes;
+    private readonly bool _isSafe;
 
-    internal MindMapBuilder(string rootText, NodeShape rootShape)
+    internal MindMapBuilder(string rootText, NodeShape rootShape, bool isSafe)
     {
-        rootText.ThrowIfWhiteSpace();
+        if (isSafe)
+        {
+            rootText.ThrowIfWhiteSpace();
+        }
 
         _root = new Node(rootText, rootShape);
         _nodes = [_root];
+        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -32,8 +37,11 @@ public class MindMapBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="parent"/> is not null and not part of the mind map, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public MindMapBuilder AddNode(string text, out Node node, Node? parent = null, NodeShape shape = NodeShape.Default)
     {
-        text.ThrowIfWhiteSpace();
-        parent?.ThrowIfForeignTo(_nodes);
+        if (_isSafe)
+        {
+            text.ThrowIfWhiteSpace();
+            parent?.ThrowIfForeignTo(_nodes);
+        }
 
         node = new Node(text, shape);
         (parent ?? _root).AddChild(node);
