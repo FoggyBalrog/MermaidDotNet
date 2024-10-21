@@ -1,4 +1,6 @@
-﻿namespace FoggyBalrog.MermaidDotNet.UnitTests.Flowchart;
+﻿using FoggyBalrog.MermaidDotNet.Flowchart.Model;
+
+namespace FoggyBalrog.MermaidDotNet.UnitTests.Flowchart;
 
 public class FlowchartSafeModeValidationTests
 {
@@ -40,7 +42,7 @@ public class FlowchartSafeModeValidationTests
             Mermaid
                 .Flowchart()
                 .AddNode("to", out var to)
-                .AddLink(from, to, "text");
+                .AddLink(from, to, out _, "text");
         });
 
         Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
@@ -58,7 +60,7 @@ public class FlowchartSafeModeValidationTests
             Mermaid
                 .Flowchart()
                 .AddNode("from", out var from)
-                .AddLink(from, to, "text");
+                .AddLink(from, to, out _, "text");
         });
 
         Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
@@ -73,7 +75,7 @@ public class FlowchartSafeModeValidationTests
                 .Flowchart()
                 .AddNode("from", out var from)
                 .AddNode("to", out var to)
-                .AddLink(from, to, " ");
+                .AddLink(from, to, out _, " ");
         });
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
@@ -88,7 +90,7 @@ public class FlowchartSafeModeValidationTests
                 .Flowchart()
                 .AddNode("from", out var from)
                 .AddNode("to", out var to)
-                .AddLink(from, to, "text", extraLength: -1);
+                .AddLink(from, to, out _, "text", extraLength: -1);
         });
 
         Assert.Equal(MermaidExceptionReason.StrictlyNegative, exception.Reason);
@@ -110,7 +112,7 @@ public class FlowchartSafeModeValidationTests
                 .AddNode("to1", out var to1)
                 .AddNode("to2", out var to2)
                 .AddNode("to3", out var to3)
-                .AddLinkChain([from1, from2, from3], [to1, to2, to3], "text");
+                .AddLinkChain([from1, from2, from3], [to1, to2, to3], out _, "text");
 
         });
 
@@ -133,7 +135,7 @@ public class FlowchartSafeModeValidationTests
                 .AddNode("from3", out var from3)
                 .AddNode("to1", out var to1)
                 .AddNode("to3", out var to3)
-                .AddLinkChain([from1, from2, from3], [to1, to2, to3], "text");
+                .AddLinkChain([from1, from2, from3], [to1, to2, to3], out _, "text");
 
         });
 
@@ -153,7 +155,7 @@ public class FlowchartSafeModeValidationTests
                 .AddNode("to1", out var to1)
                 .AddNode("to2", out var to2)
                 .AddNode("to3", out var to3)
-                .AddLinkChain([from1, from2, from3], [to1, to2, to3], " ");
+                .AddLinkChain([from1, from2, from3], [to1, to2, to3], out _, " ");
 
         });
 
@@ -173,7 +175,7 @@ public class FlowchartSafeModeValidationTests
                 .AddNode("to1", out var to1)
                 .AddNode("to2", out var to2)
                 .AddNode("to3", out var to3)
-                .AddLinkChain([from1, from2, from3], [to1, to2, to3], "text", extraLength: -1);
+                .AddLinkChain([from1, from2, from3], [to1, to2, to3], out _, "text", extraLength: -1);
 
         });
 
@@ -294,5 +296,138 @@ public class FlowchartSafeModeValidationTests
         });
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
+
+    [Fact]
+    public void StyleLinks_ThrowsIfCssIsWhiteSpace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .AddNode("N1", out Node n1)
+                .AddNode("N2", out Node n2)
+                .AddLink(n1, n2, out Link l1)
+                .StyleLinks(" ", l1);
+        });
+
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
+
+    [Fact]
+    public void StyleLinks_ThrowsIfNoLinksAreProvided()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .StyleLinks("css");
+        });
+
+        Assert.Equal(MermaidExceptionReason.EmptyCollection, exception.Reason);
+    }
+
+    [Fact]
+    public void StyleLinks_ThrowsIfForeignLinkIsProvided()
+    {
+        Mermaid
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddLink(n1, n2, out Link l1);
+
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .AddNode("N3", out Node n3)
+                .AddNode("N4", out Node n4)
+                .AddLink(n3, n4, out Link l2)
+                .StyleLinks("foo", l1, l2);
+        });
+
+        Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
+    }
+
+    [Fact]
+    public void StyleNodes_ThrowsIfCssIsWhiteSpace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .AddNode("N1", out Node n1)
+                .StyleNodes(" ", n1);
+        });
+
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
+
+    [Fact]
+    public void StyleNodes_ThrowsIfCssClassIsForeign()
+    {
+        Mermaid
+            .Flowchart()
+            .DefineCssClass("foo", "bar", out CssClass cssClass);
+
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .AddNode("N1", out Node n1)
+                .StyleNodes(cssClass, n1);
+        });
+
+        Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
+    }
+
+    [Fact]
+    public void StyleNodes_ThrowsIfNoNodesAreProvided()
+    {
+        var exception1 = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .StyleNodes("css");
+        });
+
+        var exception2 = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .DefineCssClass("foo", "bar", out CssClass cssClass)
+                .StyleNodes(cssClass);
+        });
+
+        Assert.Equal(MermaidExceptionReason.EmptyCollection, exception1.Reason);
+        Assert.Equal(MermaidExceptionReason.EmptyCollection, exception2.Reason);
+    }
+
+    [Fact]
+    public void StyleNodes_ThrowsIfForeignNodeIsProvided()
+    {
+        Mermaid
+            .Flowchart()
+            .AddNode("N1", out Node n1);
+
+        var exception1 = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .AddNode("N2", out Node n2)
+                .StyleNodes("foo", n1, n2);
+        });
+
+        var exception2 = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .DefineCssClass("foo", "bar", out CssClass cssClass)
+                .AddNode("N2", out Node n2)
+                .StyleNodes(cssClass, n1, n2);
+        });
+
+        Assert.Equal(MermaidExceptionReason.ForeignItem, exception1.Reason);
+        Assert.Equal(MermaidExceptionReason.ForeignItem, exception2.Reason);
     }
 }

@@ -46,8 +46,9 @@ public static class Mermaid
         /// Starts creating a flowchart, in unsafe mode.
         /// </summary>
         /// <param name="orientation">An optional orientation for the flowchart. If not specified, the default orientation from Mermaid will be used on rendering.</param>
+        /// <param name="curveStyle">An optional curve style for the flowchart. If not specified, the default curve style from Mermaid will be used on rendering.</param>
         /// <returns>A new <see cref="FlowchartBuilder"/> instance.</returns>
-        public static FlowchartBuilder Flowchart(FlowchartOrientation orientation = FlowchartOrientation.TopToBottom) => new(orientation, isSafe: false);
+        public static FlowchartBuilder Flowchart(FlowchartOrientation orientation = FlowchartOrientation.TopToBottom, CurveStyle? curveStyle = null) => new(orientation, curveStyle, isSafe: false);
 
         /// <summary>
         /// Starts creating a Gantt diagram, in unsafe mode.
@@ -181,8 +182,9 @@ public static class Mermaid
     /// Starts creating a flowchart.
     /// </summary>
     /// <param name="orientation">An optional orientation for the flowchart. If not specified, the default orientation from Mermaid will be used on rendering.</param>
+    /// <param name="curveStyle">An optional curve style for the flowchart. If not specified, the default curve style from Mermaid will be used on rendering.</param>
     /// <returns>A new <see cref="FlowchartBuilder"/> instance.</returns>
-    public static FlowchartBuilder Flowchart(FlowchartOrientation orientation = FlowchartOrientation.TopToBottom) => new(orientation, isSafe: true);
+    public static FlowchartBuilder Flowchart(FlowchartOrientation orientation = FlowchartOrientation.TopToBottom, CurveStyle? curveStyle = null) => new(orientation, curveStyle, isSafe: true);
 
     /// <summary>
     /// Starts creating a Gantt diagram.
