@@ -13,8 +13,12 @@ public class FlowchartBuilder
     private readonly List<IFlowItem> _items = [];
     private readonly string? _title;
     private readonly MermaidConfig? _config;
+    private readonly List<LinkStyle> _linkStyles = [];
+    private readonly List<INodeStyle> _nodeStyles = [];
+    private readonly List<CssClass> _cssClasses = [];
     private readonly FlowchartOrientation _orientation;
     private readonly bool _isSafe;
+    private int _linkCounter = 0;
 
     internal FlowchartBuilder(
         string? title,
@@ -71,6 +75,7 @@ public class FlowchartBuilder
     /// </summary>
     /// <param name="from">The node to link from.</param>
     /// <param name="to">The node to link to.</param>
+    /// <param name="link">The link that was added.</param>
     /// <param name="text">An optional text to display on the link.</param>
     /// <param name="lineStyle">The style of the link line.</param>
     /// <param name="ending">The ending of the link.</param>
@@ -83,6 +88,7 @@ public class FlowchartBuilder
     public FlowchartBuilder AddLink(
         ILinkable from,
         ILinkable to,
+        out Link link,
         string? text = null,
         LinkLineStyle lineStyle = LinkLineStyle.Solid,
         LinkEnding ending = LinkEnding.Arrow,
@@ -97,7 +103,10 @@ public class FlowchartBuilder
             extraLength.ThrowIfStrictlyNegative();
         }
 
-        _items.Add(new Link([from], [to], text, lineStyle, ending, multidirectional, extraLength));
+        link = new Link(++_linkCounter, [from], [to], text, lineStyle, ending, multidirectional, extraLength);
+
+        _items.Add(link);
+
         return this;
     }
 
@@ -106,6 +115,7 @@ public class FlowchartBuilder
     /// </summary>
     /// <param name="from">The nodes to link from.</param>
     /// <param name="to">The nodes to link to.</param>
+    /// <param name="link">The link chain that was added.</param>
     /// <param name="text">An optional text to display on the link chain.</param>
     /// <param name="lineStyle">The style of the link line.</param>
     /// <param name="ending">The ending of the link.</param>
@@ -118,6 +128,7 @@ public class FlowchartBuilder
     public FlowchartBuilder AddLinkChain(
         ILinkable[] from,
         ILinkable[] to,
+        out Link link,
         string? text = null,
         LinkLineStyle lineStyle = LinkLineStyle.Solid,
         LinkEnding ending = LinkEnding.Arrow,
@@ -132,7 +143,9 @@ public class FlowchartBuilder
             extraLength.ThrowIfStrictlyNegative();
         }
 
-        _items.Add(new Link(from, to, text, lineStyle, ending, multidirectional, extraLength));
+        link = new Link(++_linkCounter, from, to, text, lineStyle, ending, multidirectional, extraLength);
+        _items.Add(link);
+
         return this;
     }
 
@@ -224,6 +237,113 @@ public class FlowchartBuilder
     }
 
     /// <summary>
+    /// Specifies a CSS style for the provided links.
+    /// </summary>
+    /// <param name="css">The CSS style to apply to the links.</param>
+    /// <param name="links">The links to apply the style to.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>"
+    /// <exception cref="MermaidException">Thrown when <paramref name="links"/> is empty, with a reason of <see cref="MermaidExceptionReason.EmptyCollection"/>.</exception>"
+    /// <exception cref="MermaidException">Thrown when any of the links in <paramref name="links"/> are not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>"
+    public FlowchartBuilder StyleLinks(string css, params Link[] links)
+    {
+        if (_isSafe)
+        {
+            css.ThrowIfWhiteSpace();
+            links.ThrowIfEmpty();
+            links.ThrowIfAnyForeignTo(_items);
+        }
+
+        _linkStyles.Add(new(css, links));
+
+        return this;
+    }
+
+    /// <summary>
+    /// Specifies a CSS style for the provided nodes.
+    /// </summary>
+    /// <param name="css">The CSS style to apply to the nodes.</param>
+    /// <param name="nodes">The nodes to apply the style to.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>"
+    /// <exception cref="MermaidException">Thrown when <paramref name="nodes"/> is empty, with a reason of <see cref="MermaidExceptionReason.EmptyCollection"/>.</exception>"
+    /// <exception cref="MermaidException">Thrown when any of the nodes in <paramref name="nodes"/> are not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>"
+    public FlowchartBuilder StyleNodes(string css, params Node[] nodes)
+    {
+        if (_isSafe)
+        {
+            css.ThrowIfWhiteSpace();
+            nodes.ThrowIfEmpty();
+            nodes.ThrowIfAnyForeignTo(_items);
+        }
+
+        _nodeStyles.AddRange(nodes.Select(n => new RawNodeStyle(css, n)));
+
+        return this;
+    }
+
+    /// <summary>
+    /// Styles the provided nodes with a predefined CSS class (i.e. a CSS class defined outside of the mermaid code).
+    /// </summary>
+    /// <param name="cssClassName">The name of the CSS class to apply to the nodes.</param>
+    /// <param name="nodes">The nodes to apply the class to.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    public FlowchartBuilder StyleNodesWithPredefinedCssClass(string cssClassName, params Node[] nodes)
+    {
+        if (_isSafe)
+        {
+            cssClassName.ThrowIfWhiteSpace();
+            nodes.ThrowIfEmpty();
+            nodes.ThrowIfAnyForeignTo(_items);
+        }
+
+        _nodeStyles.Add(new ClassNodeStyle(cssClassName, nodes));
+
+        return this;
+    }
+
+    /// <summary>
+    /// Defines a CSS class to be used to style nodes.
+    /// </summary>
+    /// <param name="name">The name of the CSS class.</param>
+    /// <param name="css">The CSS style to apply to the class.</param>
+    /// <param name="class">The CSS class that was defined.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    public FlowchartBuilder DefineCssClass(string name, string css, out CssClass @class)
+    {
+        if (_isSafe)
+        {
+            name.ThrowIfWhiteSpace();
+            css.ThrowIfWhiteSpace();
+        }
+
+        @class = new CssClass(name, css);
+        _cssClasses.Add(@class);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Specifies a CSS class to be applied to the provided nodes.
+    /// </summary>
+    /// <param name="class">The CSS class to apply to the nodes.</param>
+    /// <param name="nodes">The nodes to apply the class to.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    public FlowchartBuilder StyleNodes(CssClass @class, params Node[] nodes)
+    {
+        if (_isSafe)
+        {
+            @class.ThrowIfForeignTo(_cssClasses);
+            nodes.ThrowIfEmpty();
+            nodes.ThrowIfAnyForeignTo(_items);
+        }
+
+        _nodeStyles.Add(new ClassNodeStyle(@class.Name, nodes));
+
+        return this;
+    }
+
+    /// <summary>
     /// Builds the Mermaid code for the flowchart.
     /// </summary>
     /// <returns>The Mermaid code for the flowchart.</returns>
@@ -263,6 +383,31 @@ public class FlowchartBuilder
 
                 default:
                     throw new InvalidOperationException($"Unknown flow item: {flowItem}");
+            }
+        }
+
+        foreach (LinkStyle linkStyle in _linkStyles)
+        {
+            string linkIds = string.Join(",", linkStyle.Links.Select(l => l.Id));
+            builder.AppendLine($"{Shared.Indent}linkStyle {linkIds} {linkStyle.Css}");
+        }
+
+        foreach (CssClass cssClass in _cssClasses)
+        {
+            builder.AppendLine($"{Shared.Indent}classDef {cssClass.Name} {cssClass.Css}");
+        }
+
+        foreach (INodeStyle nodeStyle in _nodeStyles)
+        {
+            switch (nodeStyle)
+            {
+                case RawNodeStyle rawNodeStyle:
+                    builder.AppendLine($"{Shared.Indent}style {rawNodeStyle.Node.Id} {rawNodeStyle.Css}");
+                    break;
+                case ClassNodeStyle classNodeStyle:
+                    string nodeIds = string.Join(",", classNodeStyle.Nodes.Select(n => n.Id));
+                    builder.AppendLine($"{Shared.Indent}class {nodeIds} {classNodeStyle.ClassName}");
+                    break;
             }
         }
 

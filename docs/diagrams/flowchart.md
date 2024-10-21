@@ -21,8 +21,8 @@ string diagram = Mermaid
     .AddNode("N1", out var n1)
     .AddNode("N2", out var n2)
     .AddNode("N3", out var n3)
-    .AddLink(n1, n2, "some text")
-    .AddLink(n2, n3)
+    .AddLink(n1, n2, out var l1, "some text")
+    .AddLink(n2, n3, out var l2)
     .Build();
 ```
 
@@ -184,8 +184,8 @@ string diagram = Mermaid
     .AddNode("N1", out var n1)
     .AddNode("N2", out var n2)
     .AddNode("N3", out var n3)
-    .AddLink(n1, n2, "l1", LinkLineStyle.Dotted, LinkEnding.Arrow, true)
-    .AddLink(n2, n3, "l2", LinkLineStyle.Thick, LinkEnding.Circle, true, 2)
+    .AddLink(n1, n2, out var l1, "l1", LinkLineStyle.Dotted, LinkEnding.Arrow, true)
+    .AddLink(n2, n3, out var l2, "l2", LinkLineStyle.Thick, LinkEnding.Circle, true, 2)
     .Build();
 ```
 
@@ -227,21 +227,21 @@ string diagram = Mermaid
     .AddNode("N3", out var n3)
     .AddNode("N4", out var n4)
     .AddNode("N5", out var n5)
-    .AddLink(n1, n2)
+    .AddLink(n1, n2, out var l1)
     .AddSubgraph("SG1", out var sg1, builder => builder
-        .AddLink(n2, n3)
-        .AddLink(n3, n4)
+        .AddLink(n2, n3, out var l2)
+        .AddLink(n3, n4, out var l3)
         .AddSubgraph("SG1.1", out var sg11, builder => builder
-            .AddLink(n1, n5)))
-    .AddLink(n4, n1)
+            .AddLink(n1, n5, out var l4))
+    .AddLink(n4, n1, out var l5)
     .AddSubgraph("SG2", out var sg2, builder => builder
         .AddNode("N6", out var n6)
         .AddNode("N7", out var n7)
-        .AddLink(n6, n7), FlowchartOrientation.BottomToTop)
-    .AddLink(n1, sg1)
-    .AddLink(sg2, n4)
-    .AddLink(sg1, sg2)
-    .AddLinkChain([n2, sg2], [n1, sg1])
+        .AddLink(n6, n7, out var l6), FlowchartOrientation.BottomToTop)
+    .AddLink(n1, sg1, out var l7)
+    .AddLink(sg2, n4, out var l8)
+    .AddLink(sg1, sg2, out var l9)
+    .AddLinkChain([n2, sg2], [n1, sg1], out l10)
     .Build();
 ```
 
@@ -345,4 +345,151 @@ flowchart TB
 
 [⬆ Back to top](#flowchart)
 
+## Styling
 
+### Styling links
+
+Links can be styled with CSS by using the `StyleLinks` method.
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .Flowchart()
+    .AddNode("N1", out Node n1)
+    .AddNode("N2", out Node n2)
+    .AddLink(n1, n2, out Link l1)
+    .AddLink(n2, n1, out Link l2)
+    .AddLink(n1, n2, out Link l3)
+    .AddLink(n2, n1, out Link l4)
+    .StyleLinks("stroke: red;", l1, l3)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+flowchart TB
+    id1["N1"]
+    id2["N2"]
+    id1 --> id2
+    id2 --> id1
+    id1 --> id2
+    id2 --> id1
+    linkStyle 1,3 stroke: red;
+```
+
+That renders as:
+
+```mermaid
+flowchart TB
+    id1["N1"]
+    id2["N2"]
+    id1 --> id2
+    id2 --> id1
+    id1 --> id2
+    id2 --> id1
+    linkStyle 1,3 stroke: red;
+```
+
+[⬆ Back to top](#flowchart)
+
+### Stytling curves
+
+Set the `Flowchart.Curve` property of the `MermadConfig` object. See [Mermaid configuration](~/configuration.md) or [the official Mermaid documentation](https://mermaid.js.org/config/setup/interfaces/mermaid.MermaidConfig.html#flowchart) for more information.
+
+[⬆ Back to top](#flowchart)
+
+### Styling nodes
+
+#### Raw CSS
+
+Nodes can be styled with raw CSS by using the `StyleNodes` method.
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .Flowchart()
+    .AddNode("N1", out Node n1)
+    .AddNode("N2", out Node n2)
+    .AddNode("N3", out Node n3)
+    .StyleNodes("fill: red;", n1)
+    .StyleNodes("fill: green;", n2, n3)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+flowchart TB
+    id1["N1"]
+    id2["N2"]
+    id3["N3"]
+    style id1 fill: red;
+    style id2 fill: green;
+    style id3 fill: green;
+```
+
+That renders as:
+
+```mermaid
+flowchart TB
+    id1["N1"]
+    id2["N2"]
+    id3["N3"]
+    style id1 fill: red;
+    style id2 fill: green;
+    style id3 fill: green;
+```
+
+[⬆ Back to top](#flowchart)
+
+#### CSS classes
+
+Nodes can be styled with CSS classes by using the `DefineCssClass` to define a CSS class and the `StyleNodes` method to apply it to nodes.
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .Flowchart()
+    .AddNode("N1", out Node n1)
+    .AddNode("N2", out Node n2)
+    .AddNode("N3", out Node n3)
+    .DefineCssClass("class1", "fill: red;", out CssClass class1)
+    .DefineCssClass("class2", "color: cyan;", out CssClass class2)
+    .StyleNodes(class1, n1, n3)
+    .StyleNodes(class2, n1, n2)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+flowchart TB
+    id1[""N1""]
+    id2[""N2""]
+    id3[""N3""]
+    classDef class1 fill: red;
+    classDef class2 color: cyan;
+    class id1,id3 class1
+    class id1,id2 class2
+```
+
+That renders as:
+
+```mermaid
+flowchart TB
+    id1[""N1""]
+    id2[""N2""]
+    id3[""N3""]
+    classDef class1 fill: red;
+    classDef class2 color: cyan;
+    class id1,id3 class1
+    class id1,id2 class2
+```
+
+If the CSS classes qre defined outside of the mermaid code (e.g. in a CSS file), use the `StyleNodesWithPredefinedCssClass` method instead. This will omit the `classDef` statements.
+
+[⬆ Back to top](#flowchart)

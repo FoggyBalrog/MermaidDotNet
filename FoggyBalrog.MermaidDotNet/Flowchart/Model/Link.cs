@@ -6,6 +6,7 @@
 public record Link : IFlowItem
 {
     internal Link(
+        int id,
         ILinkable[] from,
         ILinkable[] to,
         string? text,
@@ -14,6 +15,7 @@ public record Link : IFlowItem
         bool multidirectional,
         int extraLength)
     {
+        Id = id;
         From = from;
         To = to;
         Text = text;
@@ -22,6 +24,8 @@ public record Link : IFlowItem
         Multidirectional = multidirectional;
         ExtraLength = extraLength;
     }
+
+    internal int Id { get; }
 
     /// <summary>
     /// The flowchart items from which the link originates.

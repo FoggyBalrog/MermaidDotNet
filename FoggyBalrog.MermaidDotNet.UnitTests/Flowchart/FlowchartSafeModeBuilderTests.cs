@@ -97,8 +97,8 @@ public class FlowchartSafeModeBuilderTests
             .AddNode("N1", out Node n1)
             .AddNode("N2", out Node n2)
             .AddNode("N3", out Node n3)
-            .AddLink(n1, n2, "some text")
-            .AddLink(n2, n3)
+            .AddLink(n1, n2, out _, "some text")
+            .AddLink(n2, n3, out _)
             .Build();
 
         Assert.Equal(@"flowchart TB
@@ -126,22 +126,22 @@ public class FlowchartSafeModeBuilderTests
             .AddNode("N10", out Node n10)
             .AddNode("N11", out Node n11)
             .AddNode("N12", out Node n12)
-            .AddLink(n1, n2, "l1", LinkLineStyle.Solid, LinkEnding.Arrow)
-            .AddLink(n2, n3, "l2", LinkLineStyle.Dotted, LinkEnding.Arrow)
-            .AddLink(n3, n1, "l3", LinkLineStyle.Thick, LinkEnding.Arrow)
-            .AddLink(n1, n3, "l4", LinkLineStyle.Invisible, LinkEnding.Arrow)
-            .AddLink(n4, n5, "l5", LinkLineStyle.Solid, LinkEnding.Open)
-            .AddLink(n5, n6, "l6", LinkLineStyle.Dotted, LinkEnding.Open)
-            .AddLink(n6, n4, "l7", LinkLineStyle.Thick, LinkEnding.Open)
-            .AddLink(n4, n6, "l8", LinkLineStyle.Invisible, LinkEnding.Open)
-            .AddLink(n7, n8, "l9", LinkLineStyle.Solid, LinkEnding.Circle)
-            .AddLink(n8, n9, "l10", LinkLineStyle.Dotted, LinkEnding.Circle)
-            .AddLink(n9, n7, "l11", LinkLineStyle.Thick, LinkEnding.Circle)
-            .AddLink(n7, n9, "l12", LinkLineStyle.Invisible, LinkEnding.Circle)
-            .AddLink(n10, n11, "l13", LinkLineStyle.Solid, LinkEnding.Cross)
-            .AddLink(n11, n12, "l14", LinkLineStyle.Dotted, LinkEnding.Cross)
-            .AddLink(n12, n10, "l15", LinkLineStyle.Thick, LinkEnding.Cross)
-            .AddLink(n10, n12, "l16", LinkLineStyle.Invisible, LinkEnding.Cross)
+            .AddLink(n1, n2, out _, "l1", LinkLineStyle.Solid, LinkEnding.Arrow)
+            .AddLink(n2, n3, out _, "l2", LinkLineStyle.Dotted, LinkEnding.Arrow)
+            .AddLink(n3, n1, out _, "l3", LinkLineStyle.Thick, LinkEnding.Arrow)
+            .AddLink(n1, n3, out _, "l4", LinkLineStyle.Invisible, LinkEnding.Arrow)
+            .AddLink(n4, n5, out _, "l5", LinkLineStyle.Solid, LinkEnding.Open)
+            .AddLink(n5, n6, out _, "l6", LinkLineStyle.Dotted, LinkEnding.Open)
+            .AddLink(n6, n4, out _, "l7", LinkLineStyle.Thick, LinkEnding.Open)
+            .AddLink(n4, n6, out _, "l8", LinkLineStyle.Invisible, LinkEnding.Open)
+            .AddLink(n7, n8, out _, "l9", LinkLineStyle.Solid, LinkEnding.Circle)
+            .AddLink(n8, n9, out _, "l10", LinkLineStyle.Dotted, LinkEnding.Circle)
+            .AddLink(n9, n7, out _, "l11", LinkLineStyle.Thick, LinkEnding.Circle)
+            .AddLink(n7, n9, out _, "l12", LinkLineStyle.Invisible, LinkEnding.Circle)
+            .AddLink(n10, n11, out _, "l13", LinkLineStyle.Solid, LinkEnding.Cross)
+            .AddLink(n11, n12, out _, "l14", LinkLineStyle.Dotted, LinkEnding.Cross)
+            .AddLink(n12, n10, out _, "l15", LinkLineStyle.Thick, LinkEnding.Cross)
+            .AddLink(n10, n12, out _, "l16", LinkLineStyle.Invisible, LinkEnding.Cross)
             .Build();
 
         Assert.Equal(@"flowchart TB
@@ -186,10 +186,10 @@ public class FlowchartSafeModeBuilderTests
             .AddNode("N4", out Node n4)
             .AddNode("N5", out Node n5)
             .AddNode("N6", out Node _)
-            .AddLink(n1, n2, "l1", ending: LinkEnding.Arrow, multidirectional: true)
-            .AddLink(n2, n3, "l2", ending: LinkEnding.Open, multidirectional: true)
-            .AddLink(n3, n1, "l3", ending: LinkEnding.Circle, multidirectional: true)
-            .AddLink(n4, n5, "l4", ending: LinkEnding.Cross, multidirectional: true)
+            .AddLink(n1, n2, out _, "l1", ending: LinkEnding.Arrow, multidirectional: true)
+            .AddLink(n2, n3, out _, "l2", ending: LinkEnding.Open, multidirectional: true)
+            .AddLink(n3, n1, out _, "l3", ending: LinkEnding.Circle, multidirectional: true)
+            .AddLink(n4, n5, out _, "l4", ending: LinkEnding.Cross, multidirectional: true)
             .Build();
 
         Assert.Equal(@"flowchart TB
@@ -216,7 +216,7 @@ public class FlowchartSafeModeBuilderTests
             .AddNode("N4", out Node n4)
             .AddNode("N5", out Node n5)
             .AddNode("N6", out Node n6)
-            .AddLinkChain([n1, n2, n3], [n4, n5, n6], "foo")
+            .AddLinkChain([n1, n2, n3], [n4, n5, n6], out _, "foo")
             .Build();
 
         Assert.Equal(@"flowchart TB
@@ -238,11 +238,11 @@ public class FlowchartSafeModeBuilderTests
             .AddNode("N2", out Node n2)
             .AddNode("N3", out Node n3)
             .AddNode("N4", out Node n4)
-            .AddLink(n1, n2, extraLength: 3)
-            .AddLink(n2, n3, "foo", extraLength: 3)
-            .AddLink(n3, n4, lineStyle: LinkLineStyle.Dotted, extraLength: 3)
-            .AddLink(n4, n1, lineStyle: LinkLineStyle.Thick, extraLength: 3)
-            .AddLink(n1, n3, lineStyle: LinkLineStyle.Invisible, extraLength: 3)
+            .AddLink(n1, n2, out _, extraLength: 3)
+            .AddLink(n2, n3, out _, "foo", extraLength: 3)
+            .AddLink(n3, n4, out _, lineStyle: LinkLineStyle.Dotted, extraLength: 3)
+            .AddLink(n4, n1, out _, lineStyle: LinkLineStyle.Thick, extraLength: 3)
+            .AddLink(n1, n3, out _, lineStyle: LinkLineStyle.Invisible, extraLength: 3)
             .Build();
 
         Assert.Equal(@"flowchart TB
@@ -267,21 +267,21 @@ public class FlowchartSafeModeBuilderTests
             .AddNode("N3", out Node n3)
             .AddNode("N4", out Node n4)
             .AddNode("N5", out Node n5)
-            .AddLink(n1, n2)
+            .AddLink(n1, n2, out _)
             .AddSubgraph("SG1", out Subgraph sg1, builder => builder
-                .AddLink(n2, n3)
-                .AddLink(n3, n4)
+                .AddLink(n2, n3, out _)
+                .AddLink(n3, n4, out _)
                 .AddSubgraph("SG1.1", out Subgraph _, builder => builder
-                    .AddLink(n1, n5)))
-            .AddLink(n4, n1)
+                    .AddLink(n1, n5, out _)))
+            .AddLink(n4, n1, out _)
             .AddSubgraph("SG2", out Subgraph sg2, builder => builder
                 .AddNode("N6", out Node n6)
                 .AddNode("N7", out Node n7)
-                .AddLink(n6, n7), FlowchartOrientation.BottomToTop)
-            .AddLink(n1, sg1)
-            .AddLink(sg2, n4)
-            .AddLink(sg1, sg2)
-            .AddLinkChain([n2, sg2], [n1, sg1])
+                .AddLink(n6, n7, out _), FlowchartOrientation.BottomToTop)
+            .AddLink(n1, sg1, out _)
+            .AddLink(sg2, n4, out _)
+            .AddLink(sg1, sg2, out _)
+            .AddLinkChain([n2, sg2], [n1, sg1], out _)
             .Build();
 
         Assert.Equal(@"flowchart TB
@@ -362,4 +362,94 @@ public class FlowchartSafeModeBuilderTests
     id2[""N1""]
     %% This is another comment", diagram, ignoreLineEndingDifferences: true);
     }
+
+    [Fact]
+    public void CanBuildDiagramStyledLinks()
+    {
+        string diagram = Mermaid
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddLink(n1, n2, out Link l1)
+            .AddLink(n2, n1, out Link l2)
+            .AddLink(n1, n2, out Link l3)
+            .AddLink(n2, n1, out Link l4)
+            .StyleLinks("stroke: red;", l1, l3)
+            .Build();
+
+        Assert.Equal(@"flowchart TB
+    id1[""N1""]
+    id2[""N2""]
+    id1 --> id2
+    id2 --> id1
+    id1 --> id2
+    id2 --> id1
+    linkStyle 1,3 stroke: red;", diagram, ignoreLineEndingDifferences: true);
+    }
+
+    [Fact]
+    public void CanBuildDiagramStyledNodesWithRawCss()
+    {
+        string diagram = Mermaid
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .StyleNodes("fill: red;", n1)
+            .StyleNodes("fill: green;", n2, n3)
+            .Build();
+
+        Assert.Equal(@"flowchart TB
+    id1[""N1""]
+    id2[""N2""]
+    id3[""N3""]
+    style id1 fill: red;
+    style id2 fill: green;
+    style id3 fill: green;", diagram, ignoreLineEndingDifferences: true);
+    }
+
+    [Fact]
+    public void CanBuildDiagramStyledNodesWithCssClasses()
+    {
+        string diagram = Mermaid
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .DefineCssClass("class1", "fill: red;", out CssClass class1)
+            .DefineCssClass("class2", "fill: green;", out CssClass class2)
+            .StyleNodes(class1, n1, n3)
+            .StyleNodes(class2, n1, n2)
+            .Build();
+
+        Assert.Equal(@"flowchart TB
+    id1[""N1""]
+    id2[""N2""]
+    id3[""N3""]
+    classDef class1 fill: red;
+    classDef class2 fill: green;
+    class id1,id3 class1
+    class id1,id2 class2", diagram, ignoreLineEndingDifferences: true);
+    }
+
+    [Fact]
+    public void CanBuildDiagramStyledNodesWithPredefinedCssClasses()
+    {
+        string diagram = Mermaid
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .StyleNodesWithPredefinedCssClass("class1", n1, n3)
+            .StyleNodesWithPredefinedCssClass("class2", n1, n2)
+            .Build();
+
+        Assert.Equal(@"flowchart TB
+    id1[""N1""]
+    id2[""N2""]
+    id3[""N3""]
+    class id1,id3 class1
+    class id1,id2 class2", diagram, ignoreLineEndingDifferences: true);
+    }
 }
+

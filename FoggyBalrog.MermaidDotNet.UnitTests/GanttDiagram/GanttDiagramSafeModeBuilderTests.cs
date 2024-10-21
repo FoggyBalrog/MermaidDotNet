@@ -126,7 +126,6 @@ public class GanttDiagramSafeModeBuilderTests
     {
         var config = new MermaidConfig
         {
-            Theme = Theme.Forest,
             Gantt = new GanttDiagramConfig
             {
                 AxisFormat = "%d-%m",
