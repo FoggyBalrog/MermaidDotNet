@@ -5,8 +5,12 @@ on:
     tags:
       - "v*"
 
+env:
+  IS_PRERELEASE: ${{ contains(github.ref, '-') }}
+
 jobs:
   publish-docs:
+    if: ${{ !env.IS_PRERELEASE }}
     runs-on: ubuntu-latest
     
     permissions:
@@ -79,5 +83,6 @@ jobs:
         with:
           generate_release_notes: true
           files: nupkgs/*.nupkg
+          prerelease: ${{ env.IS_PRERELEASE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

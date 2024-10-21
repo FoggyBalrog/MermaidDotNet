@@ -3,7 +3,7 @@
 **FoggyBalrog.MermaidDotNet** is .NET library to generate Mermaid diagrams code.
 
 > [!NOTE]  
-> This documentation applies to the latest published version.
+> This documentation applies to the latest published version, excluding pre-releases.
 > 
 > [![NuGet Version](https://img.shields.io/nuget/v/FoggyBalrog.MermaidDotNet?logo=nuget&color=blue)](https://www.nuget.org/packages/FoggyBalrog.MermaidDotNet)
 
