@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [Pie Chart](https://mermaid.js.org/syntax/pie.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple pie chart
 
 The following code sample shows how to create a simple Mermaid pie chart.
@@ -87,7 +90,10 @@ var pieChart = Mermaid
 The code above generates the following Mermaid code:
 
 ```text
-pie title My Pie Chart
+---
+title: My Pie Chart
+---
+pie
     "Label1": 42.7
     "Label2": 57.3
 ```
@@ -95,7 +101,10 @@ pie title My Pie Chart
 That renders as:
 
 ```mermaid
-pie title My Pie Chart
+---
+title: My Pie Chart
+---
+pie
     "Label1": 42.7
     "Label2": 57.3
 ```

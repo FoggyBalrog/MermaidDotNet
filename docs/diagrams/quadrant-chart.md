@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [Quadrant chart](https://mermaid.js.org/syntax/quadrantChart.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid quadrant chart.
@@ -55,8 +58,10 @@ var quadrantChart = Mermaid
 The code above generates the following Mermaid code:
 
 ```text
+---
+title: Some title
+---
 quadrantChart
-    title Some title
     A: [0.1, 0.2]
     B: [0.3, 0.4]
 ```
@@ -64,8 +69,10 @@ quadrantChart
 That renders as:
 
 ```mermaid
+---
+title: Some title
+---
 quadrantChart
-    title Some title
     A: [0.1, 0.2]
     B: [0.3, 0.4]
 ```

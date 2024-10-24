@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.TimelineDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.TimelineDiagram;
@@ -9,10 +11,11 @@ namespace FoggyBalrog.MermaidDotNet.TimelineDiagram;
 public class TimelineDiagramBuilder
 {
     private readonly string? _title;
+    private readonly MermaidConfig? _config;
     private readonly bool _isSafe;
     private readonly List<ITimelineItem> _items = [];
 
-    internal TimelineDiagramBuilder(string? title, bool isSafe)
+    internal TimelineDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
     {
         if (isSafe)
         {
@@ -20,6 +23,7 @@ public class TimelineDiagramBuilder
         }
 
         _title = title;
+        _config = config;
         _isSafe = isSafe;
     }
 
@@ -71,8 +75,12 @@ public class TimelineDiagramBuilder
         string indent = Shared.Indent;
         var builder = new StringBuilder();
 
+        // Mermaid timeline diagram seems to not support title setting from frontmatter
+        builder.Append(FrontmatterGenerator.Generate(null, _config));
+
         builder.AppendLine("timeline");
 
+        // Mermaid timeline diagram seems to not support title setting from frontmatter
         if (!string.IsNullOrWhiteSpace(_title))
         {
             builder.AppendLine($"{indent}title {_title}");

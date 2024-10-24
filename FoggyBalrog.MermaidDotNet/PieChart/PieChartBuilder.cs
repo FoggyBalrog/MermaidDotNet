@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.PieChart.Model;
 
 namespace FoggyBalrog.MermaidDotNet.PieChart;
@@ -10,11 +12,12 @@ namespace FoggyBalrog.MermaidDotNet.PieChart;
 public class PieChartBuilder
 {
     private readonly bool _displayValuesOnLegend;
+    private readonly MermaidConfig? _config;
     private readonly string? _title;
     private readonly bool _isSafe;
     private readonly List<DataSet> _dataSets = [];
 
-    internal PieChartBuilder(bool displayValuesOnLegend, string? title, bool isSafe)
+    internal PieChartBuilder(string? title, MermaidConfig? config, bool displayValuesOnLegend, bool isSafe)
     {
         if (isSafe)
         {
@@ -22,6 +25,7 @@ public class PieChartBuilder
         }
 
         _displayValuesOnLegend = displayValuesOnLegend;
+        _config = config;
         _title = title;
         _isSafe = isSafe;
     }
@@ -54,16 +58,13 @@ public class PieChartBuilder
     {
         var builder = new StringBuilder();
 
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
+
         builder.Append("pie");
 
         if (_displayValuesOnLegend)
         {
             builder.Append(" showData");
-        }
-
-        if (!string.IsNullOrWhiteSpace(_title))
-        {
-            builder.Append($" title {_title}");
         }
 
         builder.AppendLine();

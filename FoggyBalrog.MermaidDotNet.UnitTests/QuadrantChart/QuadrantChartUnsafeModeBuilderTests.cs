@@ -43,8 +43,10 @@ public class QuadrantChartUnsafeModeBuilderTests
             .AddPoint("B", 0.3, 0.4)
             .Build();
 
-        Assert.Equal(@"quadrantChart
-    title Some title
+        Assert.Equal(@"---
+title: Some title
+---
+quadrantChart
     quadrant-1 Quadrant 1
     quadrant-2 Quadrant 2
     quadrant-3 Quadrant 3
@@ -108,8 +110,10 @@ public class QuadrantChartUnsafeModeBuilderTests
             .AddPoint("B", 0.3, 0.4)
             .Build();
 
-        Assert.Equal(@"quadrantChart
-    title Some title
+        Assert.Equal(@"---
+title: Some title
+---
+quadrantChart
     x-axis Left --> Right
     y-axis Bottom --> Top
     quadrant-1 Quadrant 1

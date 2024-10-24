@@ -72,22 +72,22 @@ public class FlowchartUnsafeModeBuilderTests
     {
         string diagram1 = Mermaid
             .Unsafe
-            .Flowchart(FlowchartOrientation.RightToLeft)
+            .Flowchart(orientation: FlowchartOrientation.RightToLeft)
             .Build();
 
         string diagram2 = Mermaid
             .Unsafe
-            .Flowchart(FlowchartOrientation.LeftToRight)
+            .Flowchart(orientation: FlowchartOrientation.LeftToRight)
             .Build();
 
         string diagram3 = Mermaid
             .Unsafe
-            .Flowchart(FlowchartOrientation.BottomToTop)
+            .Flowchart(orientation: FlowchartOrientation.BottomToTop)
             .Build();
 
         string diagram4 = Mermaid
             .Unsafe
-            .Flowchart(FlowchartOrientation.TopToBottom)
+            .Flowchart(orientation: FlowchartOrientation.TopToBottom)
             .Build();
 
         Assert.Equal("flowchart RL", diagram1, ignoreLineEndingDifferences: true);

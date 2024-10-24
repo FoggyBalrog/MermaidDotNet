@@ -350,28 +350,28 @@ classDiagram
     public void CanBuildClassDiagramsWithAllDirections()
     {
         string diagram1 = Mermaid
-            .ClassDiagram("Top to Bottom", ClassDiagramDirection.TopToBottom)
+            .ClassDiagram("Top to Bottom", direction: ClassDiagramDirection.TopToBottom)
             .AddClass("c1", out Class d1c1)
             .AddClass("c2", out Class d1c2)
             .AddRelationship(d1c1, d1c2, RelationshipType.Inheritance)
             .Build();
 
         string diagram2 = Mermaid
-            .ClassDiagram("Bottom to Top", ClassDiagramDirection.BottomToTop)
+            .ClassDiagram("Bottom to Top", direction: ClassDiagramDirection.BottomToTop)
             .AddClass("c1", out Class d2c1)
             .AddClass("c2", out Class d2c2)
             .AddRelationship(d2c1, d2c2, RelationshipType.Inheritance)
             .Build();
 
         string diagram3 = Mermaid
-            .ClassDiagram("Left to Right", ClassDiagramDirection.LeftToRight)
+            .ClassDiagram("Left to Right", direction: ClassDiagramDirection.LeftToRight)
             .AddClass("c1", out Class d3c1)
             .AddClass("c2", out Class d3c2)
             .AddRelationship(d3c1, d3c2, RelationshipType.Inheritance)
             .Build();
 
         string diagram4 = Mermaid
-            .ClassDiagram("Right to Left", ClassDiagramDirection.RightToLeft)
+            .ClassDiagram("Right to Left", direction: ClassDiagramDirection.RightToLeft)
             .AddClass("c1", out Class d4c1)
             .AddClass("c2", out Class d4c2)
             .AddRelationship(d4c1, d4c2, RelationshipType.Inheritance)

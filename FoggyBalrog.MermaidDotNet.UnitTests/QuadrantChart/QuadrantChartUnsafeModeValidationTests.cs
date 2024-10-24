@@ -7,7 +7,7 @@ public class QuadrantChartUnsafeModeValidationTests
     {
         Mermaid
             .Unsafe
-            .QuadrantChart(" ", "Q1", "Q2", "Q3", "Q4")
+            .QuadrantChart(" ", null, "Q1", "Q2", "Q3", "Q4")
             .Build();
     }
 
@@ -16,7 +16,7 @@ public class QuadrantChartUnsafeModeValidationTests
     {
         Mermaid
             .Unsafe
-            .QuadrantChart("Title", " ", "Q2", "Q3", "Q4")
+            .QuadrantChart("Title", null, " ", "Q2", "Q3", "Q4")
             .Build();
     }
 
@@ -25,7 +25,7 @@ public class QuadrantChartUnsafeModeValidationTests
     {
         Mermaid
             .Unsafe
-            .QuadrantChart("Title", "Q1", " ", "Q3", "Q4")
+            .QuadrantChart("Title", null, "Q1", " ", "Q3", "Q4")
             .Build();
     }
 
@@ -34,7 +34,7 @@ public class QuadrantChartUnsafeModeValidationTests
     {
         Mermaid
             .Unsafe
-            .QuadrantChart("Title", "Q1", "Q2", " ", "Q4")
+            .QuadrantChart("Title", null, "Q1", "Q2", " ", "Q4")
             .Build();
     }
 
@@ -43,7 +43,7 @@ public class QuadrantChartUnsafeModeValidationTests
     {
         Mermaid
             .Unsafe
-            .QuadrantChart("Title", "Q1", "Q2", "Q3", " ")
+            .QuadrantChart("Title", null, "Q1", "Q2", "Q3", " ")
             .Build();
     }
 

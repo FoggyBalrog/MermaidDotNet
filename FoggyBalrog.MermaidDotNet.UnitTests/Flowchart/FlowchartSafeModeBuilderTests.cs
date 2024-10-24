@@ -68,19 +68,19 @@ public class FlowchartSafeModeBuilderTests
     public void CanBuildDiagramWithDifferentOrientations()
     {
         string diagram1 = Mermaid
-            .Flowchart(FlowchartOrientation.RightToLeft)
+            .Flowchart(orientation: FlowchartOrientation.RightToLeft)
             .Build();
 
         string diagram2 = Mermaid
-            .Flowchart(FlowchartOrientation.LeftToRight)
+            .Flowchart(orientation: FlowchartOrientation.LeftToRight)
             .Build();
 
         string diagram3 = Mermaid
-            .Flowchart(FlowchartOrientation.BottomToTop)
+            .Flowchart(orientation: FlowchartOrientation.BottomToTop)
             .Build();
 
         string diagram4 = Mermaid
-            .Flowchart(FlowchartOrientation.TopToBottom)
+            .Flowchart(orientation: FlowchartOrientation.TopToBottom)
             .Build();
 
         Assert.Equal("flowchart RL", diagram1, ignoreLineEndingDifferences: true);

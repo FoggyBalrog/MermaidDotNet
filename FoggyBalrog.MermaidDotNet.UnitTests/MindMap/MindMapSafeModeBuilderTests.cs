@@ -44,7 +44,7 @@ public class MindMapSafeModeBuilderTests
     public void CanBuildMindMapWithDifferentShapes()
     {
         string mindMap = Mermaid
-            .MindMap("Root", NodeShape.Hexagon)
+            .MindMap("Root", rootShape: NodeShape.Hexagon)
             .AddNode("Node 1", out Node node1, shape: NodeShape.Square)
             .AddNode("Node 2", out Node node2, shape: NodeShape.RoundedSquare, parent: node1)
             .AddNode("Node 3", out Node _, shape: NodeShape.Circle, parent: node1)

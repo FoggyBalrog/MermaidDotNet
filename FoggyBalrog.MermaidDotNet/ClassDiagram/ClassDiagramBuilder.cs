@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using FoggyBalrog.MermaidDotNet.ClassDiagram.Model;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 
 namespace FoggyBalrog.MermaidDotNet.ClassDiagram;
 
@@ -9,6 +11,7 @@ namespace FoggyBalrog.MermaidDotNet.ClassDiagram;
 public class ClassDiagramBuilder
 {
     private readonly string? _title;
+    private readonly MermaidConfig? _config;
     private readonly List<IClassDiagramItem> _items = [];
     private readonly List<Relationship> _relationships = [];
     private readonly List<Note> _notes = [];
@@ -16,7 +19,11 @@ public class ClassDiagramBuilder
     private readonly ClassDiagramDirection? _direction;
     private readonly bool _isSafe;
 
-    internal ClassDiagramBuilder(string? title, ClassDiagramDirection? direction, bool isSafe)
+    internal ClassDiagramBuilder(
+        string? title,
+        MermaidConfig? config,
+        ClassDiagramDirection? direction,
+        bool isSafe)
     {
         if (isSafe)
         {
@@ -24,6 +31,7 @@ public class ClassDiagramBuilder
         }
 
         _title = title;
+        _config = config;
         _direction = direction;
         _isSafe = isSafe;
     }
@@ -282,12 +290,7 @@ public class ClassDiagramBuilder
     {
         var builder = new StringBuilder();
 
-        if (!string.IsNullOrWhiteSpace(_title))
-        {
-            builder.AppendLine("---");
-            builder.AppendLine($"title: {_title}");
-            builder.AppendLine("---");
-        }
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
 
         builder.AppendLine("classDiagram");
 

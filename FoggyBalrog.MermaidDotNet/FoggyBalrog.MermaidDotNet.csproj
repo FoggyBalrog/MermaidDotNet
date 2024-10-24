@@ -14,6 +14,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://foggybalrog.github.io/MermaidDotNet</PackageProjectUrl>
+    <UserSecretsId>97d2ea75-59b8-46d1-ac77-23b5ab2cef2f</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\mermaid.png">
@@ -25,5 +26,8 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>FoggyBalrog.MermaidDotNet.UnitTests</_Parameter1>
     </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" Version="16.1.3" />
   </ItemGroup>
 </Project>

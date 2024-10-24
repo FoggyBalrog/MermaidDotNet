@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [Flowchart](https://mermaid.js.org/syntax/flowchart.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple flowchart
 
 The following code sample shows how to create a simple Mermaid flowchart.
@@ -59,7 +62,7 @@ It can be one of the following values:
 - `RightToLeft`
 
 ```csharp
-Mermaid.Flowchart(FlowchartOrientation.BottomToTop)
+Mermaid.Flowchart(orientation: FlowchartOrientation.BottomToTop)
 ```
 
 [⬆ Back to top](#flowchart)
@@ -67,26 +70,6 @@ Mermaid.Flowchart(FlowchartOrientation.BottomToTop)
 ## Node shape
 
 The shape of the nodes can be set by passing a `shape` parameter to the `AddNode` method.
-
-<!-- List values from enum:
-public enum NodeShape
-{
-    Rectangle,
-    RoundEdges,
-    Stadium,
-    Subroutine,
-    Cylindrical,
-    Circle,
-    DoubleCircle,
-    Asymmetric,
-    Rhombus,
-    Hexagon,
-    Parallelogram,
-    ParallelogramAlt,
-    Trapezoid,
-    TrapezoidAlt
-}
- -->
 
 It can be one of the following values:
 

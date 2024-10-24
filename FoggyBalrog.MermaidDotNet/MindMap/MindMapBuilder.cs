@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.MindMap.Model;
 
 namespace FoggyBalrog.MermaidDotNet.MindMap;
@@ -11,9 +13,11 @@ public class MindMapBuilder
     private readonly Node _root;
 
     private readonly HashSet<Node> _nodes;
+    private readonly string? _title;
+    private readonly MermaidConfig? _config;
     private readonly bool _isSafe;
 
-    internal MindMapBuilder(string rootText, NodeShape rootShape, bool isSafe)
+    internal MindMapBuilder(string rootText, string? title, MermaidConfig? config, NodeShape rootShape, bool isSafe)
     {
         if (isSafe)
         {
@@ -22,6 +26,8 @@ public class MindMapBuilder
 
         _root = new Node(rootText, rootShape);
         _nodes = [_root];
+        _title = title;
+        _config = config;
         _isSafe = isSafe;
     }
 
@@ -56,6 +62,8 @@ public class MindMapBuilder
     public string Build()
     {
         var builder = new StringBuilder();
+
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
 
         builder.AppendLine("mindmap");
 

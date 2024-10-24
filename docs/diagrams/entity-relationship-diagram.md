@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [Entity Relationship Diagram](https://mermaid.js.org/syntax/entityRelationshipDiagram.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple diagram
 
 The following code sample shows how to create a simple entity relationship diagram.

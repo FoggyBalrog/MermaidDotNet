@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.RequirementDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.RequirementDiagram;
@@ -10,10 +12,14 @@ public class RequirementDiagramBuilder
 {
     private readonly List<IRequirementNode> _nodes = [];
     private readonly List<Relationship> _relationships = [];
-    private bool _isSafe;
+    private readonly string? _title;
+    private readonly MermaidConfig? _config;
+    private readonly bool _isSafe;
 
-    internal RequirementDiagramBuilder(bool isSafe)
+    internal RequirementDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
     {
+        _title = title;
+        _config = config;
         _isSafe = isSafe;
     }
 
@@ -104,6 +110,8 @@ public class RequirementDiagramBuilder
     public string Build()
     {
         var builder = new StringBuilder();
+
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
 
         builder.AppendLine("requirementDiagram");
 

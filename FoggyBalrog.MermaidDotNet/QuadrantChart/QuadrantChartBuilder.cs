@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.QuadrantChart.Model;
 
 namespace FoggyBalrog.MermaidDotNet.QuadrantChart;
@@ -11,6 +13,7 @@ public class QuadrantChartBuilder
 {
     private readonly List<Point> _points = [];
     private readonly string? _title;
+    private readonly MermaidConfig? _config;
     private readonly string? _quadrant1;
     private readonly string? _quadrant2;
     private readonly string? _quadrant3;
@@ -23,6 +26,7 @@ public class QuadrantChartBuilder
 
     internal QuadrantChartBuilder(
         string? title,
+        MermaidConfig? config,
         string? quadrant1,
         string? quadrant2,
         string? quadrant3,
@@ -39,6 +43,7 @@ public class QuadrantChartBuilder
         }
 
         _title = title;
+        _config = config;
         _quadrant1 = quadrant1;
         _quadrant2 = quadrant2;
         _quadrant3 = quadrant3;
@@ -116,12 +121,9 @@ public class QuadrantChartBuilder
     {
         var builder = new StringBuilder();
 
-        builder.AppendLine("quadrantChart");
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
 
-        if (!string.IsNullOrWhiteSpace(_title))
-        {
-            builder.AppendLine($"{Shared.Indent}title {_title}");
-        }
+        builder.AppendLine("quadrantChart");
 
         if (_axisLeft != null)
         {

@@ -21,33 +21,6 @@ public class GanttDiagramUnsafeModeValidationTests
     }
 
     [Fact]
-    public void GanttDiagram_DoesNotThrowIfAxisFormatIsWhiteSpace()
-    {
-        Mermaid
-            .Unsafe
-            .GanttDiagram(axisFormat: " ")
-            .Build();
-    }
-
-    [Fact]
-    public void GanttDiagram_DoesNotThrowIfTickIntervalIsWhiteSpace()
-    {
-        Mermaid
-            .Unsafe
-            .GanttDiagram(tickInterval: " ")
-            .Build();
-    }
-
-    [Fact]
-    public void GanttDiagram_DoesNotThrowIfWeekIntervalStartDayIsWhiteSpace()
-    {
-        Mermaid
-            .Unsafe
-            .GanttDiagram(weekIntervalStartDay: " ")
-            .Build();
-    }
-
-    [Fact]
     public void AddTask1_DoesNotThrowIfNameIsWhiteSpace()
     {
         Mermaid

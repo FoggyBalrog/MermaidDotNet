@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [Mindmaps](https://mermaid.js.org/syntax/mindmap.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid mind map.
@@ -73,7 +76,7 @@ Example:
 
 ```csharp
 var mindMap = Mermaid
-    .MindMap("Root", NodeShape.Hexagon)
+    .MindMap("Root", rootShape: NodeShape.Hexagon)
     .AddNode("Node 1", out var node1, shape: NodeShape.Square)
     .AddNode("Node 2", out var node2, shape: NodeShape.RoundedSquare, parent: node1)
     .AddNode("Node 3", out var node3, shape: NodeShape.Circle, parent: node1)

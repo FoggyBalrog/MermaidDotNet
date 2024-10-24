@@ -43,8 +43,10 @@ public class UserJourneyDiagramSafeModeBuilderTests
             .AddTask("Task 6", 6, "Actor 2")
             .Build();
 
-        Assert.Equal(@"journey
-    title My title
+        Assert.Equal(@"---
+title: My title
+---
+journey
     Task 1: 1: Actor 1, Actor 2
     Task 2: 2
     section Section 1

@@ -27,42 +27,6 @@ public class GanttDiagramSafeModeValidationTests
     }
 
     [Fact]
-    public void GanttDiagram_ThrowsIfAxisFormatIsWhiteSpace()
-    {
-        var exception = Assert.Throws<MermaidException>(() =>
-        {
-            Mermaid
-                .GanttDiagram(axisFormat: " ");
-        });
-
-        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
-    }
-
-    [Fact]
-    public void GanttDiagram_ThrowsIfTickIntervalIsWhiteSpace()
-    {
-        var exception = Assert.Throws<MermaidException>(() =>
-        {
-            Mermaid
-                .GanttDiagram(tickInterval: " ");
-        });
-
-        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
-    }
-
-    [Fact]
-    public void GanttDiagram_ThrowsIfWeekIntervalStartDayIsWhiteSpace()
-    {
-        var exception = Assert.Throws<MermaidException>(() =>
-        {
-            Mermaid
-                .GanttDiagram(weekIntervalStartDay: " ");
-        });
-
-        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
-    }
-
-    [Fact]
     public void AddTask1_ThrowsIfNameIsWhiteSpace()
     {
         var exception = Assert.Throws<MermaidException>(() =>

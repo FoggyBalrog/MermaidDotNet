@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.Flowchart.Model;
 
 namespace FoggyBalrog.MermaidDotNet.Flowchart;
@@ -9,11 +11,19 @@ namespace FoggyBalrog.MermaidDotNet.Flowchart;
 public class FlowchartBuilder
 {
     private readonly List<IFlowItem> _items = [];
+    private readonly string? _title;
+    private readonly MermaidConfig? _config;
     private readonly FlowchartOrientation _orientation;
     private readonly bool _isSafe;
 
-    internal FlowchartBuilder(FlowchartOrientation orientation, bool isSafe)
+    internal FlowchartBuilder(
+        string? title,
+        MermaidConfig? config,
+        FlowchartOrientation orientation,
+        bool isSafe)
     {
+        _title = title;
+        _config = config;
         _orientation = orientation;
         _isSafe = isSafe;
     }
@@ -220,6 +230,8 @@ public class FlowchartBuilder
     public string Build()
     {
         var builder = new StringBuilder();
+
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
 
         string orientation = SymbolMaps.Orientation[_orientation];
 

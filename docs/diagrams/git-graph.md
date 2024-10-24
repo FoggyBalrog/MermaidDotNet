@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [Git Graphs](https://mermaid.js.org/syntax/gitgraph.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid git graph.
@@ -250,64 +253,6 @@ title: My Git Graph
 ---
 gitGraph TB:
     commit
-```
-
-[⬆ Back to top](#git-graph)
-
-## Parallel commits
-
-Commits of different branches can be displayed in parallel. This can be enabled by passing the `parallelCommits` parameter to the `GitGraph` method.
-
-Example:
-
-```csharp
-string graph = Mermaid
-    .GitGraph(parallelCommits: true)
-    .Commit()
-    .Branch("dev", out Branch dev)
-    .Checkout(dev)
-    .Commit()
-    .Commit()
-    .CheckoutMain()
-    .Commit()
-    .Commit()
-    .Build();
-```
-
-The code above generates the following Mermaid code:
-
-```text
----
-config:
-    gitGraph:
-        parallelCommits: true
----
-gitGraph:
-  commit
-  branch dev
-  commit
-  commit
-  checkout main
-  commit
-  commit
-```
-
-That renders as:
-
-```mermaid
----
-config:
-    gitGraph:
-        parallelCommits: true
----
-gitGraph:
-  commit
-  branch dev
-  commit
-  commit
-  checkout main
-  commit
-  commit
 ```
 
 [⬆ Back to top](#git-graph)

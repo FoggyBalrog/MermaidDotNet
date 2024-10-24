@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [Sequence Diagram](https://mermaid.js.org/syntax/sequenceDiagram.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid sequence diagram.
@@ -46,16 +49,13 @@ sequenceDiagram
 
 ## Autonumbering
 
-Autonumbering can be enabled (it is disabled by default).
-
-Use the `WithAutoNumber` method to enable autonumbering.
+Autonumbering can be enabled (it is disabled by default) by setting the `autonumber` argument of the `SequenceDiagram` method to `true`.
 
 Example:
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram()
-    .WithAutoNumber()
+    .SequenceDiagram(autonumber: true)
     .AddMember("Alice", MemberType.Participant, out var m1)
     .AddMember("Bob", MemberType.Participant, out var m2)
     .SendMessage(m1, m2, $"Hello {m2.Name}!")

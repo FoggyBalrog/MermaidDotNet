@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.GanttDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.GanttDiagram;
@@ -10,12 +12,9 @@ public class GanttDiagramBuilder
 {
     private string _indent = Shared.Indent;
     private readonly string? _title;
-    private readonly bool _compactMode;
+    private readonly MermaidConfig? _config;
     private readonly bool _hideTodayMarker;
     private readonly string _dateFormat;
-    private readonly string? _axisFormat;
-    private readonly string? _tickInterval;
-    private readonly string? _weekIntervalStartDay;
     private readonly bool _isSafe;
     private readonly List<Exclude> _excludes = [];
     private readonly List<IGanttItem> _items = [];
@@ -23,30 +22,21 @@ public class GanttDiagramBuilder
 
     internal GanttDiagramBuilder(
         string? title,
-        bool compactMode,
+        MermaidConfig? config,
         bool hideTodayMarker,
         string dateFormat,
-        string? axisFormat,
-        string? tickInterval,
-        string? weekIntervalStartDay,
         bool isSafe)
     {
         if (isSafe)
         {
             title.ThrowIfWhiteSpace();
             dateFormat.ThrowIfWhiteSpace();
-            axisFormat.ThrowIfWhiteSpace();
-            tickInterval.ThrowIfWhiteSpace();
-            weekIntervalStartDay.ThrowIfWhiteSpace();
         }
 
         _title = title;
-        _compactMode = compactMode;
+        _config = config;
         _hideTodayMarker = hideTodayMarker;
         _dateFormat = dateFormat;
-        _axisFormat = axisFormat;
-        _tickInterval = tickInterval;
-        _weekIntervalStartDay = weekIntervalStartDay;
         _isSafe = isSafe;
     }
 
@@ -349,41 +339,15 @@ public class GanttDiagramBuilder
     {
         var builder = new StringBuilder();
 
-        if (_compactMode)
-        {
-            builder
-                .AppendLine("---")
-                .AppendLine("displayMode: compact")
-                .AppendLine("---");
-        }
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
 
         builder.AppendLine("gantt");
-
-        if (!string.IsNullOrWhiteSpace(_title))
-        {
-            builder.AppendLine($"{_indent}title {_title}");
-        }
 
         builder.AppendLine($"{_indent}dateFormat {_dateFormat}");
 
         if (_hideTodayMarker)
         {
             builder.AppendLine($"{_indent}todayMarker off");
-        }
-
-        if (!string.IsNullOrWhiteSpace(_axisFormat))
-        {
-            builder.AppendLine($"{_indent}axisFormat {_axisFormat}");
-        }
-
-        if (!string.IsNullOrWhiteSpace(_tickInterval))
-        {
-            builder.AppendLine($"{_indent}tickInterval {_tickInterval}");
-        }
-
-        if (!string.IsNullOrWhiteSpace(_weekIntervalStartDay))
-        {
-            builder.AppendLine($"{_indent}weekday {_weekIntervalStartDay}");
         }
 
         if (_excludes.Count > 0)
