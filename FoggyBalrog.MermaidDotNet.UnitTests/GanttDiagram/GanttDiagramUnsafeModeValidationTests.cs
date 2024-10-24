@@ -21,6 +21,24 @@ public class GanttDiagramUnsafeModeValidationTests
     }
 
     [Fact]
+    public void GanttDiagram_DoesNotThrowIfTodayMarkerCssIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .GanttDiagram(todayMarkerCss: " ")
+            .Build();
+    }
+
+    [Fact]
+    public void GanttDiagram_DoesNotThrowIfTodayMarkerCssIsNotNullWhenHideTodayMarkerIsTrue()
+    {
+        Mermaid
+            .Unsafe
+            .GanttDiagram(hideTodayMarker: true, todayMarkerCss: " ")
+            .Build();
+    }
+
+    [Fact]
     public void AddTask1_DoesNotThrowIfNameIsWhiteSpace()
     {
         Mermaid

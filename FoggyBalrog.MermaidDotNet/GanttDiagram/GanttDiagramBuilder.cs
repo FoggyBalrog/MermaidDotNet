@@ -14,6 +14,7 @@ public class GanttDiagramBuilder
     private readonly string? _title;
     private readonly MermaidConfig? _config;
     private readonly bool _hideTodayMarker;
+    private readonly string? _todayMarkerCss;
     private readonly string _dateFormat;
     private readonly bool _isSafe;
     private readonly List<Exclude> _excludes = [];
@@ -24,6 +25,7 @@ public class GanttDiagramBuilder
         string? title,
         MermaidConfig? config,
         bool hideTodayMarker,
+        string? todayMarkerCss,
         string dateFormat,
         bool isSafe)
     {
@@ -31,11 +33,18 @@ public class GanttDiagramBuilder
         {
             title.ThrowIfWhiteSpace();
             dateFormat.ThrowIfWhiteSpace();
+            todayMarkerCss.ThrowIfWhiteSpace();
+
+            if (hideTodayMarker && todayMarkerCss is not null)
+            {
+                throw MermaidException.InvalidConfiguration($"{nameof(hideTodayMarker)} and {nameof(todayMarkerCss)} cannot be used together.");
+            }
         }
 
         _title = title;
         _config = config;
         _hideTodayMarker = hideTodayMarker;
+        _todayMarkerCss = todayMarkerCss;
         _dateFormat = dateFormat;
         _isSafe = isSafe;
     }
@@ -348,6 +357,11 @@ public class GanttDiagramBuilder
         if (_hideTodayMarker)
         {
             builder.AppendLine($"{_indent}todayMarker off");
+        }
+
+        if (_todayMarkerCss is not null)
+        {
+            builder.AppendLine($"{_indent}todayMarker {_todayMarkerCss}");
         }
 
         if (_excludes.Count > 0)

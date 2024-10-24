@@ -69,6 +69,7 @@ public static class Mermaid
         /// <param name="title">An optional title for the diagram.</param>
         /// <param name="config">An optional configuration for the diagram.</param>
         /// <param name="hideTodayMarker">Specifies whether the today marker should be hidden.</param>
+        /// <param name="todayMarkerCss">An optional CSS class for the today marker. If not specified, the default class from Mermaid will be used on rendering.</param>
         /// <param name="dateFormat">Specifies the date format to use. Refer to the Mermaid documentation for supported formats.</param>
         /// <returns>A new <see cref="GanttDiagramBuilder"/> instance.</returns>
         /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
@@ -77,7 +78,8 @@ public static class Mermaid
             string? title = null,
             MermaidConfig? config = null,
             bool hideTodayMarker = false,
-            string dateFormat = "YYYY-MM-DD") => new(title, config, hideTodayMarker, dateFormat, isSafe: false);
+            string? todayMarkerCss = null,
+            string dateFormat = "YYYY-MM-DD") => new(title, config, hideTodayMarker, todayMarkerCss, dateFormat, isSafe: false);
 
         /// <summary>
         /// Starts creating a Git graph, in unsafe mode.
@@ -238,6 +240,7 @@ public static class Mermaid
     /// <param name="title">An optional title for the diagram.</param>
     /// <param name="config">An optional configuration for the diagram.</param>
     /// <param name="hideTodayMarker">Specifies whether the today marker should be hidden.</param>
+    /// <param name="todayMarkerCss">An optional CSS class for the today marker. If not specified, the default class from Mermaid will be used on rendering.</param>
     /// <param name="dateFormat">Specifies the date format to use. Refer to the Mermaid documentation for supported formats.</param>
     /// <returns>A new <see cref="GanttDiagramBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
@@ -246,7 +249,8 @@ public static class Mermaid
         string? title = null,
         MermaidConfig? config = null,
         bool hideTodayMarker = false,
-        string dateFormat = "YYYY-MM-DD") => new(title, config, hideTodayMarker, dateFormat, isSafe: true);
+        string? todayMarkerCss = null,
+        string dateFormat = "YYYY-MM-DD") => new(title, config, hideTodayMarker, todayMarkerCss, dateFormat, isSafe: true);
 
     /// <summary>
     /// Starts creating a Git graph.

@@ -27,6 +27,30 @@ public class GanttDiagramSafeModeValidationTests
     }
 
     [Fact]
+    public void GanttDiagram_ThrowsIfTodayMarkerCssIsWhiteSpace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .GanttDiagram(todayMarkerCss: " ");
+        });
+
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
+
+    [Fact]
+    public void GanttDiagram_ThrowsIfTodayMarkerCssIsNotNullWhenHideTodayMarkerIsTrue()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .GanttDiagram(hideTodayMarker: true, todayMarkerCss: "stroke: #d3d3d3; stroke-width: 2px;");
+        });
+
+        Assert.Equal(MermaidExceptionReason.InvalidConfiguration, exception.Reason);
+    }
+
+    [Fact]
     public void AddTask1_ThrowsIfNameIsWhiteSpace()
     {
         var exception = Assert.Throws<MermaidException>(() =>

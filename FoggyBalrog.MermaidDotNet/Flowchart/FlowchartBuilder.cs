@@ -242,9 +242,9 @@ public class FlowchartBuilder
     /// <param name="css">The CSS style to apply to the links.</param>
     /// <param name="links">The links to apply the style to.</param>
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
-    /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>"
-    /// <exception cref="MermaidException">Thrown when <paramref name="links"/> is empty, with a reason of <see cref="MermaidExceptionReason.EmptyCollection"/>.</exception>"
-    /// <exception cref="MermaidException">Thrown when any of the links in <paramref name="links"/> are not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>"
+    /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="links"/> is empty, with a reason of <see cref="MermaidExceptionReason.EmptyCollection"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when any of the links in <paramref name="links"/> are not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public FlowchartBuilder StyleLinks(string css, params Link[] links)
     {
         if (_isSafe)
@@ -265,9 +265,9 @@ public class FlowchartBuilder
     /// <param name="css">The CSS style to apply to the nodes.</param>
     /// <param name="nodes">The nodes to apply the style to.</param>
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
-    /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>"
-    /// <exception cref="MermaidException">Thrown when <paramref name="nodes"/> is empty, with a reason of <see cref="MermaidExceptionReason.EmptyCollection"/>.</exception>"
-    /// <exception cref="MermaidException">Thrown when any of the nodes in <paramref name="nodes"/> are not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>"
+    /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="nodes"/> is empty, with a reason of <see cref="MermaidExceptionReason.EmptyCollection"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when any of the nodes in <paramref name="nodes"/> are not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public FlowchartBuilder StyleNodes(string css, params Node[] nodes)
     {
         if (_isSafe)

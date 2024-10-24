@@ -40,7 +40,7 @@ public class GitGraphBuilder
     /// <param name="id">An optional identifier for the commit. If not specified, the commit will be assigned an auto-generated identifier.</param>
     /// <param name="type">The type of the commit.</param>
     /// <param name="tag">An optional tag for the commit.</param>
-    /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>"/>
+    /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="id"/> or <paramref name="tag"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GitGraphBuilder Commit(string? id = null, CommitType type = CommitType.Normal, string? tag = null)
     {

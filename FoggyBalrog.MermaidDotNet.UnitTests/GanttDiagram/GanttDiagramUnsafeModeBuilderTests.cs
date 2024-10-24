@@ -145,6 +145,7 @@ public class GanttDiagramUnsafeModeBuilderTests
                 title: "My Gantt",
                 config: config,
                 hideTodayMarker: true,
+                todayMarkerCss: "stroke: #d3d3d3; stroke-width: 2px;",
                 dateFormat: "DD-MM-YYYY")
             .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _)
             .Build();
@@ -161,6 +162,7 @@ config:
 gantt
     dateFormat DD-MM-YYYY
     todayMarker off
+    todayMarker stroke: #d3d3d3; stroke-width: 2px;
     Foo: task1, 01-05-2024, 05-05-2024", diagram, ignoreLineEndingDifferences: true);
     }
 

@@ -135,11 +135,21 @@ public class GanttDiagramSafeModeBuilderTests
             }
         };
 
-        string diagram = Mermaid
+        string diagram1 = Mermaid
             .GanttDiagram(
                 title: "My Gantt",
                 config: config,
                 hideTodayMarker: true,
+                dateFormat: "DD-MM-YYYY")
+            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _)
+            .Build();
+
+        string diagram2 = Mermaid
+            .GanttDiagram(
+                title: "My Gantt",
+                config: config,
+                hideTodayMarker: false,
+                todayMarkerCss: "stroke: #d3d3d3; stroke-width: 2px;",
                 dateFormat: "DD-MM-YYYY")
             .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _)
             .Build();
@@ -156,7 +166,21 @@ config:
 gantt
     dateFormat DD-MM-YYYY
     todayMarker off
-    Foo: task1, 01-05-2024, 05-05-2024", diagram, ignoreLineEndingDifferences: true);
+    Foo: task1, 01-05-2024, 05-05-2024", diagram1, ignoreLineEndingDifferences: true);
+
+        Assert.Equal(@"---
+title: My Gantt
+config:
+  gantt:
+    axisFormat: '%d-%m'
+    tickInterval: 1week
+    displayMode: compact
+    weekday: monday
+---
+gantt
+    dateFormat DD-MM-YYYY
+    todayMarker stroke: #d3d3d3; stroke-width: 2px;
+    Foo: task1, 01-05-2024, 05-05-2024", diagram2, ignoreLineEndingDifferences: true);
     }
 
     [Fact]

@@ -234,7 +234,6 @@ gantt
 ## Customization
 
 The Gantt diagram by passing optional parameters to the `GanttDiagram` method. The following parameters can be customized (in addition to the `MermaidConfig` object that can be passed to any diagram builder method):
-
 - `title`: The title of the diagram.
 - `hideTodayMarker`: Whether to hide the today marker.
 - `dateFormat`: The date format. See format [here](https://day.js.org/docs/en/parse/string-format/).
@@ -276,6 +275,39 @@ title: My Gantt
 gantt
     dateFormat DD-MM-YYYY
     todayMarker off
+    Foo: task1, 01-05-2024, 05-05-2024
+```
+
+[⬆ Back to top](#gantt-diagram)
+
+## Styling
+
+### Today marker
+
+The today marker can be styled by passing CSS to the `todayMarkerCss` parameter of the `GanttDiagram` method. 
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .GanttDiagram(todayMarkerCss: "stroke:red,stroke-width:10px")
+    .AddTask("Foo", DateTimeOffset.Parse("2024-05-01"), DateTimeOffset.Parse("2024-05-05"), out var t1)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+gantt
+    todayMarker stroke:red,stroke-width:10px
+    Foo: task1, 01-05-2024, 05-05-2024
+```
+
+That renders as:
+
+```mermaid
+gantt
+    todayMarker stroke:red,stroke-width:10px
     Foo: task1, 01-05-2024, 05-05-2024
 ```
 
