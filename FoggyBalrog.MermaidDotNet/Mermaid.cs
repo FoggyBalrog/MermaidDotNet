@@ -60,6 +60,7 @@ public static class Mermaid
         /// <param name="title">An optional title for the diagram.</param>
         /// <param name="compactMode">Specifies whether the compact mode should be used.</param>
         /// <param name="hideTodayMarker">Specifies whether the today marker should be hidden.</param>
+        /// <param name="todayMarkerCss">An optional CSS class for the today marker. If not specified, the default class from Mermaid will be used on rendering.</param>
         /// <param name="dateFormat">Specifies the date format to use. Refer to the Mermaid documentation for supported formats.</param>
         /// <param name="axisFormat">An optional format for the axis. If not specified, the default format from Mermaid will be used on rendering. Refer to the Mermaid documentation for supported formats.</param>
         /// <param name="tickInterval">An optional tick interval for the diagram. If not specified, the default interval from Mermaid will be used on rendering. Refer to the Mermaid documentation for supported intervals.</param>
@@ -70,14 +71,17 @@ public static class Mermaid
         /// <exception cref="MermaidException">Thrown when <paramref name="axisFormat"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
         /// <exception cref="MermaidException">Thrown when <paramref name="tickInterval"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
         /// <exception cref="MermaidException">Thrown when <paramref name="weekIntervalStartDay"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        /// <exception cref="MermaidException">Thrown when <paramref name="todayMarkerCss"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        /// <exception cref="MermaidException">Thrown when <paramref name="todayMarkerCss"/> is not <c>null</c> and <paramref name="hideTodayMarker"/> is <c>true</c>, with the reason <see cref="MermaidExceptionReason.InvalidConfiguration"/>.</exception>
         public static GanttDiagramBuilder GanttDiagram(
             string? title = null,
             bool compactMode = false,
             bool hideTodayMarker = false,
+            string? todayMarkerCss = null,
             string dateFormat = "YYYY-MM-DD",
             string? axisFormat = null,
             string? tickInterval = null,
-            string? weekIntervalStartDay = null) => new(title, compactMode, hideTodayMarker, dateFormat, axisFormat, tickInterval, weekIntervalStartDay, isSafe: false);
+            string? weekIntervalStartDay = null) => new(title, compactMode, hideTodayMarker, todayMarkerCss, dateFormat, axisFormat, tickInterval, weekIntervalStartDay, isSafe: false);
 
         /// <summary>
         /// Starts creating a Git graph, in unsafe mode.
@@ -200,6 +204,7 @@ public static class Mermaid
     /// <param name="title">An optional title for the diagram.</param>
     /// <param name="compactMode">Specifies whether the compact mode should be used.</param>
     /// <param name="hideTodayMarker">Specifies whether the today marker should be hidden.</param>
+    /// <param name="todayMarkerCss">An optional CSS class for the today marker. If not specified, the default class from Mermaid will be used on rendering.</param>
     /// <param name="dateFormat">Specifies the date format to use. Refer to the Mermaid documentation for supported formats.</param>
     /// <param name="axisFormat">An optional format for the axis. If not specified, the default format from Mermaid will be used on rendering. Refer to the Mermaid documentation for supported formats.</param>
     /// <param name="tickInterval">An optional tick interval for the diagram. If not specified, the default interval from Mermaid will be used on rendering. Refer to the Mermaid documentation for supported intervals.</param>
@@ -210,14 +215,17 @@ public static class Mermaid
     /// <exception cref="MermaidException">Thrown when <paramref name="axisFormat"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     /// <exception cref="MermaidException">Thrown when <paramref name="tickInterval"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     /// <exception cref="MermaidException">Thrown when <paramref name="weekIntervalStartDay"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="todayMarkerCss"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="todayMarkerCss"/> is not <c>null</c> and <paramref name="hideTodayMarker"/> is <c>true</c>, with the reason <see cref="MermaidExceptionReason.InvalidConfiguration"/>.</exception>
     public static GanttDiagramBuilder GanttDiagram(
         string? title = null,
         bool compactMode = false,
         bool hideTodayMarker = false,
+        string? todayMarkerCss = null,
         string dateFormat = "YYYY-MM-DD",
         string? axisFormat = null,
         string? tickInterval = null,
-        string? weekIntervalStartDay = null) => new(title, compactMode, hideTodayMarker, dateFormat, axisFormat, tickInterval, weekIntervalStartDay, isSafe: true);
+        string? weekIntervalStartDay = null) => new(title, compactMode, hideTodayMarker, todayMarkerCss, dateFormat, axisFormat, tickInterval, weekIntervalStartDay, isSafe: true);
 
     /// <summary>
     /// Starts creating a Git graph.

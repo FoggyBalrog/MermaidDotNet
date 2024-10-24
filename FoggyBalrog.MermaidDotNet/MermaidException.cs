@@ -50,4 +50,9 @@ public class MermaidException : Exception
     {
         return new MermaidException(MermaidExceptionReason.WhiteSpace, $"Item at index {index} in collection '{itemsName}' cannot be whitespace.");
     }
+
+    internal static Exception InvalidConfiguration(string comment)
+    {
+        return new MermaidException(MermaidExceptionReason.InvalidConfiguration, $"Invalid configuration: {comment}");
+    }
 }

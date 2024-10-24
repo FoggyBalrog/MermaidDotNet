@@ -232,15 +232,6 @@ gantt
 
 The Gantt diagram by passing optional parameters to the `GanttDiagram` method. The following parameters can be customized:
 
-<!-- public static GanttDiagramBuilder GanttDiagram(
-    string? title = null,
-    bool compactMode = false,
-    bool hideTodayMarker = false,
-    string dateFormat = "YYYY-MM-DD",
-    string? axisFormat = null,
-    string? tickInterval = null,
-    string? weekIntervalStartDay = null) -->
-
 - `title`: The title of the diagram.
 - `compactMode`: Whether to use compact mode.
 - `hideTodayMarker`: Whether to hide the today marker.
@@ -294,6 +285,39 @@ gantt
     axisFormat %d-%m
     tickInterval 1week
     weekday monday
+    Foo: task1, 01-05-2024, 05-05-2024
+```
+
+[⬆ Back to top](#gantt-diagram)
+
+## Styling
+
+### Today marker
+
+The today marker can be styled by passing CSS to the `todayMarkerCss` parameter of the `GanttDiagram` method. 
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .GanttDiagram(todayMarkerCss: "stroke:red,stroke-width:10px")
+    .AddTask("Foo", DateTimeOffset.Parse("2024-05-01"), DateTimeOffset.Parse("2024-05-05"), out var t1)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+gantt
+    todayMarker stroke:red,stroke-width:10px
+    Foo: task1, 01-05-2024, 05-05-2024
+```
+
+That renders as:
+
+```mermaid
+gantt
+    todayMarker stroke:red,stroke-width:10px
     Foo: task1, 01-05-2024, 05-05-2024
 ```
 

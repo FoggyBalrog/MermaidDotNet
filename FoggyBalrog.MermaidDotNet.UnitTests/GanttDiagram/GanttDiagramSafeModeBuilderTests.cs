@@ -122,11 +122,24 @@ public class GanttDiagramSafeModeBuilderTests
     [Fact]
     public void CanBuildGanttDiagramWithConfiguration()
     {
-        string diagram = Mermaid
+        string diagram1 = Mermaid
             .GanttDiagram(
                 title: "My Gantt",
                 compactMode: true,
                 hideTodayMarker: true,
+                dateFormat: "DD-MM-YYYY",
+                axisFormat: "%d-%m",
+                tickInterval: "1week",
+                weekIntervalStartDay: "monday")
+            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _)
+            .Build();
+
+        string diagram2 = Mermaid
+            .GanttDiagram(
+                title: "My Gantt",
+                compactMode: true,
+                hideTodayMarker: false,
+                todayMarkerCss: "stroke: #d3d3d3; stroke-width: 2px;",
                 dateFormat: "DD-MM-YYYY",
                 axisFormat: "%d-%m",
                 tickInterval: "1week",
@@ -144,7 +157,19 @@ gantt
     axisFormat %d-%m
     tickInterval 1week
     weekday monday
-    Foo: task1, 01-05-2024, 05-05-2024", diagram, ignoreLineEndingDifferences: true);
+    Foo: task1, 01-05-2024, 05-05-2024", diagram1, ignoreLineEndingDifferences: true);
+
+        Assert.Equal(@"---
+displayMode: compact
+---
+gantt
+    title My Gantt
+    dateFormat DD-MM-YYYY
+    todayMarker stroke: #d3d3d3; stroke-width: 2px;
+    axisFormat %d-%m
+    tickInterval 1week
+    weekday monday
+    Foo: task1, 01-05-2024, 05-05-2024", diagram2, ignoreLineEndingDifferences: true);
     }
 
     [Fact]

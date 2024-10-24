@@ -12,6 +12,7 @@ public class GanttDiagramBuilder
     private readonly string? _title;
     private readonly bool _compactMode;
     private readonly bool _hideTodayMarker;
+    private readonly string? _todayMarkerCss;
     private readonly string _dateFormat;
     private readonly string? _axisFormat;
     private readonly string? _tickInterval;
@@ -25,6 +26,7 @@ public class GanttDiagramBuilder
         string? title,
         bool compactMode,
         bool hideTodayMarker,
+        string? todayMarkerCss,
         string dateFormat,
         string? axisFormat,
         string? tickInterval,
@@ -38,11 +40,18 @@ public class GanttDiagramBuilder
             axisFormat.ThrowIfWhiteSpace();
             tickInterval.ThrowIfWhiteSpace();
             weekIntervalStartDay.ThrowIfWhiteSpace();
+            todayMarkerCss.ThrowIfWhiteSpace();
+
+            if (hideTodayMarker && todayMarkerCss is not null)
+            {
+                throw MermaidException.InvalidConfiguration($"{nameof(hideTodayMarker)} and {nameof(todayMarkerCss)} cannot be used together.");
+            }
         }
 
         _title = title;
         _compactMode = compactMode;
         _hideTodayMarker = hideTodayMarker;
+        _todayMarkerCss = todayMarkerCss;
         _dateFormat = dateFormat;
         _axisFormat = axisFormat;
         _tickInterval = tickInterval;
@@ -369,6 +378,11 @@ public class GanttDiagramBuilder
         if (_hideTodayMarker)
         {
             builder.AppendLine($"{_indent}todayMarker off");
+        }
+
+        if (_todayMarkerCss is not null)
+        {
+            builder.AppendLine($"{_indent}todayMarker {_todayMarkerCss}");
         }
 
         if (!string.IsNullOrWhiteSpace(_axisFormat))

@@ -132,6 +132,7 @@ public class GanttDiagramUnsafeModeBuilderTests
                 title: "My Gantt",
                 compactMode: true,
                 hideTodayMarker: true,
+                todayMarkerCss: "stroke: #d3d3d3; stroke-width: 2px;",
                 dateFormat: "DD-MM-YYYY",
                 axisFormat: "%d-%m",
                 tickInterval: "1week",
@@ -146,6 +147,7 @@ gantt
     title My Gantt
     dateFormat DD-MM-YYYY
     todayMarker off
+    todayMarker stroke: #d3d3d3; stroke-width: 2px;
     axisFormat %d-%m
     tickInterval 1week
     weekday monday
