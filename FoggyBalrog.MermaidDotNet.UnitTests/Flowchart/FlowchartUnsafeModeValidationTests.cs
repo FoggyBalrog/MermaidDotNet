@@ -352,4 +352,24 @@ public class FlowchartUnsafeModeValidationTests
             .StyleNodes(cssClass, n1, n2, n3)
             .Build();
     }
+
+    [Fact]
+    public void DefineCssClass_DoesNotThrowIfNameIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .DefineCssClass(" ", "css", out var _)
+            .Build();
+    }
+
+    [Fact]
+    public void DefineCssClass_DoesNotThrowIfCssIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .DefineCssClass("foo", " ", out var _)
+            .Build();
+    }
 }

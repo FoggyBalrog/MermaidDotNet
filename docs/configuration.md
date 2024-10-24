@@ -60,3 +60,7 @@ config:
 gantt
     Foo: task1, 01-05-2024, 05-05-2024
 ```
+
+## Theme variables
+
+The `ThemeVariables` property of the `MermaidConfig` object is a dictionary that can be used to set theme variables for the diagram. The specific variables that can be set vary depending on the diagram type.

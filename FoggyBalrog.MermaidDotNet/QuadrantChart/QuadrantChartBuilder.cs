@@ -18,6 +18,7 @@ public class QuadrantChartBuilder
     private readonly string? _quadrant2;
     private readonly string? _quadrant3;
     private readonly string? _quadrant4;
+    private readonly List<CssClass> _cssClasses = [];
     private readonly bool _isSafe;
     private string? _axisLeft;
     private string? _axisRight;
@@ -97,19 +98,44 @@ public class QuadrantChartBuilder
     /// <param name="label">The label of the point.</param>
     /// <param name="x">The X coordinate of the point. Must be between 0 and 1.</param>
     /// <param name="y">The Y coordinate of the point. Must be between 0 and 1.</param>
+    /// <param name="css">The optional CSS style to apply to the point.</param>
+    /// <param name="cssClass">The optional CSS class to apply to the point.</param>
     /// <returns>The current <see cref="QuadrantChartBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="label"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     /// <exception cref="MermaidException">Thrown when <paramref name="x"/> or <paramref name="y"/> is out of [0, 1] range, with the reason <see cref="MermaidExceptionReason.OutOfRange"/>.</exception>
-    public QuadrantChartBuilder AddPoint(string label, double x, double y)
+    public QuadrantChartBuilder AddPoint(string label, double x, double y, string? css = null, CssClass? cssClass = null)
     {
         if (_isSafe)
         {
             label.ThrowIfWhiteSpace();
             x.ThrowIfOutOfRange(0, 1);
             y.ThrowIfOutOfRange(0, 1);
+            css.ThrowIfWhiteSpace();
+            cssClass?.ThrowIfForeignTo(_cssClasses);
         }
 
-        _points.Add(new Point(label, x, y));
+        _points.Add(new Point(label, x, y, css, cssClass));
+        return this;
+    }
+
+    /// <summary>
+    /// Defines a CSS class to be used to style nodes.
+    /// </summary>
+    /// <param name="name">The name of the CSS class.</param>
+    /// <param name="css">The CSS style to apply to the class.</param>
+    /// <param name="class">The CSS class that was defined.</param>
+    /// <returns>The current <see cref="QuadrantChartBuilder"/> instance.</returns>
+    public QuadrantChartBuilder DefineCssClass(string name, string css, out CssClass @class)
+    {
+        if (_isSafe)
+        {
+            name.ThrowIfWhiteSpace();
+            css.ThrowIfWhiteSpace();
+        }
+
+        @class = new CssClass(name, css);
+        _cssClasses.Add(@class);
+
         return this;
     }
 
@@ -159,7 +185,14 @@ public class QuadrantChartBuilder
         {
             string x = point.X.ToString(CultureInfo.InvariantCulture);
             string y = point.Y.ToString(CultureInfo.InvariantCulture);
-            builder.AppendLine($"{Shared.Indent}{point.Label}: [{x}, {y}]");
+            string classString = point.CssClass != null ? $":::{point.CssClass.Name}" : "";
+            string cssString = point.Css != null ? $" {point.Css}" : "";
+            builder.AppendLine($"{Shared.Indent}{point.Label}{classString}: [{x}, {y}]{cssString}");
+        }
+
+        foreach (CssClass cssClass in _cssClasses)
+        {
+            builder.AppendLine($"{Shared.Indent}classDef {cssClass.Name} {cssClass.Css}");
         }
 
         // Remove the last newline

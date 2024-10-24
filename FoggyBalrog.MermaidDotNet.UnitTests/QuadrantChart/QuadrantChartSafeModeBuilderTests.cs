@@ -117,4 +117,22 @@ quadrantChart
     A: [0.1, 0.2]
     B: [0.3, 0.4]", quadrantChart, ignoreLineEndingDifferences: true);
     }
+
+    [Fact]
+    public void CanBuildQuadrantChartWithPointStyling()
+    {
+        string quadrantChart = Mermaid
+            .QuadrantChart()
+            .DefineCssClass("foo", "color: #ff0000", out var foo)
+            .AddPoint("A", 0.1, 0.2, "radius: 25")
+            .AddPoint("B", 0.3, 0.4, "radius: 1", foo)
+            .AddPoint("C", 0.5, 0.6, cssClass: foo)
+            .Build();
+
+        Assert.Equal(@"quadrantChart
+    A: [0.1, 0.2] radius: 25
+    B:::foo: [0.3, 0.4] radius: 1
+    C:::foo: [0.5, 0.6]
+    classDef foo color: #ff0000", quadrantChart, ignoreLineEndingDifferences: true);
+    }
 }

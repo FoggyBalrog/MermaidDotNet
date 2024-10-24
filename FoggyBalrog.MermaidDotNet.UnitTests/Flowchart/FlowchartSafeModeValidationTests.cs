@@ -430,4 +430,30 @@ public class FlowchartSafeModeValidationTests
         Assert.Equal(MermaidExceptionReason.ForeignItem, exception1.Reason);
         Assert.Equal(MermaidExceptionReason.ForeignItem, exception2.Reason);
     }
+
+    [Fact]
+    public void DefineCssClass_ThrowsIfNameIsWhiteSpace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .DefineCssClass(" ", "css", out var _);
+        });
+
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
+
+    [Fact]
+    public void DefineCssClass_ThrowsIfCssIsWhiteSpace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .DefineCssClass("foo", " ", out var _);
+        });
+
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
 }
