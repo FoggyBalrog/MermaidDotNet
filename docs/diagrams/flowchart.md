@@ -567,3 +567,42 @@ flowchart TB
 If the CSS classes qre defined outside of the mermaid code (e.g. in a CSS file), use the `StyleNodesWithPredefinedCssClass` method instead. This will omit the `classDef` statements.
 
 [⬆ Back to top](#flowchart)
+
+## ELK renderer
+
+To specify the flowchart should be rendered using the ELK renderer, set the `useElkRenderer` parameter of the `Flowchart` method to `true`.
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .Flowchart(useElkRenderer: true)
+    .AddNode("N1", out Node n1)
+    .AddNode("N2", out Node n2)
+    .AddLink(n1, n2, out _)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+%%{ init: { 'flowchart': { 'defaultRenderer': 'elk' } } }%%
+flowchart TB
+    id1["N1"]
+    id2["N2"]
+    id1 --> id2
+```
+
+That renders as:
+
+```mermaid
+%%{ init: { 'flowchart': { 'defaultRenderer': 'elk' } } }%%
+flowchart TB
+    id1["N1"]
+    id2["N2"]
+    id1 --> id2
+```
+
+**Note:** The above mermaid diagram could be rendered without the specified renderer, depending on where  it is currently being rendered. For instance the GitHub markdown rendering engine does not support the `defaultRenderer` option at the time of writing.
+
+[⬆ Back to top](#flowchart)

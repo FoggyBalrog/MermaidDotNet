@@ -468,5 +468,22 @@ flowchart TB
     class id1,id3 class1
     class id1,id2 class2", diagram, ignoreLineEndingDifferences: true);
     }
+
+    [Fact]
+    public void CanBuildWithElkRenderer()
+    {
+        string diagram = Mermaid
+            .Flowchart(useElkRenderer: true)
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddLink(n1, n2, out _)
+            .Build();
+
+        Assert.Equal(@"%%{ init: { 'flowchart': { 'defaultRenderer': 'elk' } } }%%
+flowchart TB
+    id1[""N1""]
+    id2[""N2""]
+    id1 --> id2", diagram, ignoreLineEndingDifferences: true);
+    }
 }
 

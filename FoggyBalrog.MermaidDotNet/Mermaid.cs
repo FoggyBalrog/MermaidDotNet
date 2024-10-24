@@ -47,8 +47,12 @@ public static class Mermaid
         /// </summary>
         /// <param name="orientation">An optional orientation for the flowchart. If not specified, the default orientation from Mermaid will be used on rendering.</param>
         /// <param name="curveStyle">An optional curve style for the flowchart. If not specified, the default curve style from Mermaid will be used on rendering.</param>
+        /// <param name="useElkRenderer">Specifies whether to use the ELK renderer for the flowchart.</param>
         /// <returns>A new <see cref="FlowchartBuilder"/> instance.</returns>
-        public static FlowchartBuilder Flowchart(FlowchartOrientation orientation = FlowchartOrientation.TopToBottom, CurveStyle? curveStyle = null) => new(orientation, curveStyle, isSafe: false);
+        public static FlowchartBuilder Flowchart(
+            FlowchartOrientation orientation = FlowchartOrientation.TopToBottom,
+            CurveStyle? curveStyle = null,
+            bool useElkRenderer = false) => new(orientation, curveStyle, useElkRenderer, isSafe: false);
 
         /// <summary>
         /// Starts creating a Gantt diagram, in unsafe mode.
@@ -183,8 +187,12 @@ public static class Mermaid
     /// </summary>
     /// <param name="orientation">An optional orientation for the flowchart. If not specified, the default orientation from Mermaid will be used on rendering.</param>
     /// <param name="curveStyle">An optional curve style for the flowchart. If not specified, the default curve style from Mermaid will be used on rendering.</param>
+    /// <param name="useElkRenderer">Specifies whether to use the ELK renderer for the flowchart.</param>
     /// <returns>A new <see cref="FlowchartBuilder"/> instance.</returns>
-    public static FlowchartBuilder Flowchart(FlowchartOrientation orientation = FlowchartOrientation.TopToBottom, CurveStyle? curveStyle = null) => new(orientation, curveStyle, isSafe: true);
+    public static FlowchartBuilder Flowchart(
+        FlowchartOrientation orientation = FlowchartOrientation.TopToBottom,
+        CurveStyle? curveStyle = null,
+        bool useElkRenderer = false) => new(orientation, curveStyle, useElkRenderer, isSafe: true);
 
     /// <summary>
     /// Starts creating a Gantt diagram.

@@ -14,16 +14,19 @@ public class FlowchartBuilder
     private readonly List<CssClass> _cssClasses = [];
     private readonly FlowchartOrientation _orientation;
     private readonly CurveStyle? _curveStyle;
+    private readonly bool _useElkRenderer;
     private readonly bool _isSafe;
     private int _linkCounter = 0;
 
     internal FlowchartBuilder(
         FlowchartOrientation orientation,
         CurveStyle? curveStyle,
+        bool useElkRenderer,
         bool isSafe)
     {
         _orientation = orientation;
         _curveStyle = curveStyle;
+        _useElkRenderer = useElkRenderer;
         _isSafe = isSafe;
     }
 
@@ -349,6 +352,11 @@ public class FlowchartBuilder
         if (_curveStyle is not null)
         {
             builder.AppendLine($"%%{{ init: {{ 'flowchart': {{ 'curve': '{_curveStyle}' }} }} }}%%");
+        }
+
+        if (_useElkRenderer)
+        {
+            builder.AppendLine("%%{ init: { 'flowchart': { 'defaultRenderer': 'elk' } } }%%");
         }
 
         string orientation = SymbolMaps.Orientation[_orientation];
