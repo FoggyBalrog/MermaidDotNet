@@ -12,6 +12,29 @@ public class PieChartUnsafeModeValidationTests
     }
 
     [Fact]
+    public void PieChartBuilder_DoesNotThrowIfTextPositionIsOutOfRange()
+    {
+        Mermaid
+            .Unsafe
+            .PieChart(textPosition: -0.1)
+            .Build();
+
+        Mermaid
+            .Unsafe
+            .PieChart(textPosition: 1.1)
+            .Build();
+    }
+
+    [Fact]
+    public void PieChartBuilder_DoesNotThrowIfPieOuterStrokeWidthIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .PieChart(pieOuterStrokeWidth: " ")
+            .Build();
+    }
+
+    [Fact]
     public void AddDataSet_DoesNotThrowIfLabelIsWhiteSpace()
     {
         Mermaid

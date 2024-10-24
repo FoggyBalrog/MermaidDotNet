@@ -101,3 +101,73 @@ pie title My Pie Chart
 ```
 
 [⬆ Back to top](#pie-chart)
+
+## Styling
+
+### Text position
+
+The text position can be specified by setting the `textPosition` parameter of the `PieChart` method. The value must be comprised between 0 and 1.
+
+Example:
+
+```csharp
+string pieChart = Mermaid
+    .PieChart(textPosition: 0.42)
+    .AddDataSet("Label1", 42.7)
+    .AddDataSet("Label2", 57.3)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+%%{init: {"pie": {"textPosition": 0.42}}}%%
+pie
+    "Label1" : 42.7
+    "Label2" : 57.3
+```
+
+That renders as:
+
+```mermaid
+%%{init: {"pie": {"textPosition": 0.42}}}%%
+pie
+    "Label1" : 42.7
+    "Label2" : 57.3
+```
+
+[⬆ Back to top](#pie-chart)
+
+### Outer stroke width
+
+The outer stroke width can be set by passing a CSS with value string to the `pieOuterStrokeWidth` parameter of the `PieChart` method.
+
+Example:
+
+```csharp
+string pieChart = Mermaid
+    .PieChart(pieOuterStrokeWidth: "15px")
+    .AddDataSet("Label1", 42.7)
+    .AddDataSet("Label2", 57.3)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+%%{init: {"themeVariables": {"pieOuterStrokeWidth": "15px"}}}%%
+pie
+    "Label1" : 42.7
+    "Label2" : 57.3
+```
+
+That renders as:
+
+```mermaid
+%%{init: {"themeVariables": {"pieOuterStrokeWidth": "15px"}}}%%
+pie
+    "Label1" : 42.7
+    "Label2" : 57.3
+```
+
+[⬆ Back to top](#pie-chart)

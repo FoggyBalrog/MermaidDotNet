@@ -110,9 +110,17 @@ public static class Mermaid
         /// </summary>
         /// <param name="displayValuesOnLegend">Specifies whether to display values on the legend.</param>
         /// <param name="title">An optional title for the diagram.</param>
+        /// <param name="textPosition">An optional position for the text. If not specified, the default position from Mermaid will be used on rendering.</param>
+        /// <param name="pieOuterStrokeWidth">An optional outer stroke width for the pie chart. If not specified, the default width from Mermaid will be used on rendering.</param>
         /// <returns>A new <see cref="PieChartBuilder"/> instance.</returns>
         /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-        public static PieChartBuilder PieChart(bool displayValuesOnLegend = false, string? title = null) => new(displayValuesOnLegend, title, isSafe: false);
+        /// <exception cref="MermaidException">Thrown when <paramref name="textPosition"/> is out of [0 ; 1] range, with the reason <see cref="MermaidExceptionReason.OutOfRange"/>.</exception>
+        /// <exception cref="MermaidException">Thrown when <paramref name="pieOuterStrokeWidth"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+        public static PieChartBuilder PieChart(
+            bool displayValuesOnLegend = false,
+            string? title = null,
+            double? textPosition = null,
+            string? pieOuterStrokeWidth = null) => new(displayValuesOnLegend, title, textPosition, pieOuterStrokeWidth, isSafe: false);
 
         /// <summary>
         /// Starts creating a quadrant chart, in unsafe mode.
@@ -254,9 +262,17 @@ public static class Mermaid
     /// </summary>
     /// <param name="displayValuesOnLegend">Specifies whether to display values on the legend.</param>
     /// <param name="title">An optional title for the diagram.</param>
+    /// <param name="textPosition">An optional position for the text. If not specified, the default position from Mermaid will be used on rendering.</param>
+    /// <param name="pieOuterStrokeWidth">An optional outer stroke width for the pie chart. If not specified, the default width from Mermaid will be used on rendering.</param>
     /// <returns>A new <see cref="PieChartBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-    public static PieChartBuilder PieChart(bool displayValuesOnLegend = false, string? title = null) => new(displayValuesOnLegend, title, isSafe: true);
+    /// <exception cref="MermaidException">Thrown when <paramref name="textPosition"/> is out of [0 ; 1] range, with the reason <see cref="MermaidExceptionReason.OutOfRange"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="pieOuterStrokeWidth"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    public static PieChartBuilder PieChart(
+        bool displayValuesOnLegend = false,
+        string? title = null,
+        double? textPosition = null,
+        string? pieOuterStrokeWidth = null) => new(displayValuesOnLegend, title, textPosition, pieOuterStrokeWidth, isSafe: true);
 
     /// <summary>
     /// Starts creating a quadrant chart.

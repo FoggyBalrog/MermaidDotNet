@@ -81,4 +81,41 @@ public class PieChartSafeModeBuilderTests
     ""Label1"" : 42.7
     ""Label2"" : 57.3", pieChart, ignoreLineEndingDifferences: true);
     }
+
+    [Fact]
+    public void CanBuildPieChartWithStyling()
+    {
+        string pieChart1 = Mermaid
+            .PieChart(textPosition: 0.42)
+            .AddDataSet("Label1", 42.7)
+            .AddDataSet("Label2", 57.3)
+            .Build();
+
+        string pieChart2 = Mermaid
+            .PieChart(pieOuterStrokeWidth: "5px")
+            .AddDataSet("Label1", 42.7)
+            .AddDataSet("Label2", 57.3)
+            .Build();
+
+        string pieChart3 = Mermaid
+            .PieChart(textPosition: 0.42, pieOuterStrokeWidth: "5px")
+            .AddDataSet("Label1", 42.7)
+            .AddDataSet("Label2", 57.3)
+            .Build();
+
+        Assert.Equal(@"%%{init: {""pie"": {""textPosition"": 0.42}}}%%
+pie
+    ""Label1"" : 42.7
+    ""Label2"" : 57.3", pieChart1, ignoreLineEndingDifferences: true);
+
+        Assert.Equal(@"%%{init: {""themeVariables"": {""pieOuterStrokeWidth"": ""5px""}}}%%
+pie
+    ""Label1"" : 42.7
+    ""Label2"" : 57.3", pieChart2, ignoreLineEndingDifferences: true);
+
+        Assert.Equal(@"%%{init: {""pie"": {""textPosition"": 0.42}, ""themeVariables"": {""pieOuterStrokeWidth"": ""5px""}}}%%
+pie
+    ""Label1"" : 42.7
+    ""Label2"" : 57.3", pieChart3, ignoreLineEndingDifferences: true);
+    }
 }

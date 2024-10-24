@@ -11,18 +11,29 @@ public class PieChartBuilder
 {
     private readonly bool _displayValuesOnLegend;
     private readonly string? _title;
+    private readonly double? _textPosition;
+    private readonly string? _pieOuterStrokeWidth;
     private readonly bool _isSafe;
     private readonly List<DataSet> _dataSets = [];
 
-    internal PieChartBuilder(bool displayValuesOnLegend, string? title, bool isSafe)
+    internal PieChartBuilder(
+        bool displayValuesOnLegend,
+        string? title,
+        double? textPosition,
+        string? pieOuterStrokeWidth,
+        bool isSafe)
     {
         if (isSafe)
         {
             title.ThrowIfWhiteSpace();
+            textPosition?.ThrowIfOutOfRange(0, 1);
+            pieOuterStrokeWidth.ThrowIfWhiteSpace();
         }
 
         _displayValuesOnLegend = displayValuesOnLegend;
         _title = title;
+        _textPosition = textPosition;
+        _pieOuterStrokeWidth = pieOuterStrokeWidth;
         _isSafe = isSafe;
     }
 
@@ -53,6 +64,30 @@ public class PieChartBuilder
     public string Build()
     {
         var builder = new StringBuilder();
+
+        if (_textPosition is not null || _pieOuterStrokeWidth is not null)
+        {
+            builder.Append("%%{init: {");
+
+            if (_textPosition is not null)
+            {
+                string invariantTextPosition = _textPosition.Value.ToString(CultureInfo.InvariantCulture);
+                builder.Append($"\"pie\": {{\"textPosition\": {invariantTextPosition}}}");
+            }
+
+            if (_textPosition is not null && _pieOuterStrokeWidth is not null)
+            {
+                builder.Append(", ");
+            }
+
+            if (_pieOuterStrokeWidth is not null)
+            {
+                builder.Append($"\"themeVariables\": {{\"pieOuterStrokeWidth\": \"{_pieOuterStrokeWidth}\"}}");
+            }
+
+            builder.Append("}}%%");
+            builder.AppendLine();
+        }
 
         builder.Append("pie");
 
