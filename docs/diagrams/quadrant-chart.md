@@ -153,3 +153,97 @@ quadrantChart
 ```
 
 [⬆ Back to top](#quadrant-chart)
+
+## Styling
+
+### Chart styling
+
+Chart styling can be configured by passing a `StyleConfiguration` object to the `QuadrantChart` method.
+
+All the properties that can be set are detailed in the [official Mermaid documentation](hhttps://mermaid.js.org/syntax/quadrantChart.html#chart-configurations).
+
+Example:
+
+```csharp
+var config = new StyleConfiguration
+{
+    ChartConfigurations = new()
+    {
+        ChartWidth = 400,
+        ChartHeight = 150
+    },
+    ThemeVariables = new()
+    {
+        Quadrant1Fill = "red",
+        Quadrant2Fill = "green",
+        Quadrant3Fill = "blue",
+        Quadrant4Fill = "yellow"
+    }
+};
+
+string quadrantChart = Mermaid
+    .QuadrantChart(styleConfiguration: config)
+    .AddPoint("A", 0.1, 0.2)
+    .AddPoint("B", 0.3, 0.4)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+%%{init: {"quadrantChart": {"chartWidth": 400, "chartHeight": 150}, "themeVariables": {"quadrant1Fill": "red", "quadrant2Fill": "green", "quadrant3Fill": "blue", "quadrant4Fill": "yellow"}}}%%
+quadrantChart
+    A: [0.1, 0.2]
+    B: [0.3, 0.4]
+```
+
+That renders as:
+
+```mermaid
+%%{init: {"quadrantChart": {"chartWidth": 400, "chartHeight": 150}, "themeVariables": {"quadrant1Fill": "red", "quadrant2Fill": "green", "quadrant3Fill": "blue", "quadrant4Fill": "yellow"}}}%%
+quadrantChart
+    A: [0.1, 0.2]
+    B: [0.3, 0.4]
+```
+
+**Note:** The above diagram can be rendered without taking into account the some of the style configurations, depending on the rendering engine used.
+
+[⬆ Back to top](#quadrant-chart)
+
+### Point styling
+
+Point styling can be configured by passing CSS or style class to the `AddPoint` method.
+
+Example:
+
+```csharp
+string quadrantChart = Mermaid
+    .QuadrantChart()
+    .DefineCssClass("foo", "color: #ff0000", out var foo)
+    .AddPoint("A", 0.1, 0.2, "radius: 25")
+    .AddPoint("B", 0.3, 0.4, "radius: 10", foo)
+    .AddPoint("C", 0.5, 0.6, cssClass: foo)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+quadrantChart
+    A: [0.1, 0.2] radius: 25
+    B:::foo: [0.3, 0.4] radius: 10
+    C:::foo: [0.5, 0.6]
+    classDef foo color: #ff0000
+```
+
+That renders as:
+
+```mermaid
+quadrantChart
+    A: [0.1, 0.2] radius: 25
+    B:::foo: [0.3, 0.4] radius: 10
+    C:::foo: [0.5, 0.6]
+    classDef foo color: #ff0000
+```
+
+[⬆ Back to top](#quadrant-chart)

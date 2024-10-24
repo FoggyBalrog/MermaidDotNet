@@ -136,4 +136,49 @@ public class QuadrantChartUnsafeModeValidationTests
             .AddPoint("Label", 0.5, 1.1)
             .Build();
     }
+
+    [Fact]
+    public void AddPoint_DoesNotThrowIfCssIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .QuadrantChart()
+            .AddPoint("Label", 0.5, 0.5, " ")
+            .Build();
+    }
+
+    [Fact]
+    public void AddPoint_DoesNotThrowIfCssClassIsForeign()
+    {
+        Mermaid
+            .Unsafe
+            .QuadrantChart()
+            .DefineCssClass("class", "css", out var cssClass);
+
+        Mermaid
+            .Unsafe
+            .QuadrantChart()
+            .AddPoint("Label", 0.5, 0.5, cssClass: cssClass)
+            .Build();
+    }
+
+    [Fact]
+    public void DefineCssClass_DoesNotThrowIfNameIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .QuadrantChart()
+            .DefineCssClass(" ", "css", out var _)
+            .Build();
+    }
+
+    [Fact]
+    public void DefineCssClass_DoesNotThrowIfCssIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .QuadrantChart()
+            .DefineCssClass("foo", " ", out var _)
+            .Build();
+    }
 }

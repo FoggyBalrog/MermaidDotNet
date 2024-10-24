@@ -8,6 +8,7 @@ using FoggyBalrog.MermaidDotNet.GitGraph;
 using FoggyBalrog.MermaidDotNet.MindMap;
 using FoggyBalrog.MermaidDotNet.PieChart;
 using FoggyBalrog.MermaidDotNet.QuadrantChart;
+using FoggyBalrog.MermaidDotNet.QuadrantChart.Model;
 using FoggyBalrog.MermaidDotNet.RequirementDiagram;
 using FoggyBalrog.MermaidDotNet.SequenceDiagram;
 using FoggyBalrog.MermaidDotNet.StateDiagram;
@@ -130,6 +131,7 @@ public static class Mermaid
         /// <param name="quadrant2">An optional label for the second quadrant.</param>
         /// <param name="quadrant3">An optional label for the third quadrant.</param>
         /// <param name="quadrant4">An optional label for the fourth quadrant.</param>
+        /// <param name="styleConfiguration">An optional style configuration for the diagram.</param>
         /// <returns>A new <see cref="QuadrantChartBuilder"/> instance.</returns>
         /// <exception cref="MermaidException">Thrown when <paramref name="title"/>, <paramref name="quadrant1"/>, <paramref name="quadrant2"/>, <paramref name="quadrant3"/>, or <paramref name="quadrant4"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
         public static QuadrantChartBuilder QuadrantChart(
@@ -137,7 +139,8 @@ public static class Mermaid
             string? quadrant1 = null,
             string? quadrant2 = null,
             string? quadrant3 = null,
-            string? quadrant4 = null) => new(title, quadrant1, quadrant2, quadrant3, quadrant4, isSafe: false);
+            string? quadrant4 = null,
+            StyleConfiguration? styleConfiguration = null) => new(title, quadrant1, quadrant2, quadrant3, quadrant4, styleConfiguration, isSafe: false);
 
         /// <summary>
         /// Starts creating a requirement diagram, in unsafe mode.
@@ -282,6 +285,7 @@ public static class Mermaid
     /// <param name="quadrant2">An optional label for the second quadrant.</param>
     /// <param name="quadrant3">An optional label for the third quadrant.</param>
     /// <param name="quadrant4">An optional label for the fourth quadrant.</param>
+    /// <param name="styleConfiguration">An optional style configuration for the diagram.</param>
     /// <returns>A new <see cref="QuadrantChartBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/>, <paramref name="quadrant1"/>, <paramref name="quadrant2"/>, <paramref name="quadrant3"/>, or <paramref name="quadrant4"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static QuadrantChartBuilder QuadrantChart(
@@ -289,7 +293,8 @@ public static class Mermaid
         string? quadrant1 = null,
         string? quadrant2 = null,
         string? quadrant3 = null,
-        string? quadrant4 = null) => new(title, quadrant1, quadrant2, quadrant3, quadrant4, isSafe: true);
+        string? quadrant4 = null,
+        StyleConfiguration? styleConfiguration = null) => new(title, quadrant1, quadrant2, quadrant3, quadrant4, styleConfiguration, isSafe: true);
 
     /// <summary>
     /// Starts creating a requirement diagram.
