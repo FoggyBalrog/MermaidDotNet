@@ -8,7 +8,7 @@ public class QuadrantChartSafeModeValidationTests
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
-                .QuadrantChart(" ", "Q1", "Q2", "Q3", "Q4");
+                .QuadrantChart(" ", null, "Q1", "Q2", "Q3", "Q4");
         });
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
@@ -20,7 +20,7 @@ public class QuadrantChartSafeModeValidationTests
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
-                .QuadrantChart("Title", " ", "Q2", "Q3", "Q4");
+                .QuadrantChart("Title", null, " ", "Q2", "Q3", "Q4");
         });
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
@@ -32,7 +32,7 @@ public class QuadrantChartSafeModeValidationTests
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
-                .QuadrantChart("Title", "Q1", " ", "Q3", "Q4");
+                .QuadrantChart("Title", null, "Q1", " ", "Q3", "Q4");
         });
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
@@ -44,7 +44,7 @@ public class QuadrantChartSafeModeValidationTests
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
-                .QuadrantChart("Title", "Q1", "Q2", " ", "Q4");
+                .QuadrantChart("Title", null, "Q1", "Q2", " ", "Q4");
         });
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
@@ -56,7 +56,7 @@ public class QuadrantChartSafeModeValidationTests
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
-                .QuadrantChart("Title", "Q1", "Q2", "Q3", " ");
+                .QuadrantChart("Title", null, "Q1", "Q2", "Q3", " ");
         });
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
@@ -177,5 +177,61 @@ public class QuadrantChartSafeModeValidationTests
         });
 
         Assert.Equal(MermaidExceptionReason.OutOfRange, exception.Reason);
+    }
+
+    [Fact]
+    public void AddPoint_ThrowsIfCssIsWhiteSpace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .QuadrantChart()
+                .AddPoint("Label", 0.5, 0.5, " ");
+        });
+
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
+
+    [Fact]
+    public void AddPoint_ThrowsIfCssClassIsForeign()
+    {
+        Mermaid
+            .QuadrantChart()
+            .DefineCssClass("class", "css", out var cssClass);
+
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .QuadrantChart()
+                .AddPoint("Label", 0.5, 0.5, cssClass: cssClass);
+        });
+
+        Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
+    }
+
+    [Fact]
+    public void DefineCssClass_ThrowsIfNameIsWhiteSpace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .QuadrantChart()
+                .DefineCssClass(" ", "css", out var _);
+        });
+
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
+
+    [Fact]
+    public void DefineCssClass_ThrowsIfCssIsWhiteSpace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .QuadrantChart()
+                .DefineCssClass("foo", " ", out var _);
+        });
+
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
     }
 }

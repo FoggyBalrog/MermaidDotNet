@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.GitGraph.Model;
 
 namespace FoggyBalrog.MermaidDotNet.GitGraph;
@@ -10,14 +12,14 @@ public class GitGraphBuilder
 {
     private const string _mainBranchName = "main";
     private readonly string? _title;
-    private readonly bool _parallelCommits;
+    private readonly MermaidConfig? _config;
     private readonly bool _vertical;
     private readonly bool _isSafe;
     private readonly List<IGitCommand> _commands = [];
 
     internal GitGraphBuilder(
         string? title,
-        bool parallelCommits,
+        MermaidConfig? config,
         bool vertical,
         bool isSafe)
     {
@@ -27,7 +29,7 @@ public class GitGraphBuilder
         }
 
         _title = title;
-        _parallelCommits = parallelCommits;
+        _config = config;
         _vertical = vertical;
         _isSafe = isSafe;
     }
@@ -38,7 +40,7 @@ public class GitGraphBuilder
     /// <param name="id">An optional identifier for the commit. If not specified, the commit will be assigned an auto-generated identifier.</param>
     /// <param name="type">The type of the commit.</param>
     /// <param name="tag">An optional tag for the commit.</param>
-    /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>"/>
+    /// <returns>The current <see cref="GitGraphBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="id"/> or <paramref name="tag"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GitGraphBuilder Commit(string? id = null, CommitType type = CommitType.Normal, string? tag = null)
     {
@@ -131,24 +133,7 @@ public class GitGraphBuilder
     {
         var builder = new StringBuilder();
 
-        if (!string.IsNullOrWhiteSpace(_title) || _parallelCommits)
-        {
-            builder.AppendLine("---");
-
-            if (!string.IsNullOrWhiteSpace(_title))
-            {
-                builder.AppendLine($"title: {_title}");
-            }
-
-            if (_parallelCommits)
-            {
-                builder.AppendLine("config:");
-                builder.AppendLine($"{Shared.Indent}gitGraph:");
-                builder.AppendLine($"{Shared.Indent.Repeat(2)}parallelCommits: true");
-            }
-
-            builder.AppendLine("---");
-        }
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
 
         string orientation = _vertical ? " TB:" : "";
 

@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [Gantt diagrams](https://mermaid.js.org/syntax/gantt.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid Gantt diagram.
@@ -230,24 +233,10 @@ gantt
 
 ## Customization
 
-The Gantt diagram by passing optional parameters to the `GanttDiagram` method. The following parameters can be customized:
-
-<!-- public static GanttDiagramBuilder GanttDiagram(
-    string? title = null,
-    bool compactMode = false,
-    bool hideTodayMarker = false,
-    string dateFormat = "YYYY-MM-DD",
-    string? axisFormat = null,
-    string? tickInterval = null,
-    string? weekIntervalStartDay = null) -->
-
+The Gantt diagram by passing optional parameters to the `GanttDiagram` method. The following parameters can be customized (in addition to the `MermaidConfig` object that can be passed to any diagram builder method):
 - `title`: The title of the diagram.
-- `compactMode`: Whether to use compact mode.
 - `hideTodayMarker`: Whether to hide the today marker.
 - `dateFormat`: The date format. See format [here](https://day.js.org/docs/en/parse/string-format/).
-- `axisFormat`: The axis format. See format [here](https://github.com/d3/d3-time-format/tree/v4.0.0#locale_format).
-- `tickInterval`: The tick interval. Must match `/^([1-9][0-9]*)(millisecond|second|minute|hour|day|week|month)$/;` (for example `1day`, `1week`).
-- `weekIntervalStartDay`: The name of the start day of the week. Igored if `tickInterval` is not set to `week`.
 
 Example:
 
@@ -269,15 +258,11 @@ The code above generates the following Mermaid code:
 
 ```text
 ---
-displayMode: compact
+title: My Gantt
 ---
 gantt
-    title My Gantt
     dateFormat DD-MM-YYYY
     todayMarker off
-    axisFormat %d-%m
-    tickInterval 1week
-    weekday monday
     Foo: task1, 01-05-2024, 05-05-2024
 ```
 
@@ -285,15 +270,44 @@ That renders as:
 
 ```mermaid
 ---
-displayMode: compact
+title: My Gantt
 ---
 gantt
-    title My Gantt
     dateFormat DD-MM-YYYY
     todayMarker off
-    axisFormat %d-%m
-    tickInterval 1week
-    weekday monday
+    Foo: task1, 01-05-2024, 05-05-2024
+```
+
+[⬆ Back to top](#gantt-diagram)
+
+## Styling
+
+### Today marker
+
+The today marker can be styled by passing CSS to the `todayMarkerCss` parameter of the `GanttDiagram` method. 
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .GanttDiagram(todayMarkerCss: "stroke:red,stroke-width:10px")
+    .AddTask("Foo", DateTimeOffset.Parse("2024-05-01"), DateTimeOffset.Parse("2024-05-05"), out var t1)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+gantt
+    todayMarker stroke:red,stroke-width:10px
+    Foo: task1, 01-05-2024, 05-05-2024
+```
+
+That renders as:
+
+```mermaid
+gantt
+    todayMarker stroke:red,stroke-width:10px
     Foo: task1, 01-05-2024, 05-05-2024
 ```
 

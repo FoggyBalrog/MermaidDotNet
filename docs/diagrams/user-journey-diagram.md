@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [User journey](https://mermaid.js.org/syntax/userJourney.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple user journey diagram
 
 The following code sample shows how to create a simple Mermaid user journey diagram.
@@ -94,8 +97,10 @@ journey
 That renders as:
 
 ```mermaid
+---
+title: My title
+---
 journey
-    title My title
     Task 1: 1: Actor 1, Actor 2
     Task 2: 2
     section Section 1

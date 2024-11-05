@@ -1,6 +1,8 @@
 ﻿using System.Drawing;
 using System.Globalization;
 using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.SequenceDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.SequenceDiagram;
@@ -10,14 +12,18 @@ namespace FoggyBalrog.MermaidDotNet.SequenceDiagram;
 /// </summary>
 public class SequenceDiagramBuilder
 {
+    private readonly string? _title;
+    private readonly MermaidConfig? _config;
     private readonly bool _autonumber;
     private readonly bool _isSafe;
     private readonly List<Box> _boxes = [];
     private readonly List<Member> _membersOutsideBoxes = [];
     private readonly List<ISequenceItem> _sequenceItems = [];
 
-    internal SequenceDiagramBuilder(bool autonumber, bool isSafe)
+    internal SequenceDiagramBuilder(string? title, MermaidConfig? config, bool autonumber, bool isSafe)
     {
+        _title = title;
+        _config = config;
         _autonumber = autonumber;
         _isSafe = isSafe;
     }
@@ -491,6 +497,8 @@ public class SequenceDiagramBuilder
     {
         string indent = Shared.Indent;
         var builder = new StringBuilder();
+
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
 
         builder.AppendLine("sequenceDiagram");
 

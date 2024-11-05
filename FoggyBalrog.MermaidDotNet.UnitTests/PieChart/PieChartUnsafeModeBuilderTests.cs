@@ -21,7 +21,10 @@ public class PieChartUnsafeModeBuilderTests
             .PieChart(title: "Title")
             .Build();
 
-        Assert.Equal("pie title Title", pieChart, ignoreLineEndingDifferences: true);
+        Assert.Equal(@"---
+title: Title
+---
+pie", pieChart, ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -43,7 +46,10 @@ public class PieChartUnsafeModeBuilderTests
             .PieChart(displayValuesOnLegend: true, title: "Title")
             .Build();
 
-        Assert.Equal("pie showData title Title", pieChart, ignoreLineEndingDifferences: true);
+        Assert.Equal(@"---
+title: Title
+---
+pie showData", pieChart, ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -84,7 +90,10 @@ public class PieChartUnsafeModeBuilderTests
             .AddDataSet("Label2", 57.3)
             .Build();
 
-        Assert.Equal(@"pie showData title Title
+        Assert.Equal(@"---
+title: Title
+---
+pie showData
     ""Label1"" : 42.7
     ""Label2"" : 57.3", pieChart, ignoreLineEndingDifferences: true);
     }

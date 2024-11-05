@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.StateDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.StateDiagram;
@@ -10,11 +12,12 @@ public class StateDiagramBuilder
 {
     private string _indent = Shared.Indent;
     private readonly string? _title;
+    private readonly MermaidConfig? _config;
     private readonly StateDiagramDirection? _direction;
     private readonly bool _isSafe;
     private readonly List<IStateDiagramItem> _items = [];
 
-    internal StateDiagramBuilder(string? title, StateDiagramDirection? direction, bool isSafe)
+    internal StateDiagramBuilder(string? title, MermaidConfig? config, StateDiagramDirection? direction, bool isSafe)
     {
         if (isSafe)
         {
@@ -22,6 +25,7 @@ public class StateDiagramBuilder
         }
 
         _title = title;
+        _config = config;
         _direction = direction;
         _isSafe = isSafe;
     }
@@ -265,12 +269,7 @@ public class StateDiagramBuilder
     {
         var builder = new StringBuilder();
 
-        if (!string.IsNullOrWhiteSpace(_title))
-        {
-            builder.AppendLine("---");
-            builder.AppendLine($"title: {_title}");
-            builder.AppendLine("---");
-        }
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
 
         builder.AppendLine("stateDiagram-v2");
 

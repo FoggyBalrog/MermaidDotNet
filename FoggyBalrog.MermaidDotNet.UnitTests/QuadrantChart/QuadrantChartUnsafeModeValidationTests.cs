@@ -7,7 +7,7 @@ public class QuadrantChartUnsafeModeValidationTests
     {
         Mermaid
             .Unsafe
-            .QuadrantChart(" ", "Q1", "Q2", "Q3", "Q4")
+            .QuadrantChart(" ", null, "Q1", "Q2", "Q3", "Q4")
             .Build();
     }
 
@@ -16,7 +16,7 @@ public class QuadrantChartUnsafeModeValidationTests
     {
         Mermaid
             .Unsafe
-            .QuadrantChart("Title", " ", "Q2", "Q3", "Q4")
+            .QuadrantChart("Title", null, " ", "Q2", "Q3", "Q4")
             .Build();
     }
 
@@ -25,7 +25,7 @@ public class QuadrantChartUnsafeModeValidationTests
     {
         Mermaid
             .Unsafe
-            .QuadrantChart("Title", "Q1", " ", "Q3", "Q4")
+            .QuadrantChart("Title", null, "Q1", " ", "Q3", "Q4")
             .Build();
     }
 
@@ -34,7 +34,7 @@ public class QuadrantChartUnsafeModeValidationTests
     {
         Mermaid
             .Unsafe
-            .QuadrantChart("Title", "Q1", "Q2", " ", "Q4")
+            .QuadrantChart("Title", null, "Q1", "Q2", " ", "Q4")
             .Build();
     }
 
@@ -43,7 +43,7 @@ public class QuadrantChartUnsafeModeValidationTests
     {
         Mermaid
             .Unsafe
-            .QuadrantChart("Title", "Q1", "Q2", "Q3", " ")
+            .QuadrantChart("Title", null, "Q1", "Q2", "Q3", " ")
             .Build();
     }
 
@@ -134,6 +134,51 @@ public class QuadrantChartUnsafeModeValidationTests
             .Unsafe
             .QuadrantChart()
             .AddPoint("Label", 0.5, 1.1)
+            .Build();
+    }
+
+    [Fact]
+    public void AddPoint_DoesNotThrowIfCssIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .QuadrantChart()
+            .AddPoint("Label", 0.5, 0.5, " ")
+            .Build();
+    }
+
+    [Fact]
+    public void AddPoint_DoesNotThrowIfCssClassIsForeign()
+    {
+        Mermaid
+            .Unsafe
+            .QuadrantChart()
+            .DefineCssClass("class", "css", out var cssClass);
+
+        Mermaid
+            .Unsafe
+            .QuadrantChart()
+            .AddPoint("Label", 0.5, 0.5, cssClass: cssClass)
+            .Build();
+    }
+
+    [Fact]
+    public void DefineCssClass_DoesNotThrowIfNameIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .QuadrantChart()
+            .DefineCssClass(" ", "css", out var _)
+            .Build();
+    }
+
+    [Fact]
+    public void DefineCssClass_DoesNotThrowIfCssIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .QuadrantChart()
+            .DefineCssClass("foo", " ", out var _)
             .Build();
     }
 }

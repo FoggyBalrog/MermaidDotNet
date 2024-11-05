@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [State diagram](https://mermaid.js.org/syntax/stateDiagram.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple state diagram
 
 The following code sample shows how to create a simple Mermaid state diagram.

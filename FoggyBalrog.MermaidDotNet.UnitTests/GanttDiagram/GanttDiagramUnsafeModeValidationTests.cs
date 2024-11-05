@@ -21,29 +21,20 @@ public class GanttDiagramUnsafeModeValidationTests
     }
 
     [Fact]
-    public void GanttDiagram_DoesNotThrowIfAxisFormatIsWhiteSpace()
+    public void GanttDiagram_DoesNotThrowIfTodayMarkerCssIsWhiteSpace()
     {
         Mermaid
             .Unsafe
-            .GanttDiagram(axisFormat: " ")
+            .GanttDiagram(todayMarkerCss: " ")
             .Build();
     }
 
     [Fact]
-    public void GanttDiagram_DoesNotThrowIfTickIntervalIsWhiteSpace()
+    public void GanttDiagram_DoesNotThrowIfTodayMarkerCssIsNotNullWhenHideTodayMarkerIsTrue()
     {
         Mermaid
             .Unsafe
-            .GanttDiagram(tickInterval: " ")
-            .Build();
-    }
-
-    [Fact]
-    public void GanttDiagram_DoesNotThrowIfWeekIntervalStartDayIsWhiteSpace()
-    {
-        Mermaid
-            .Unsafe
-            .GanttDiagram(weekIntervalStartDay: " ")
+            .GanttDiagram(hideTodayMarker: true, todayMarkerCss: " ")
             .Build();
     }
 

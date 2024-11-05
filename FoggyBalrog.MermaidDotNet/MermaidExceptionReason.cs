@@ -8,5 +8,7 @@ public enum MermaidExceptionReason
     EmptyCollection,
     DuplicateValue,
     StrictlyNegative,
-    OutOfRange
+    OutOfRange,
+    InvalidConfiguration,
+    InvalidOperation
 }

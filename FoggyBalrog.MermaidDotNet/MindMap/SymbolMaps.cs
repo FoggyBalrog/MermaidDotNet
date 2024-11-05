@@ -6,6 +6,7 @@ internal static class SymbolMaps
 {
     public static Dictionary<NodeShape, (string Left, string Right)> Nodes = new()
     {
+        [NodeShape.Default] = ("", ""),
         [NodeShape.Square] = ("[", "]"),
         [NodeShape.RoundedSquare] = ("(", ")"),
         [NodeShape.Circle] = ("((", "))"),

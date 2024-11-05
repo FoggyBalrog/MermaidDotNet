@@ -567,7 +567,7 @@ public class SequenceDiagramSafeModeBuilderTests
     public void CanBuildDiagramWithAutoNumber()
     {
         string diagram = Mermaid
-            .SequenceDiagram(true)
+            .SequenceDiagram(autonumber: true)
             .AddMember("Alice", MemberType.Participant, out Member m1)
             .AddMember("Bob", MemberType.Participant, out Member m2)
             .SendMessage(m1, m2, $"Hello {m2.Name}!")

@@ -2,6 +2,9 @@
 
 *Official Mermaid documentation: [Quadrant chart](https://mermaid.js.org/syntax/quadrantChart.html).*
 
+> [!NOTE]
+> All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
+
 ## Simple diagram
 
 The following code sample shows how to create a simple Mermaid quadrant chart.
@@ -55,8 +58,10 @@ var quadrantChart = Mermaid
 The code above generates the following Mermaid code:
 
 ```text
+---
+title: Some title
+---
 quadrantChart
-    title Some title
     A: [0.1, 0.2]
     B: [0.3, 0.4]
 ```
@@ -64,8 +69,10 @@ quadrantChart
 That renders as:
 
 ```mermaid
+---
+title: Some title
+---
 quadrantChart
-    title Some title
     A: [0.1, 0.2]
     B: [0.3, 0.4]
 ```
@@ -150,6 +157,46 @@ quadrantChart
     y-axis Bottom --> Top
     A: [0.1, 0.2]
     B: [0.3, 0.4]
+```
+
+[⬆ Back to top](#quadrant-chart)
+
+## Styling
+
+### Point styling
+
+Point styling can be configured by passing CSS or style class to the `AddPoint` method.
+
+Example:
+
+```csharp
+string quadrantChart = Mermaid
+    .QuadrantChart()
+    .DefineCssClass("foo", "color: #ff0000", out var foo)
+    .AddPoint("A", 0.1, 0.2, "radius: 25")
+    .AddPoint("B", 0.3, 0.4, "radius: 10", foo)
+    .AddPoint("C", 0.5, 0.6, cssClass: foo)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+quadrantChart
+    A: [0.1, 0.2] radius: 25
+    B:::foo: [0.3, 0.4] radius: 10
+    C:::foo: [0.5, 0.6]
+    classDef foo color: #ff0000
+```
+
+That renders as:
+
+```mermaid
+quadrantChart
+    A: [0.1, 0.2] radius: 25
+    B:::foo: [0.3, 0.4] radius: 10
+    C:::foo: [0.5, 0.6]
+    classDef foo color: #ff0000
 ```
 
 [⬆ Back to top](#quadrant-chart)

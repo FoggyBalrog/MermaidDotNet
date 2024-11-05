@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using FoggyBalrog.MermaidDotNet.Configuration;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.UserJourneyDiagram.Model;
 using Task = FoggyBalrog.MermaidDotNet.UserJourneyDiagram.Model.Task;
 
@@ -11,10 +13,11 @@ public class UserJourneyDiagramBuilder
 {
     private string _indent = Shared.Indent;
     private readonly string? _title;
+    private readonly MermaidConfig? _config;
     private readonly bool _isSafe;
     private readonly List<IUserJourneyDiagramItem> _items = [];
 
-    internal UserJourneyDiagramBuilder(string? title, bool isSafe)
+    internal UserJourneyDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
     {
         if (isSafe)
         {
@@ -22,6 +25,7 @@ public class UserJourneyDiagramBuilder
         }
 
         _title = title;
+        _config = config;
         _isSafe = isSafe;
     }
 
@@ -72,12 +76,9 @@ public class UserJourneyDiagramBuilder
     {
         var builder = new StringBuilder();
 
-        builder.AppendLine("journey");
+        builder.Append(FrontmatterGenerator.Generate(_title, _config));
 
-        if (!string.IsNullOrWhiteSpace(_title))
-        {
-            builder.AppendLine($"{_indent}title {_title}");
-        }
+        builder.AppendLine("journey");
 
         foreach (IUserJourneyDiagramItem? item in _items)
         {

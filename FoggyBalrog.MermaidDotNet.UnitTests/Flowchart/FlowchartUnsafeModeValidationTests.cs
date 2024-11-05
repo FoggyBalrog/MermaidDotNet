@@ -1,4 +1,6 @@
-﻿namespace FoggyBalrog.MermaidDotNet.UnitTests.Flowchart;
+﻿using FoggyBalrog.MermaidDotNet.Flowchart.Model;
+
+namespace FoggyBalrog.MermaidDotNet.UnitTests.Flowchart;
 
 public class FlowchartUnsafeModeValidationTests
 {
@@ -34,7 +36,7 @@ public class FlowchartUnsafeModeValidationTests
             .Unsafe
             .Flowchart()
             .AddNode("to", out var to)
-            .AddLink(from, to, "text")
+            .AddLink(from, to, out _, "text")
             .Build();
     }
 
@@ -50,7 +52,7 @@ public class FlowchartUnsafeModeValidationTests
             .Unsafe
             .Flowchart()
             .AddNode("from", out var from)
-            .AddLink(from, to, "text")
+            .AddLink(from, to, out _, "text")
             .Build();
     }
 
@@ -62,7 +64,7 @@ public class FlowchartUnsafeModeValidationTests
             .Flowchart()
             .AddNode("from", out var from)
             .AddNode("to", out var to)
-            .AddLink(from, to, " ")
+            .AddLink(from, to, out _, " ")
             .Build();
     }
 
@@ -74,7 +76,7 @@ public class FlowchartUnsafeModeValidationTests
             .Flowchart()
             .AddNode("from", out var from)
             .AddNode("to", out var to)
-            .AddLink(from, to, "text", extraLength: -1)
+            .AddLink(from, to, out _, "text", extraLength: -1)
             .Build();
     }
 
@@ -94,7 +96,7 @@ public class FlowchartUnsafeModeValidationTests
             .AddNode("to1", out var to1)
             .AddNode("to2", out var to2)
             .AddNode("to3", out var to3)
-            .AddLinkChain([from1, from2, from3], [to1, to2, to3], "text")
+            .AddLinkChain([from1, from2, from3], [to1, to2, to3], out _, "text")
             .Build();
     }
 
@@ -114,7 +116,7 @@ public class FlowchartUnsafeModeValidationTests
             .AddNode("from3", out var from3)
             .AddNode("to1", out var to1)
             .AddNode("to3", out var to3)
-            .AddLinkChain([from1, from2, from3], [to1, to2, to3], "text")
+            .AddLinkChain([from1, from2, from3], [to1, to2, to3], out _, "text")
             .Build();
     }
 
@@ -130,7 +132,7 @@ public class FlowchartUnsafeModeValidationTests
             .AddNode("to1", out var to1)
             .AddNode("to2", out var to2)
             .AddNode("to3", out var to3)
-            .AddLinkChain([from1, from2, from3], [to1, to2, to3], " ")
+            .AddLinkChain([from1, from2, from3], [to1, to2, to3], out _, " ")
             .Build();
     }
 
@@ -146,7 +148,7 @@ public class FlowchartUnsafeModeValidationTests
             .AddNode("to1", out var to1)
             .AddNode("to2", out var to2)
             .AddNode("to3", out var to3)
-            .AddLinkChain([from1, from2, from3], [to1, to2, to3], "text", extraLength: -1)
+            .AddLinkChain([from1, from2, from3], [to1, to2, to3], out _, "text", extraLength: -1)
             .Build();
     }
 
@@ -241,6 +243,133 @@ public class FlowchartUnsafeModeValidationTests
             .Unsafe
             .Flowchart()
             .Comment(" ")
+            .Build();
+    }
+
+    [Fact]
+    public void StyleLinks_DoesNotThrowIfCssIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddLink(n1, n2, out Link l1)
+            .AddLink(n2, n1, out Link l2)
+            .AddLink(n1, n2, out Link l3)
+            .StyleLinks(" ", l1, l2, l3)
+            .Build();
+    }
+
+    [Fact]
+    public void StyleLinks_DoesNotThrowIfNoLinksAreProvided()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .StyleLinks(" ")
+            .Build();
+    }
+
+    [Fact]
+    public void StyleLinks_DoesNotThrowIfForeignLinkIsProvided()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddLink(n1, n2, out Link l1);
+
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .AddNode("N3", out Node n3)
+            .AddNode("N4", out Node n4)
+            .AddLink(n3, n4, out Link l2)
+            .StyleLinks(" ", l1, l2)
+            .Build();
+    }
+
+    [Fact]
+    public void StyleNodes_DoesNotThrowIfCssIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .StyleNodes(" ", n1, n2, n3)
+            .Build();
+    }
+
+    [Fact]
+    public void StyleNodes_DoesNotThrowIfCssClassIsForeign()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .DefineCssClass("foo", "bar", out CssClass cssClass);
+
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .StyleNodes(cssClass, n1, n2, n3)
+            .Build();
+    }
+
+    [Fact]
+    public void StyleNodes_DoesNotThrowIfNoNodesAreProvided()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .DefineCssClass("foo", "bar", out CssClass cssClass)
+            .StyleNodes(" ")
+            .StyleNodes(cssClass)
+            .Build();
+    }
+
+    [Fact]
+    public void StyleNodes_DoesNotThrowIfForeignNodeIsProvided()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .AddNode("N2", out Node n2);
+
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N3", out Node n3)
+            .DefineCssClass("foo", "bar", out CssClass cssClass)
+            .StyleNodes(" ", n1, n2, n3)
+            .StyleNodes(cssClass, n1, n2, n3)
+            .Build();
+    }
+
+    [Fact]
+    public void DefineCssClass_DoesNotThrowIfNameIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .DefineCssClass(" ", "css", out var _)
+            .Build();
+    }
+
+    [Fact]
+    public void DefineCssClass_DoesNotThrowIfCssIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .DefineCssClass("foo", " ", out var _)
             .Build();
     }
 }

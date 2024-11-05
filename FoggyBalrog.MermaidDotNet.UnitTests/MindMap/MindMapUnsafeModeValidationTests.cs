@@ -12,6 +12,15 @@ public class MindMapUnsafeModeValidationTests
     }
 
     [Fact]
+    public void MindMapBuilder_DoesNotThrowIfMarkdownWithDefaultShape()
+    {
+        Mermaid
+            .Unsafe
+            .MindMap("Root", rootIsMarkdown: true)
+            .Build();
+    }
+
+    [Fact]
     public void AddNode_DoesNotThrowIfNodeTextIsWhiteSpace()
     {
         Mermaid
@@ -33,6 +42,36 @@ public class MindMapUnsafeModeValidationTests
             .Unsafe
             .MindMap("Root")
             .AddNode("Node 2", out var node2, node1)
+            .Build();
+    }
+
+    [Fact]
+    public void AddNode_DoesNotThrowIfIconIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .MindMap("Root")
+            .AddNode("Node 1", out var _, icon: " ")
+            .Build();
+    }
+
+    [Fact]
+    public void AddNode_DoesNotThrowIfAnyClassIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .MindMap("Root")
+            .AddNode("Node 1", out var _, classes: ["foo", " ", "baz"])
+            .Build();
+    }
+
+    [Fact]
+    public void AddNode_DoesNotThrowIfMarkdownWithDefaultShape()
+    {
+        Mermaid
+            .Unsafe
+            .MindMap("Root", rootIsMarkdown: true)
+            .AddNode("Node 1", out var _, isMarkdown: true)
             .Build();
     }
 }

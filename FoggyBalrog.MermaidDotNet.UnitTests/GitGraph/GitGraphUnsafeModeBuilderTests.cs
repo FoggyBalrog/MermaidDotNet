@@ -1,4 +1,5 @@
-﻿using FoggyBalrog.MermaidDotNet.GitGraph.Model;
+﻿using FoggyBalrog.MermaidDotNet.Configuration.Model;
+using FoggyBalrog.MermaidDotNet.GitGraph.Model;
 
 namespace FoggyBalrog.MermaidDotNet.UnitTests;
 
@@ -109,11 +110,19 @@ public class GitGraphUnsafeModeBuilderTests
     [Fact]
     public void CanBuildGitGraphWithAllSettings()
     {
+        var config = new MermaidConfig
+        {
+            Git = new()
+            {
+                ParallelCommits = true
+            }
+        };
+
         string graph = Mermaid
             .Unsafe
             .GitGraph(
                 title: "My Git Graph",
-                parallelCommits: true,
+                config: config,
                 vertical: true)
             .Commit()
             .Build();
@@ -121,8 +130,8 @@ public class GitGraphUnsafeModeBuilderTests
         Assert.Equal(@"---
 title: My Git Graph
 config:
-    gitGraph:
-        parallelCommits: true
+  gitGraph:
+    parallelCommits: true
 ---
 gitGraph TB:
     commit", graph, ignoreLineEndingDifferences: true);

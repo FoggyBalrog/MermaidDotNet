@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using FoggyBalrog.MermaidDotNet.Configuration.Model;
+using FoggyBalrog.MermaidDotNet.Configuration.Model.Enums;
 using FoggyBalrog.MermaidDotNet.GanttDiagram.Model;
 
 namespace FoggyBalrog.MermaidDotNet.UnitTests.GanttDiagram;
@@ -122,29 +124,63 @@ public class GanttDiagramSafeModeBuilderTests
     [Fact]
     public void CanBuildGanttDiagramWithConfiguration()
     {
-        string diagram = Mermaid
+        var config = new MermaidConfig
+        {
+            Gantt = new GanttDiagramConfig
+            {
+                AxisFormat = "%d-%m",
+                DisplayMode = DisplayMode.Compact,
+                TickInterval = "1week",
+                Weekday = Weekday.Monday
+            }
+        };
+
+        string diagram1 = Mermaid
             .GanttDiagram(
                 title: "My Gantt",
-                compactMode: true,
+                config: config,
                 hideTodayMarker: true,
-                dateFormat: "DD-MM-YYYY",
-                axisFormat: "%d-%m",
-                tickInterval: "1week",
-                weekIntervalStartDay: "monday")
+                dateFormat: "DD-MM-YYYY")
+            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _)
+            .Build();
+
+        string diagram2 = Mermaid
+            .GanttDiagram(
+                title: "My Gantt",
+                config: config,
+                hideTodayMarker: false,
+                todayMarkerCss: "stroke: #d3d3d3; stroke-width: 2px;",
+                dateFormat: "DD-MM-YYYY")
             .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask _)
             .Build();
 
         Assert.Equal(@"---
-displayMode: compact
+title: My Gantt
+config:
+  gantt:
+    axisFormat: '%d-%m'
+    tickInterval: 1week
+    displayMode: compact
+    weekday: monday
 ---
 gantt
-    title My Gantt
     dateFormat DD-MM-YYYY
     todayMarker off
-    axisFormat %d-%m
-    tickInterval 1week
-    weekday monday
-    Foo: task1, 01-05-2024, 05-05-2024", diagram, ignoreLineEndingDifferences: true);
+    Foo: task1, 01-05-2024, 05-05-2024", diagram1, ignoreLineEndingDifferences: true);
+
+        Assert.Equal(@"---
+title: My Gantt
+config:
+  gantt:
+    axisFormat: '%d-%m'
+    tickInterval: 1week
+    displayMode: compact
+    weekday: monday
+---
+gantt
+    dateFormat DD-MM-YYYY
+    todayMarker stroke: #d3d3d3; stroke-width: 2px;
+    Foo: task1, 01-05-2024, 05-05-2024", diagram2, ignoreLineEndingDifferences: true);
     }
 
     [Fact]
