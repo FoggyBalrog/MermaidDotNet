@@ -46,13 +46,18 @@ public class MermaidException : Exception
         return new MermaidException(MermaidExceptionReason.OutOfRange, $"Value '{valueName}' must be between {min} and {max} (actual: {value}).");
     }
 
-    internal static Exception WhiteSpaceInCollection(string itemsName, int index)
+    internal static MermaidException WhiteSpaceInCollection(string itemsName, int index)
     {
         return new MermaidException(MermaidExceptionReason.WhiteSpace, $"Item at index {index} in collection '{itemsName}' cannot be whitespace.");
     }
 
-    internal static Exception InvalidConfiguration(string comment)
+    internal static MermaidException InvalidConfiguration(string comment)
     {
         return new MermaidException(MermaidExceptionReason.InvalidConfiguration, $"Invalid configuration: {comment}");
+    }
+
+    internal static MermaidException InvalidOperation(string comment)
+    {
+        return new MermaidException(MermaidExceptionReason.InvalidOperation, comment);
     }
 }

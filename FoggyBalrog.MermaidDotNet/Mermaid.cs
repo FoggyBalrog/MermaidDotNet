@@ -101,13 +101,19 @@ public static class Mermaid
         /// <param name="title">An optional title for the diagram.</param>
         /// <param name="config">An optional configuration for the diagram.</param>
         /// <param name="rootShape">The shape for the root node. If not specified, the default shape from Mermaid will be used on rendering.</param>
+        /// <param name="rootIsMarkdown">Specifies whether the root node text is in Markdown format.</param>
+        /// <param name="rootIcon">The optional font icon for the root node.</param>
+        /// <param name="rootClasses">The optional CSS classes for the root node.</param>
         /// <returns>A new <see cref="MindMapBuilder"/> instance.</returns>
         /// <exception cref="MermaidException">Thrown when <paramref name="rootText"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
         public static MindMapBuilder MindMap(
             string rootText,
             string? title = null,
             MermaidConfig? config = null,
-            MindMap.Model.NodeShape rootShape = MermaidDotNet.MindMap.Model.NodeShape.Default) => new(rootText, title, config, rootShape, isSafe: false);
+            MindMap.Model.NodeShape rootShape = MermaidDotNet.MindMap.Model.NodeShape.Default,
+            bool rootIsMarkdown = false,
+            string? rootIcon = null,
+            params string[] rootClasses) => new(rootText, title, config, rootShape, rootIsMarkdown, rootIcon, rootClasses, isSafe: false);
 
         /// <summary>
         /// Starts creating a pie chart, in unsafe mode.
@@ -272,13 +278,19 @@ public static class Mermaid
     /// <param name="title">An optional title for the diagram.</param>
     /// <param name="config">An optional configuration for the diagram.</param>
     /// <param name="rootShape">The shape for the root node. If not specified, the default shape from Mermaid will be used on rendering.</param>
+    /// <param name="rootIsMarkdown">Specifies whether the root node text is in Markdown format.</param>
+    /// <param name="rootIcon">The optional font icon for the root node.</param>
+    /// <param name="rootClasses">The optional CSS classes for the root node.</param>
     /// <returns>A new <see cref="MindMapBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="rootText"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public static MindMapBuilder MindMap(
         string rootText,
         string? title = null,
         MermaidConfig? config = null,
-        MindMap.Model.NodeShape rootShape = MermaidDotNet.MindMap.Model.NodeShape.Default) => new(rootText, title, config, rootShape, isSafe: true);
+        MindMap.Model.NodeShape rootShape = MermaidDotNet.MindMap.Model.NodeShape.Default,
+        bool rootIsMarkdown = false,
+        string? rootIcon = null,
+        params string[] rootClasses) => new(rootText, title, config, rootShape, rootIsMarkdown, rootIcon, rootClasses, isSafe: true);
 
     /// <summary>
     /// Starts creating a pie chart.

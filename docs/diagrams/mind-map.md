@@ -110,3 +110,122 @@ mindmap
 ```
 
 [⬆ Back to top](#mind-map)
+
+## Styling
+
+### Icons
+
+Text icons can be added to nodes by passing the `icon` parameter to the `AddNode` method, or the `rootIcon` parameter to the `MindMap` method for the root node.
+
+Example:
+
+```csharp
+string mindMap = Mermaid
+    .MindMap("Root", rootIcon: "fa fa-home")
+    .AddNode("Node 1", out Node node1, icon: "fa fa-book")
+    .AddNode("Node 2", out Node _, icon: "fa fa-hat-wizard", parent: node1)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+mindmap
+    Root
+    ::icon(fa fa-home)
+        Node 1
+        ::icon(fa fa-book)
+            Node 2
+            ::icon(fa fa-hat-wizard)
+```
+
+That renders as:
+
+```mermaid
+mindmap
+    Root
+    ::icon(fa fa-home)
+        Node 1
+        ::icon(fa fa-book)
+            Node 2
+            ::icon(fa fa-hat-wizard)
+```
+
+[⬆ Back to top](#mind-map)
+
+### Classes
+
+CSS classes can be added to nodes by passing the `classes` parameter to the `AddNode` method, or the `rootClasses` parameter to the `MindMap` method for the root node.
+
+Example:
+
+```csharp
+string mindMap = Mermaid
+    .MindMap("Root", rootClasses: ["class1", "class2"])
+    .AddNode("Node 1", out Node node1, classes: ["class3", "class4"])
+    .AddNode("Node 2", out Node _, classes: ["class5", "class6"], parent: node1)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+mindmap
+    Root
+    ::: class1 class2
+        Node 1
+        ::: class3 class4
+            Node 2
+            ::: class5 class6
+```
+
+That renders as:
+
+```mermaid
+mindmap
+    Root
+    ::: class1 class2
+        Node 1
+        ::: class3 class4
+            Node 2
+            ::: class5 class6
+```
+
+[⬆ Back to top](#mind-map)
+
+### Markdown
+
+Node text can be rendered as Markdown by passing the `isMarkdown` parameter to the `AddNode` method, or the `rootIsMarkdown` parameter to the `MindMap` method for the root node.
+
+> [!NOTE]
+> Mermaid does not support Markdown rendering for node with default shape.
+
+Example:
+
+```csharp
+string mindMap = Mermaid
+    .MindMap("**Root**", rootIsMarkdown: true, rootShape: NodeShape.Square)
+    .AddNode("**Node 1**", out Node node1, isMarkdown: true, shape: NodeShape.Square)
+    .AddNode("**Node 2**", out Node _, parent: node1, isMarkdown: true, shape: NodeShape.Square)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+mindmap
+    id0["`**Root**`"]
+        id1["`**Node 1**`"]
+            id2["`**Node 2**`"]
+```
+
+That renders as:
+
+```mermaid
+mindmap
+    id0["`**Root**`"]
+        id1["`**Node 1**`"]
+            id2["`**Node 2**`"]
+```
+
+[⬆ Back to top](#mind-map)

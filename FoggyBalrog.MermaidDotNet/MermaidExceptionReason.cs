@@ -9,5 +9,6 @@ public enum MermaidExceptionReason
     DuplicateValue,
     StrictlyNegative,
     OutOfRange,
-    InvalidConfiguration
+    InvalidConfiguration,
+    InvalidOperation
 }

@@ -60,4 +60,40 @@ public class MindMapSafeModeBuilderTests
                 id3)Node 5(
             id2((Node 3))", mindMap, ignoreLineEndingDifferences: true);
     }
+
+    [Fact]
+    public void CanBuildMindMapWithIconAndClasses()
+    {
+        string mindMap = Mermaid
+            .MindMap("Root", rootIcon: "fa fa-home", rootClasses: ["class1", "class2"])
+            .AddNode("Node 1", out Node node1, icon: "fa fa-book", classes: ["class3", "class4"])
+            .AddNode("Node 2", out Node _, icon: "fa fa-hat-wizard", classes: ["class5", "class6"], parent: node1)
+            .Build();
+
+        Assert.Equal(@"mindmap
+    Root
+    ::icon(fa fa-home)
+    ::: class1 class2
+        Node 1
+        ::icon(fa fa-book)
+        ::: class3 class4
+            Node 2
+            ::icon(fa fa-hat-wizard)
+            ::: class5 class6", mindMap, ignoreLineEndingDifferences: true);
+    }
+
+    [Fact]
+    public void CanBuildMindMapWithMarkdown()
+    {
+        string mindMap = Mermaid
+            .MindMap("Root", rootIsMarkdown: true, rootShape: NodeShape.Square)
+            .AddNode("Node 1", out Node node1, isMarkdown: true, shape: NodeShape.Square)
+            .AddNode("Node 2", out Node _, parent: node1, isMarkdown: true, shape: NodeShape.Square)
+            .Build();
+
+        Assert.Equal(@"mindmap
+    id0[""`Root`""]
+        id1[""`Node 1`""]
+            id2[""`Node 2`""]", mindMap, ignoreLineEndingDifferences: true);
+    }
 }
