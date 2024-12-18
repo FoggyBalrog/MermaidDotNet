@@ -1,0 +1,53 @@
+﻿namespace FoggyBalrog.MermaidDotNet.Flowchart.Model;
+
+/// <summary>
+/// The expanded shape of a node.
+/// </summary>
+public enum ExpandedNodeShape
+{
+    NotchRect,
+    Hourglass,
+    Bolt,
+    Brace,
+    BraceR,
+    Braces,
+    LeanR,
+    LeanL,
+    Cyl,
+    Diam,
+    Delay,
+    HCyl,
+    LinCyl,
+    CurvTrap,
+    DivRect,
+    Doc,
+    Rounded,
+    Tri,
+    Fork,
+    WinPane,
+    FCirc,
+    LinDoc,
+    LinRect,
+    NotchPent,
+    FlipTri,
+    SlRect,
+    TrapT,
+    Docs,
+    StRect,
+    Odd,
+    Flag,
+    Hex,
+    TrapB,
+    Rect,
+    Circle,
+    SmCirc,
+    DblCirc,
+    FrCirc,
+    BowRect,
+    FrRect,
+    CrossCirc,
+    TagDoc,
+    TagRect,
+    Stadium,
+    Text
+}
