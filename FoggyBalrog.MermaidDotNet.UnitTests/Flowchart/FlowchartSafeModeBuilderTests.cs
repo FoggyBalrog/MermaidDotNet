@@ -53,6 +53,107 @@ public class FlowchartSafeModeBuilderTests
     }
 
     [Fact]
+    public void CanBuildNodesWithDifferentExpandedShapes()
+    {
+        string diagram = Mermaid
+            .Flowchart()
+            .AddNodeWithExpandedShape("N1", out _, ExpandedNodeShape.NotchRect)
+            .AddNodeWithExpandedShape("N2", out _, ExpandedNodeShape.Hourglass)
+            .AddNodeWithExpandedShape("N3", out _, ExpandedNodeShape.Bolt)
+            .AddNodeWithExpandedShape("N4", out _, ExpandedNodeShape.Brace)
+            .AddNodeWithExpandedShape("N5", out _, ExpandedNodeShape.BraceR)
+            .AddNodeWithExpandedShape("N6", out _, ExpandedNodeShape.Braces)
+            .AddNodeWithExpandedShape("N7", out _, ExpandedNodeShape.LeanR)
+            .AddNodeWithExpandedShape("N8", out _, ExpandedNodeShape.LeanL)
+            .AddNodeWithExpandedShape("N9", out _, ExpandedNodeShape.Cyl)
+            .AddNodeWithExpandedShape("N10", out _, ExpandedNodeShape.Diam)
+            .AddNodeWithExpandedShape("N11", out _, ExpandedNodeShape.Delay)
+            .AddNodeWithExpandedShape("N12", out _, ExpandedNodeShape.HCyl)
+            .AddNodeWithExpandedShape("N13", out _, ExpandedNodeShape.LinCyl)
+            .AddNodeWithExpandedShape("N14", out _, ExpandedNodeShape.CurvTrap)
+            .AddNodeWithExpandedShape("N15", out _, ExpandedNodeShape.DivRect)
+            .AddNodeWithExpandedShape("N16", out _, ExpandedNodeShape.Doc)
+            .AddNodeWithExpandedShape("N17", out _, ExpandedNodeShape.Rounded)
+            .AddNodeWithExpandedShape("N18", out _, ExpandedNodeShape.Tri)
+            .AddNodeWithExpandedShape("N19", out _, ExpandedNodeShape.Fork)
+            .AddNodeWithExpandedShape("N20", out _, ExpandedNodeShape.WinPane)
+            .AddNodeWithExpandedShape("N21", out _, ExpandedNodeShape.FCirc)
+            .AddNodeWithExpandedShape("N22", out _, ExpandedNodeShape.LinDoc)
+            .AddNodeWithExpandedShape("N23", out _, ExpandedNodeShape.LinRect)
+            .AddNodeWithExpandedShape("N24", out _, ExpandedNodeShape.NotchPent)
+            .AddNodeWithExpandedShape("N25", out _, ExpandedNodeShape.FlipTri)
+            .AddNodeWithExpandedShape("N26", out _, ExpandedNodeShape.SlRect)
+            .AddNodeWithExpandedShape("N27", out _, ExpandedNodeShape.TrapT)
+            .AddNodeWithExpandedShape("N28", out _, ExpandedNodeShape.Docs)
+            .AddNodeWithExpandedShape("N29", out _, ExpandedNodeShape.StRect)
+            .AddNodeWithExpandedShape("N30", out _, ExpandedNodeShape.Odd)
+            .AddNodeWithExpandedShape("N31", out _, ExpandedNodeShape.Flag)
+            .AddNodeWithExpandedShape("N32", out _, ExpandedNodeShape.Hex)
+            .AddNodeWithExpandedShape("N33", out _, ExpandedNodeShape.TrapB)
+            .AddNodeWithExpandedShape("N34", out _, ExpandedNodeShape.Rect)
+            .AddNodeWithExpandedShape("N35", out _, ExpandedNodeShape.Circle)
+            .AddNodeWithExpandedShape("N36", out _, ExpandedNodeShape.SmCirc)
+            .AddNodeWithExpandedShape("N37", out _, ExpandedNodeShape.DblCirc)
+            .AddNodeWithExpandedShape("N38", out _, ExpandedNodeShape.FrCirc)
+            .AddNodeWithExpandedShape("N39", out _, ExpandedNodeShape.BowRect)
+            .AddNodeWithExpandedShape("N40", out _, ExpandedNodeShape.FrRect)
+            .AddNodeWithExpandedShape("N41", out _, ExpandedNodeShape.CrossCirc)
+            .AddNodeWithExpandedShape("N42", out _, ExpandedNodeShape.TagDoc)
+            .AddNodeWithExpandedShape("N43", out _, ExpandedNodeShape.TagRect)
+            .AddNodeWithExpandedShape("N44", out _, ExpandedNodeShape.Stadium)
+            .AddNodeWithExpandedShape("N45", out _, ExpandedNodeShape.Text)
+            .Build();
+
+        Assert.Equal(@"flowchart TB
+    id1@{ shape: notch-rect, label: ""N1"" }
+    id2@{ shape: hourglass, label: ""N2"" }
+    id3@{ shape: bolt, label: ""N3"" }
+    id4@{ shape: brace, label: ""N4"" }
+    id5@{ shape: brace-r, label: ""N5"" }
+    id6@{ shape: braces, label: ""N6"" }
+    id7@{ shape: lean-r, label: ""N7"" }
+    id8@{ shape: lean-l, label: ""N8"" }
+    id9@{ shape: cyl, label: ""N9"" }
+    id10@{ shape: diam, label: ""N10"" }
+    id11@{ shape: delay, label: ""N11"" }
+    id12@{ shape: h-cyl, label: ""N12"" }
+    id13@{ shape: lin-cyl, label: ""N13"" }
+    id14@{ shape: curv-trap, label: ""N14"" }
+    id15@{ shape: div-rect, label: ""N15"" }
+    id16@{ shape: doc, label: ""N16"" }
+    id17@{ shape: rounded, label: ""N17"" }
+    id18@{ shape: tri, label: ""N18"" }
+    id19@{ shape: fork, label: ""N19"" }
+    id20@{ shape: win-pane, label: ""N20"" }
+    id21@{ shape: f-circ, label: ""N21"" }
+    id22@{ shape: lin-doc, label: ""N22"" }
+    id23@{ shape: lin-rect, label: ""N23"" }
+    id24@{ shape: notch-pent, label: ""N24"" }
+    id25@{ shape: flip-tri, label: ""N25"" }
+    id26@{ shape: sl-rect, label: ""N26"" }
+    id27@{ shape: trap-t, label: ""N27"" }
+    id28@{ shape: docs, label: ""N28"" }
+    id29@{ shape: st-rect, label: ""N29"" }
+    id30@{ shape: odd, label: ""N30"" }
+    id31@{ shape: flag, label: ""N31"" }
+    id32@{ shape: hex, label: ""N32"" }
+    id33@{ shape: trap-b, label: ""N33"" }
+    id34@{ shape: rect, label: ""N34"" }
+    id35@{ shape: circle, label: ""N35"" }
+    id36@{ shape: sm-circ, label: ""N36"" }
+    id37@{ shape: dbl-circ, label: ""N37"" }
+    id38@{ shape: fr-circ, label: ""N38"" }
+    id39@{ shape: bow-rect, label: ""N39"" }
+    id40@{ shape: fr-rect, label: ""N40"" }
+    id41@{ shape: cross-circ, label: ""N41"" }
+    id42@{ shape: tag-doc, label: ""N42"" }
+    id43@{ shape: tag-rect, label: ""N43"" }
+    id44@{ shape: stadium, label: ""N44"" }
+    id45@{ shape: text, label: ""N45"" }", diagram, ignoreLineEndingDifferences: true);
+    }
+
+
+    [Fact]
     public void CanBuildMarkdownNode()
     {
         string diagram = Mermaid

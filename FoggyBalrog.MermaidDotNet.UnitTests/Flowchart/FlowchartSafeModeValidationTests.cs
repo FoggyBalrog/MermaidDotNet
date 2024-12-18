@@ -18,6 +18,19 @@ public class FlowchartSafeModeValidationTests
     }
 
     [Fact]
+    public void AddNodeWithExpandedShape_ThrowsIfTextIsWhiteSpace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .Flowchart()
+                .AddNodeWithExpandedShape(" ", out var _, ExpandedNodeShape.NotchRect);
+        });
+
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
+
+    [Fact]
     public void AddMarkdownNode_ThrowsIfMarkdownIsWhiteSpace()
     {
         var exception = Assert.Throws<MermaidException>(() =>

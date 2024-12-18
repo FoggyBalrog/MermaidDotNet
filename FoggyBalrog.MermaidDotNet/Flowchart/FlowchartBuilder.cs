@@ -53,6 +53,26 @@ public class FlowchartBuilder
     }
 
     /// <summary>
+    /// Adds a simple text node to the flowchart, with an expanded shape.
+    /// </summary>
+    /// <param name="text">The text of the node.</param>
+    /// <param name="node">The node that was added.</param>
+    /// <param name="expandedNodeShape">The expanded shape of the node.</param>
+    /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    public FlowchartBuilder AddNodeWithExpandedShape(string text, out Node node, ExpandedNodeShape expandedNodeShape)
+    {
+        if (_isSafe)
+        {
+            text.ThrowIfWhiteSpace();
+        }
+
+        node = new Node($"id{_items.Count + 1}", text, null, null, expandedNodeShape);
+        _items.Add(node);
+        return this;
+    }
+
+    /// <summary>
     /// Adds a markdown node to the flowchart.
     /// </summary>
     /// <param name="markdown">The markdown text of the node.</param>
@@ -439,9 +459,17 @@ public class FlowchartBuilder
 
     private static void BuildNode(StringBuilder builder, Node node)
     {
-        (string leftBoundary, string rightBoundary) = SymbolMaps.Nodes[node.Shape];
+        if (node.Shape is null)
+        {
+            string expandedShapeString = SymbolMaps.ExpandedNodesShapeStrings[(ExpandedNodeShape)node.ExpandedShape!];
+            builder.AppendLine($"{Shared.Indent}{node.Id}@{{ shape: {expandedShapeString}, label: \"{node.Text}\" }}");
+        }
+        else
+        {
+            (string leftBoundary, string rightBoundary) = SymbolMaps.Nodes[(NodeShape)node.Shape];
+            builder.AppendLine($"{Shared.Indent}{node.Id}{leftBoundary}\"{node.Text}\"{rightBoundary}");
+        }
 
-        builder.AppendLine($"{Shared.Indent}{node.Id}{leftBoundary}\"{node.Text}\"{rightBoundary}");
 
         switch (node.NodeClickBinding)
         {

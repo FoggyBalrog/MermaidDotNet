@@ -15,6 +15,16 @@ public class FlowchartUnsafeModeValidationTests
     }
 
     [Fact]
+    public void AddNodeWithExpandedShape_DoesNotThrowIfTextIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .Flowchart()
+            .AddNodeWithExpandedShape(" ", out var _, ExpandedNodeShape.NotchRect)
+            .Build();
+    }
+
+    [Fact]
     public void AddMarkdownNode_DoesNotThrowIfMarkdownIsWhiteSpace()
     {
         Mermaid

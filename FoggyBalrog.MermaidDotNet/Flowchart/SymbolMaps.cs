@@ -30,6 +30,55 @@ internal static class SymbolMaps
         [NodeShape.TrapezoidAlt] = ("[\\", "/]")
     };
 
+    public static Dictionary<ExpandedNodeShape, string> ExpandedNodesShapeStrings { get; } = new()
+    {
+        [ExpandedNodeShape.NotchRect] = "notch-rect",
+        [ExpandedNodeShape.Hourglass] = "hourglass",
+        [ExpandedNodeShape.Bolt] = "bolt",
+        [ExpandedNodeShape.Brace] = "brace",
+        [ExpandedNodeShape.BraceR] = "brace-r",
+        [ExpandedNodeShape.Braces] = "braces",
+        [ExpandedNodeShape.LeanR] = "lean-r",
+        [ExpandedNodeShape.LeanL] = "lean-l",
+        [ExpandedNodeShape.Cyl] = "cyl",
+        [ExpandedNodeShape.Diam] = "diam",
+        [ExpandedNodeShape.Delay] = "delay",
+        [ExpandedNodeShape.HCyl] = "h-cyl",
+        [ExpandedNodeShape.LinCyl] = "lin-cyl",
+        [ExpandedNodeShape.CurvTrap] = "curv-trap",
+        [ExpandedNodeShape.DivRect] = "div-rect",
+        [ExpandedNodeShape.Doc] = "doc",
+        [ExpandedNodeShape.Rounded] = "rounded",
+        [ExpandedNodeShape.Tri] = "tri",
+        [ExpandedNodeShape.Fork] = "fork",
+        [ExpandedNodeShape.WinPane] = "win-pane",
+        [ExpandedNodeShape.FCirc] = "f-circ",
+        [ExpandedNodeShape.LinDoc] = "lin-doc",
+        [ExpandedNodeShape.LinRect] = "lin-rect",
+        [ExpandedNodeShape.NotchPent] = "notch-pent",
+        [ExpandedNodeShape.FlipTri] = "flip-tri",
+        [ExpandedNodeShape.SlRect] = "sl-rect",
+        [ExpandedNodeShape.TrapT] = "trap-t",
+        [ExpandedNodeShape.Docs] = "docs",
+        [ExpandedNodeShape.StRect] = "st-rect",
+        [ExpandedNodeShape.Odd] = "odd",
+        [ExpandedNodeShape.Flag] = "flag",
+        [ExpandedNodeShape.Hex] = "hex",
+        [ExpandedNodeShape.TrapB] = "trap-b",
+        [ExpandedNodeShape.Rect] = "rect",
+        [ExpandedNodeShape.Circle] = "circle",
+        [ExpandedNodeShape.SmCirc] = "sm-circ",
+        [ExpandedNodeShape.DblCirc] = "dbl-circ",
+        [ExpandedNodeShape.FrCirc] = "fr-circ",
+        [ExpandedNodeShape.BowRect] = "bow-rect",
+        [ExpandedNodeShape.FrRect] = "fr-rect",
+        [ExpandedNodeShape.CrossCirc] = "cross-circ",
+        [ExpandedNodeShape.TagDoc] = "tag-doc",
+        [ExpandedNodeShape.TagRect] = "tag-rect",
+        [ExpandedNodeShape.Stadium] = "stadium",
+        [ExpandedNodeShape.Text] = "text"
+    };
+
     public static Dictionary<HyperlinkTarget, string> HyperlinksTargets { get; } = new()
     {
         [HyperlinkTarget.Self] = "_self",
