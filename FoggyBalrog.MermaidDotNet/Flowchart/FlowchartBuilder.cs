@@ -123,7 +123,7 @@ public class FlowchartBuilder
             extraLength.ThrowIfStrictlyNegative();
         }
 
-        link = new Link(++_linkCounter, [from], [to], text, lineStyle, ending, multidirectional, extraLength);
+        link = new Link(_linkCounter++, [from], [to], text, lineStyle, ending, multidirectional, extraLength);
 
         _items.Add(link);
 
@@ -163,7 +163,7 @@ public class FlowchartBuilder
             extraLength.ThrowIfStrictlyNegative();
         }
 
-        link = new Link(++_linkCounter, from, to, text, lineStyle, ending, multidirectional, extraLength);
+        link = new Link(_linkCounter++, from, to, text, lineStyle, ending, multidirectional, extraLength);
         _items.Add(link);
 
         return this;

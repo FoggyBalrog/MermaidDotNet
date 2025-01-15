@@ -583,7 +583,7 @@ flowchart TB
     id2 --> id1
     id1 --> id2
     id2 --> id1
-    linkStyle 1,3 stroke: red;
+    linkStyle 0,2 stroke: red;
 ```
 
 That renders as:
@@ -596,7 +596,7 @@ flowchart TB
     id2 --> id1
     id1 --> id2
     id2 --> id1
-    linkStyle 1,3 stroke: red;
+    linkStyle 0,2 stroke: red;
 ```
 
 [⬆ Back to top](#flowchart)

@@ -485,7 +485,7 @@ public class FlowchartSafeModeBuilderTests
     id2 --> id1
     id1 --> id2
     id2 --> id1
-    linkStyle 1,3 stroke: red;", diagram, ignoreLineEndingDifferences: true);
+    linkStyle 0,2 stroke: red;", diagram, ignoreLineEndingDifferences: true);
     }
 
     [Fact]
