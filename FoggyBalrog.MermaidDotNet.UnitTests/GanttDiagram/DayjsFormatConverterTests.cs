@@ -2,7 +2,7 @@
 
 namespace FoggyBalrog.MermaidDotNet.UnitTests.GanttDiagram;
 
-public class DateFormatConverterTests
+public class DayjsFormatConverterTests
 {
     private readonly DateTimeOffset _referenceDate1 = new(2024, 01, 3, 08, 06, 07, 371, 954, TimeSpan.FromHours(-5));
     private readonly DateTimeOffset _referenceDate2 = new(2024, 10, 13, 14, 17, 23, 371, 954, TimeSpan.FromHours(14));
@@ -34,12 +34,33 @@ public class DateFormatConverterTests
     [InlineData("Do", "3rd", "13th")]
     [InlineData("X", "1704287167.371", "1728778643.371")]
     [InlineData("x", "1704287167371", "1728778643371")]
-    public void ToDayjsFormat(string dayjsFormat, string expectedFormattedDate1, string expectedFormattedDate2)
+    public void FormatDateTimeOffset(string dayjsFormat, string expectedFormattedDate1, string expectedFormattedDate2)
     {
-        string formattedDate1 = DateFormatConverter.ToDayjsFormat(_referenceDate1, dayjsFormat);
-        string formattedDate2 = DateFormatConverter.ToDayjsFormat(_referenceDate2, dayjsFormat);
+        string formattedDate1 = DayjsFormatConverter.FormatDateTimeOffset(_referenceDate1, dayjsFormat);
+        string formattedDate2 = DayjsFormatConverter.FormatDateTimeOffset(_referenceDate2, dayjsFormat);
 
         Assert.Equal(expectedFormattedDate1, formattedDate1);
         Assert.Equal(expectedFormattedDate2, formattedDate2);
+    }
+
+    [Theory]
+    [InlineData(0d, "0ms")]
+    [InlineData(1d, "1ms")]
+    [InlineData(500d, "500ms")]
+    [InlineData(1500d, "1.5s")]
+    [InlineData(60000d, "1m")]
+    [InlineData(90000d, "1.5m")]
+    [InlineData(3600000d, "1h")]
+    [InlineData(86400000d, "1d")]
+    [InlineData(604800000d, "1w")]
+    [InlineData(2592000000d, "1M")]
+    [InlineData(31536000000d, "1y")]
+    [InlineData(-1500d, "-1.5s")]
+    public void FormatTimeSpan(double milliseconds, string expected)
+    {
+        TimeSpan span = TimeSpan.FromMilliseconds(milliseconds);
+        string formatted = DayjsFormatConverter.FormatTimeSpan(span);
+
+        Assert.Equal(expected, formatted);
     }
 }
