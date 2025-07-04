@@ -13,7 +13,7 @@ public class GanttDiagramSafeModeBuilderTests
         string diagram = Mermaid
             .GanttDiagram()
             .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask t1)
-            .AddTask("Bar", Date("2024-05-08"), TimeSpan.FromDays(3), out GanttTask t2)
+            .AddTask("Bar", Date("2024-05-08"), TimeSpan.FromSeconds(90), out GanttTask t2)
             .AddTask("Baz", t1, Date("2024-05-09"), out GanttTask _)
             .AddTask("Qux", t1, TimeSpan.FromDays(2), out GanttTask _)
             .AddTask("Quux", Date("2024-05-04"), t2, out GanttTask _)
@@ -23,7 +23,7 @@ public class GanttDiagramSafeModeBuilderTests
         Assert.Equal(@"gantt
     dateFormat YYYY-MM-DD
     Foo: task1, 2024-05-01, 2024-05-05
-    Bar: task2, 2024-05-08, 3d
+    Bar: task2, 2024-05-08, 1.5m
     Baz: task3, after task1, 2024-05-09
     Qux: task4, after task1, 2d
     Quux: task5, 2024-05-04, until task2

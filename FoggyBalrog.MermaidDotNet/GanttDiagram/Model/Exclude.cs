@@ -52,5 +52,5 @@ internal record Exclude(string Text)
     /// <param name="date">The date to exclude.</param>
     /// <param name="format">The format of the date.</param>
     /// <returns>The exclude for the date.</returns>
-    public static Exclude Date(DateTimeOffset date, string format) => new(DateFormatConverter.ToDayjsFormat(date, format));
+    public static Exclude Date(DateTimeOffset date, string format) => new(DayjsFormatConverter.FormatDateTimeOffset(date, format));
 }

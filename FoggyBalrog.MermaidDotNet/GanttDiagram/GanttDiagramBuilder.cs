@@ -418,11 +418,11 @@ public class GanttDiagramBuilder
 
         string declaration = task switch
         {
-            StartEndGanttTask startEndTask => $"{_indent}{startEndTask.Name}: {tags}{startEndTask.Id}, {DateFormatConverter.ToDayjsFormat(startEndTask.Start, _dateFormat)}, {DateFormatConverter.ToDayjsFormat(startEndTask.End, _dateFormat)}",
-            StartDurationGanttTask startDurationTask => $"{_indent}{startDurationTask.Name}: {tags}{startDurationTask.Id}, {DateFormatConverter.ToDayjsFormat(startDurationTask.Start, _dateFormat)}, {startDurationTask.Duration.TotalDays}d",
-            AfterEndGanttTask afterEndTask => $"{_indent}{afterEndTask.Name}: {tags}{afterEndTask.Id}, after {afterEndTask.AfterTask.Id}, {DateFormatConverter.ToDayjsFormat(afterEndTask.End, _dateFormat)}",
-            AfterDurationGanttTask afterDurationTask => $"{_indent}{afterDurationTask.Name}: {tags}{afterDurationTask.Id}, after {afterDurationTask.AfterTask.Id}, {afterDurationTask.Duration.TotalDays}d",
-            StartUntilGanttTask startUntilTask => $"{_indent}{startUntilTask.Name}: {tags}{startUntilTask.Id}, {DateFormatConverter.ToDayjsFormat(startUntilTask.Start, _dateFormat)}, until {startUntilTask.UntilTask.Id}",
+            StartEndGanttTask startEndTask => $"{_indent}{startEndTask.Name}: {tags}{startEndTask.Id}, {DayjsFormatConverter.FormatDateTimeOffset(startEndTask.Start, _dateFormat)}, {DayjsFormatConverter.FormatDateTimeOffset(startEndTask.End, _dateFormat)}",
+            StartDurationGanttTask startDurationTask => $"{_indent}{startDurationTask.Name}: {tags}{startDurationTask.Id}, {DayjsFormatConverter.FormatDateTimeOffset(startDurationTask.Start, _dateFormat)}, {DayjsFormatConverter.FormatTimeSpan(startDurationTask.Duration)}",
+            AfterEndGanttTask afterEndTask => $"{_indent}{afterEndTask.Name}: {tags}{afterEndTask.Id}, after {afterEndTask.AfterTask.Id}, {DayjsFormatConverter.FormatDateTimeOffset(afterEndTask.End, _dateFormat)}",
+            AfterDurationGanttTask afterDurationTask => $"{_indent}{afterDurationTask.Name}: {tags}{afterDurationTask.Id}, after {afterDurationTask.AfterTask.Id}, {DayjsFormatConverter.FormatTimeSpan(afterDurationTask.Duration)}",
+            StartUntilGanttTask startUntilTask => $"{_indent}{startUntilTask.Name}: {tags}{startUntilTask.Id}, {DayjsFormatConverter.FormatDateTimeOffset(startUntilTask.Start, _dateFormat)}, until {startUntilTask.UntilTask.Id}",
             AfterUntilGanttTask afterUntilTask => $"{_indent}{afterUntilTask.Name}: {tags}{afterUntilTask.Id}, after {afterUntilTask.AfterTask.Id}, until {afterUntilTask.UntilTask.Id}",
             _ => throw new NotSupportedException($"Task type {task.GetType().Name} is not supported.")
         };
