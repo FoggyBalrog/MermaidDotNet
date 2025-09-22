@@ -2,9 +2,10 @@
 
 Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class.
 
-The `MermaidConfig` object from `FoggyBalrog.MermaidDotNet` implements the properties of the Mermaid configuration object from the Mermaid library, as found [in the Mermaid documentation](https://mermaid.js.org/config/setup/interfaces/mermaid.MermaidConfig.html), except for the configuration specific to experimental diagrams, that are not supported by this library.
-
 The `MermaidConfig` object will be rendered in the frontmatter of the diagram file, as a YAML object under the `config` key.
+
+> [!TIP] Directives
+> Configuration using directives was deprecated in Mermaid v10.5.0 and is not supported in this library.
 
 Example:
 
