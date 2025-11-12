@@ -203,7 +203,7 @@ gantt
     Foo: task1, 2024-05-01, 2024-05-05
     Bar: task2, 2024-05-08, 2024-05-12
     Milestone 1: vert, vert1, 2024-05-03, 0ms
-    Milestone 2: vert, vert1, 2024-05-10, 1d", diagram, ignoreLineEndingDifferences: true);
+    Milestone 2: vert, vert2, 2024-05-10, 1d", diagram, ignoreLineEndingDifferences: true);
     }
 
     private static DateTimeOffset Date(string date)

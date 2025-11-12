@@ -299,7 +299,7 @@ public class GanttDiagramBuilder
             name.ThrowIfWhiteSpace();
         }
 
-        _items.Add(new VerticalMarker($"vert{_vertCounter}", name, position, nextTaskOffset ?? TimeSpan.Zero));
+        _items.Add(new VerticalMarker($"vert{_vertCounter++}", name, position, nextTaskOffset ?? TimeSpan.Zero));
         return this;
     }
 

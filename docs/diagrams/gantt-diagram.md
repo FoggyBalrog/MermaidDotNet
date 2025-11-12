@@ -214,7 +214,7 @@ gantt
     Foo: task1, 2024-05-01, 2024-05-05
     Bar: task2, 2024-05-08, 2024-05-12
     Milestone 1: vert, vert1, 2024-05-03, 0ms
-    Milestone 2: vert, vert1, 2024-05-10, 1d
+    Milestone 2: vert, vert2, 2024-05-10, 1d
 ```
 
 That renders as:
@@ -225,7 +225,7 @@ gantt
     Foo: task1, 2024-05-01, 2024-05-05
     Bar: task2, 2024-05-08, 2024-05-12
     Milestone 1: vert, vert1, 2024-05-03, 0ms
-    Milestone 2: vert, vert1, 2024-05-10, 1d
+    Milestone 2: vert, vert2, 2024-05-10, 1d
 ```
 
 [⬆ Back to top](#gantt-diagram)
