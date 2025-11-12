@@ -191,6 +191,45 @@ gantt
 
 [⬆ Back to top](#gantt-diagram)
 
+## Vertical markers
+
+Vertical markers can be added to the diagram with the `AddVerticalMarker` method.
+
+Example:
+```csharp
+string diagram = Mermaid
+    .GanttDiagram()
+    .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask t1)
+    .AddTask("Bar", Date("2024-05-08"), Date("2024-05-12"), out GanttTask t2)
+    .AddVerticalMarker("Milestone 1", Date("2024-05-03"))
+    .AddVerticalMarker("Milestone 2", Date("2024-05-10"), TimeSpan.FromDays(1))
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+gantt
+    dateFormat YYYY-MM-DD
+    Foo: task1, 2024-05-01, 2024-05-05
+    Bar: task2, 2024-05-08, 2024-05-12
+    Milestone 1: vert, vert1, 2024-05-03, 0ms
+    Milestone 2: vert, vert1, 2024-05-10, 1d
+```
+
+That renders as:
+
+```mermaid
+gantt
+    dateFormat YYYY-MM-DD
+    Foo: task1, 2024-05-01, 2024-05-05
+    Bar: task2, 2024-05-08, 2024-05-12
+    Milestone 1: vert, vert1, 2024-05-03, 0ms
+    Milestone 2: vert, vert1, 2024-05-10, 1d
+```
+
+[⬆ Back to top](#gantt-diagram)
+
 ## Interaction
 
 Tasks can have an hyperlink or a javascript callback attached to them, by either using the `AddHyperlink` or `AddCallback` methods.

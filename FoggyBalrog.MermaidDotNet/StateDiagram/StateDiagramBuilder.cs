@@ -108,6 +108,28 @@ public class StateDiagramBuilder
     }
 
     /// <summary>
+    /// Adds a hyperlink to the specified state in the diagram, optionally including a tooltip.
+    /// </summary>
+    /// <param name="state">The state to which the hyperlink will be attached.</param>
+    /// <param name="url">The URL to associate with the state.</param>
+    /// <param name="tooltip">An optional tooltip to display when hovering over the link.</param>
+    /// <returns>The current <see cref="StateDiagramBuilder"/> instance, enabling method chaining.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="state"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="url"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    public StateDiagramBuilder AddStateLink(State state, string url, string? tooltip = null)
+    {
+        if (_isSafe)
+        {
+            state.ThrowIfForeignTo(_items);
+            url.ThrowIfWhiteSpace();
+            tooltip?.ThrowIfWhiteSpace();
+        }
+        _items.Add(new StateLink(state, url, tooltip));
+        return this;
+    }
+
+    /// <summary>
     /// Adds a note to a state.
     /// </summary>
     /// <param name="state">The state to add the note to.</param>
@@ -302,6 +324,12 @@ public class StateDiagramBuilder
 
                 case State { Kind: StateKind.Simple } state:
                     builder.AppendLine($"{_indent}{state.Id} : {state.Description}");
+                    break;
+
+                case StateLink stateLink:
+                    string tooltipPart = stateLink.Tooltip is not null ? $" \"{stateLink.Tooltip}\"" : string.Empty;
+                    string hrefPart = stateLink.Tooltip is null ? "href " : string.Empty;
+                    builder.AppendLine($"{_indent}click {stateLink.State.Id} {hrefPart}\"{stateLink.Url}\"{tooltipPart}");
                     break;
 
                 case CompositeStateEnd:
