@@ -202,6 +202,26 @@ gantt
     click task2 call myFunction()", diagram, ignoreLineEndingDifferences: true);
     }
 
+
+    [Fact]
+    public void CanBuildGanttDiagramWithVerticalMarker()
+    {
+        string diagram = Mermaid
+            .GanttDiagram()
+            .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask t1)
+            .AddTask("Bar", Date("2024-05-08"), Date("2024-05-12"), out GanttTask t2)
+            .AddVerticalMarker("Milestone 1", Date("2024-05-03"))
+            .AddVerticalMarker("Milestone 2", Date("2024-05-10"), TimeSpan.FromDays(1))
+            .Build();
+
+        Assert.Equal(@"gantt
+    dateFormat YYYY-MM-DD
+    Foo: task1, 2024-05-01, 2024-05-05
+    Bar: task2, 2024-05-08, 2024-05-12
+    Milestone 1: vert, vert1, 2024-05-03, 0ms
+    Milestone 2: vert, vert2, 2024-05-10, 1d", diagram, ignoreLineEndingDifferences: true);
+    }
+
     private static DateTimeOffset Date(string date)
     {
         return DateTimeOffset.Parse(date, CultureInfo.InvariantCulture);

@@ -45,6 +45,50 @@ public class StateDiagramSafeModeValidationTests
     }
 
     [Fact]
+    public void AddStateLink_ThrowsIfStateIsForeign()
+    {
+        Mermaid
+            .StateDiagram()
+            .AddState("State", out var state);
+
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .StateDiagram()
+                .AddStateLink(state, "http://example.com");
+        });
+
+        Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
+    }
+
+    [Fact]
+    public void AddStateLink_ThrowsIfUrlIsWhitespace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .StateDiagram()
+                .AddState("State", out var state)
+                .AddStateLink(state, " ");
+        });
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
+
+    [Fact]
+    public void AddStateLink_ThrowsIfTooltipIsWhitespace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .StateDiagram()
+                .AddState("State", out var state)
+                .AddStateLink(state, "http://example.com", " ");
+        });
+
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
+
+    [Fact]
     public void AddNote_ThrowsIfStateIsForeign()
     {
         Mermaid

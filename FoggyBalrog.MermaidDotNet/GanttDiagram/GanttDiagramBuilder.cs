@@ -20,6 +20,7 @@ public class GanttDiagramBuilder
     private readonly List<Exclude> _excludes = [];
     private readonly List<IGanttItem> _items = [];
     private int _taskCounter = 1;
+    private int _vertCounter = 1;
 
     internal GanttDiagramBuilder(
         string? title,
@@ -283,6 +284,26 @@ public class GanttDiagramBuilder
     }
 
     /// <summary>
+    /// Adds a vertical marker to the gantt diagram, at a given position.
+    /// </summary>
+    /// <param name="name">The marker name.</param>
+    /// <param name="position">The position.</param>
+    /// <param name="nextTaskOffset">An optional offset for the following task start.</param>
+    /// <returns>The current <see cref="GanttDiagramBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    /// <remarks>This feature was introduced in Mermaid 11.7.0.</remarks>
+    public GanttDiagramBuilder AddVerticalMarker(string name, DateTimeOffset position, TimeSpan? nextTaskOffset = null)
+    {
+        if (_isSafe)
+        {
+            name.ThrowIfWhiteSpace();
+        }
+
+        _items.Add(new VerticalMarker($"vert{_vertCounter++}", name, position, nextTaskOffset ?? TimeSpan.Zero));
+        return this;
+    }
+
+    /// <summary>
     /// Adds a section to the Gantt diagram.
     /// </summary>
     /// <param name="name">The name of the section.</param>
@@ -381,6 +402,9 @@ public class GanttDiagramBuilder
                 case GanttTask task:
                     BuildTask(builder, task);
                     break;
+                case VerticalMarker marker:
+                    BuildVerticalMarker(builder, marker);
+                    break;
                 default:
                     throw new NotSupportedException($"Item type {item.GetType().Name} is not supported.");
             }
@@ -390,6 +414,11 @@ public class GanttDiagramBuilder
         builder.Length -= Environment.NewLine.Length;
 
         return builder.ToString();
+    }
+
+    private void BuildVerticalMarker(StringBuilder builder, VerticalMarker marker)
+    {
+        builder.AppendLine($"{_indent}{marker.Name}: vert, {marker.Id}, {DayjsFormatConverter.FormatDateTimeOffset(marker.Position, _dateFormat)}, {DayjsFormatConverter.FormatTimeSpan(marker.NextTaskOffset)}");
     }
 
     private void BuildTask(StringBuilder builder, GanttTask task)

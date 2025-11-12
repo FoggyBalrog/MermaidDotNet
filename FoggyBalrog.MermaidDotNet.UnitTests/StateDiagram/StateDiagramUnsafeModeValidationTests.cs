@@ -36,6 +36,43 @@ public class StateDiagramUnsafeModeValidationTests
     }
 
     [Fact]
+    public void AddStateLink_DoesNotThrowIfStateIsForeign()
+    {
+        Mermaid
+            .Unsafe
+            .StateDiagram()
+            .AddState("State", out var state);
+
+        Mermaid
+            .Unsafe
+            .StateDiagram()
+            .AddStateLink(state, "http://example.com")
+            .Build();
+    }
+
+    [Fact]
+    public void AddStateLink_DoesNotThrowIfUrlIsWhitespace()
+    {
+        Mermaid
+            .Unsafe
+            .StateDiagram()
+            .AddState("State", out var state)
+            .AddStateLink(state, " ")
+            .Build();
+    }
+
+    [Fact]
+    public void AddStateLink_DoesNotThrowIfTooltipIsWhitespace()
+    {
+        Mermaid
+            .Unsafe
+            .StateDiagram()
+            .AddState("State", out var state)
+            .AddStateLink(state, "http://example.com", " ")
+            .Build();
+    }
+
+    [Fact]
     public void AddNote_DoesNotThrowIfStateIsForeign()
     {
         Mermaid

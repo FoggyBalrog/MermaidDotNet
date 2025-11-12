@@ -214,8 +214,10 @@ internal static class MermaidConfigTestBuilder
             TaskFontSize = "20px",
             TaskMargin = 110,
             TextPlacement = "top",
+            TitleColor = "red",
+            TitleFontFamily = "Verdana",
+            TitleFontSize = "24px",
             Width = 120,
-
 
             // Properties from BaseDiagramConfig
             UseMaxWidth = true,

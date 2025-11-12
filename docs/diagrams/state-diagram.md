@@ -450,6 +450,53 @@ stateDiagram-v2
 
 [⬆ Back to top](#state-diagram)
 
+## Interaction
+
+States can be made clickable by using the `AddStateLink` method.
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .StateDiagram()
+    .AddState("State 1", out State s1)
+    .AddState("State 2", out State s2)
+    .AddStateLink(s1, "https://example.com/state1")
+    .AddStateLink(s2, "https://example.com/state2", "State 2 Tooltip")
+    .AddTransitionFromStart(s1)
+    .AddStateTransition(s1, s2)
+    .AddTransitionToEnd(s2)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+stateDiagram-v2
+    s1 : State 1
+    s2 : State 2
+    click s1 href ""https://example.com/state1""
+    click s2 ""https://example.com/state2"" ""State 2 Tooltip""
+    [*] --> s1
+    s1 --> s2
+    s2 --> [*]
+```
+
+That renders as:
+
+```mermaid
+stateDiagram-v2
+    s1 : State 1
+    s2 : State 2
+    click s1 href "https://example.com/state1"
+    click s2 "https://example.com/state2" "State 2 Tooltip"
+    [*] --> s1
+    s1 --> s2
+    s2 --> [*]
+```
+
+[⬆ Back to top](#state-diagram)
+
 ## Custom styling
 
 States can be styled by using the `StyleWithRawCss` method, when using raw CSS, or the `StyleWithCssClass` method, when using a CSS class. CSS classes can be applied to multiple states at once.

@@ -64,4 +64,13 @@ public record JourneyDiagramConfig : BaseDiagramConfig
 
     [YamlMember(Alias = "sectionColours")]
     public string[]? SectionColours { get; set; }
+
+    [YamlMember(Alias = "titleColor")]
+    public string? TitleColor { get; set; }
+
+    [YamlMember(Alias = "titleFontFamily")]
+    public string? TitleFontFamily { get; set; }
+
+    [YamlMember(Alias = "titleFontSize")]
+    public string? TitleFontSize { get; set; }
 }

@@ -294,4 +294,16 @@ public class GanttDiagramSafeModeValidationTests
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
     }
+
+    [Fact]
+    public void AddVerticalMarker_ThrowsIfNameIsWhiteSpace()
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .GanttDiagram()
+                .AddVerticalMarker(" ", DateTimeOffset.Now);
+        });
+        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+    }
 }

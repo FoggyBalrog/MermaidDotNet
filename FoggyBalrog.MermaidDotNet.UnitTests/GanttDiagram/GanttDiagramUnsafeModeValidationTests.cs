@@ -241,4 +241,14 @@ public class GanttDiagramUnsafeModeValidationTests
             .AddHyperlink(t1, " ")
             .Build();
     }
+
+    [Fact]
+    public void AddVerticalMarker_DoesNotThrowIfNameIsWhiteSpace()
+    {
+        Mermaid
+            .Unsafe
+            .GanttDiagram()
+            .AddVerticalMarker(" ", DateTimeOffset.Now)
+            .Build();
+    }
 }

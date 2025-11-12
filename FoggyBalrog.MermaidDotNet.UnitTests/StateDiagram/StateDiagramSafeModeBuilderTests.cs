@@ -48,6 +48,29 @@ stateDiagram-v2
     }
 
     [Fact]
+    public void CanBuildStateDiagramWithLinks()
+    {
+        string diagram = Mermaid
+            .StateDiagram()
+            .AddState("State 1", out State s1)
+            .AddState("State 2", out State s2)
+            .AddStateLink(s1, "https://example.com/state1")
+            .AddStateLink(s2, "https://example.com/state2", "State 2 Tooltip")
+            .AddTransitionFromStart(s1)
+            .AddStateTransition(s1, s2)
+            .AddTransitionToEnd(s2)
+            .Build();
+        Assert.Equal(@"stateDiagram-v2
+    s1 : State 1
+    s2 : State 2
+    click s1 href ""https://example.com/state1""
+    click s2 ""https://example.com/state2"" ""State 2 Tooltip""
+    [*] --> s1
+    s1 --> s2
+    s2 --> [*]", diagram, ignoreLineEndingDifferences: true);
+    }
+
+    [Fact]
     public void CanBuildStateDiagramWithDirection()
     {
         string diagram = Mermaid
