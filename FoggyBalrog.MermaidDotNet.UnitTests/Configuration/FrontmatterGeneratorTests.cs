@@ -180,6 +180,9 @@ config:
     sectionColours:
       - '#ff0000'
       - '#00ff00'
+    titleColor: red
+    titleFontFamily: Verdana
+    titleFontSize: 24px
     useWidth: 130
     useMaxWidth: true
   layout: Layout
