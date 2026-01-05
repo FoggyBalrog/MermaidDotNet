@@ -42,6 +42,7 @@ internal static class MermaidConfigTestBuilder
             Pie = BuildPieDiagramConfig(),
             QuadrantChart = BuildQuadrantChartConfig(),
             Requirement = BuildRequirementDiagramConfig(),
+            Sankey = BuildSankeyDiagramConfig(),
             Secure = ["foo", "bar"],
             SecurityLevel = SecurityLevel.Strict,
             Sequence = BuildSequenceDiagramConfig(),
@@ -279,7 +280,6 @@ internal static class MermaidConfigTestBuilder
         };
     }
 
-    // requirement diagram config
     public static RequirementDiagramConfig BuildRequirementDiagramConfig()
     {
         return new RequirementDiagramConfig
@@ -297,6 +297,21 @@ internal static class MermaidConfigTestBuilder
             // Properties from BaseDiagramConfig
             UseMaxWidth = true,
             UseWidth = 70
+        };
+    }
+
+    public static SankeyDiagramConfig BuildSankeyDiagramConfig()
+    {
+        return new SankeyDiagramConfig
+        {
+            Height = 10,
+            LinkColor = "#ff0000",
+            NodeAlignment = "justify",
+            Width = 20,
+
+            // Properties from BaseDiagramConfig
+            UseMaxWidth = true,
+            UseWidth = 30
         };
     }
 
