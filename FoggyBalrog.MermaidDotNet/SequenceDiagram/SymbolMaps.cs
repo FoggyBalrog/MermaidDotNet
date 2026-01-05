@@ -8,6 +8,12 @@ internal static class SymbolMaps
     {
         [MemberType.Participant] = "participant",
         [MemberType.Actor] = "actor",
+        [MemberType.Boundary] = "boundary",
+        [MemberType.Control] = "control",
+        [MemberType.Entity] = "entity",
+        [MemberType.Database] = "database",
+        [MemberType.Collections] = "collections",
+        [MemberType.Queue] = "queue",
     };
 
     public static Dictionary<NotePosition, string> NotePositions { get; } = new()

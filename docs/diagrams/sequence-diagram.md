@@ -11,15 +11,15 @@ The following code sample shows how to create a simple Mermaid sequence diagram.
 
 Use the `SequenceDiagram` property of the `Mermaid` class to create a sequence diagram.
 
-Add participants with the `AddParticipant` method, and send messages with the `SendMessage` method.
+Add members with the `AddMember` method, and send messages with the `SendMessage` method.
 
 Generate the diagram mermaid code with the `Build` method.
 
 ```csharp
 Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
+    .AddMember(Alice, out var a)
+    .AddMember(Bob, out var b)
     .SendMessage(a, b, $"Hello {b.Name}!")
     .SendMessage(b, a, $"Hello {a.Name}!")
     .Build();
@@ -112,8 +112,8 @@ Line types (table):
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
+    .AddMember(Alice, out var a)
+    .AddMember(Bob, out var b)
     .SendMessage(a, b, $"Hello {b.Name}!", lineType: LineType.Dotted, arrowType: ArrowType.Open)
     .Build();
 ```
@@ -140,17 +140,21 @@ sequenceDiagram
 
 ## Member types
 
-Members can be of type `Participant` or `Actor`.
+Members can be of type `Participant`, `Actor`, `Boundary`, `Control`, `Entity`, `Database`, `Collections` or `Queue`.
 
-Either use the `AddMember` method with the right `MemberType` argument, or use the shortcut methods `AddParticipant` and `AddActor`.
+Use the `AddMember` method with the right `MemberType` argument.
 
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddMember("Alice", MemberType.Participant, out var a)
-    .AddMember("Bob", MemberType.Actor, out var b)
-    .AddParticipant("Charlie", out var c)
-    .AddActor("David", out var d)
+    .AddMember("Alice", out _, MemberType.Participant) // or just `.AddMember("Alice", out _)`
+    .AddMember("Bob", out _, MemberType.Actor)
+    .AddMember("Charlie", out _, MemberType.Boundary)
+    .AddMember("David", out _, MemberType.Control)
+    .AddMember("Eve", out _, MemberType.Entity)
+    .AddMember("Frank", out _, MemberType.Database)
+    .AddMember("Grace", out _, MemberType.Collections)
+    .AddMember("Heidi", out _, MemberType.Queue)
     .Build();
 ```
 
@@ -160,8 +164,12 @@ The code above generates the following Mermaid code:
 sequenceDiagram
     participant Alice
     actor Bob
-    participant Charlie
-    actor David
+    participant Charlie@{ "type" : "boundary" }
+    participant David@{ "type" : "control" }
+    participant Eve@{ "type" : "entity" }
+    participant Frank@{ "type" : "database" }
+    participant Grace@{ "type" : "collections" }
+    participant Heidi@{ "type" : "queue" }
 ```
 
 That renders as:
@@ -170,8 +178,12 @@ That renders as:
 sequenceDiagram
     participant Alice
     actor Bob
-    participant Charlie
-    actor David
+    participant Charlie@{ "type" : "boundary" }
+    participant David@{ "type" : "control" }
+    participant Eve@{ "type" : "entity" }
+    participant Frank@{ "type" : "database" }
+    participant Grace@{ "type" : "collections" }
+    participant Heidi@{ "type" : "queue" }
 ```
 
 [⬆ Back to top](#sequence-diagram)
@@ -239,8 +251,8 @@ Use the `SendCreateMessage` and `SendDestroyMessage` methods.
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
+    .AddMember(Alice, out var a)
+    .AddMember(Bob, out var b)
     .SendMessage(a, b, $"Hello {b.Name}, how are you?")
     .SendMessage(b, a, "Fine, thank you. And you?")
     .SendCreateMessage(a, "Carl", MemberType.Participant, out var c, "Hi Carl!")
@@ -292,7 +304,7 @@ sequenceDiagram
 
 Members can be grouped in boxes.
 
-Use the `AddBox` method to create a box, and the `AddParticipant` method with the box as argument to add a member to the box.
+Use the `AddBox` method to create a box, and the `AddMember` method with the box as argument to add a member to the box.
 
 Example:
 
@@ -302,11 +314,11 @@ string diagram = Mermaid
     .AddBox("Box1", out var box1, Color.Aquamarine)
     .AddBox("Box2", out var box2, Color.FromArgb(70, 55, 56, 57))
     .AddBox("Box3", out var box3)
-    .AddParticipant("Alice", out var a, box1)
-    .AddParticipant("Bob", out var b, box1)
-    .AddParticipant("Charlie", out var c, box2)
-    .AddParticipant("David", out var d, box3)
-    .AddParticipant("Eve", out var e)
+    .AddMember(Alice, out var a, box: box1)
+    .AddMember(Bob, out var b, box: box1)
+    .AddMember(Charlie, out var c, box: box2)
+    .AddMember(David, out var d, box: box3)
+    .AddMember(Eve, out var e)
     .SendMessage(a, b, $"Hello {b.Name}!")
     .SendMessage(b, c, $"Hello {c.Name}!")
     .SendMessage(c, d, $"Hello {d.Name}!")
@@ -372,8 +384,8 @@ Example:
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("John", out var j)
+    .AddMember(Alice, out var a)
+    .AddMember(John, out var j)
     .SendMessage(a, j, "Hello John, how are you?", activationType: ActivationType.Activate)
     .SendMessage(a, j, "John, can you hear me?", activationType: ActivationType.Activate)
     .SendMessage(j, a, "Hi Alice, I can hear you!", activationType: ActivationType.Deactivate)
@@ -419,9 +431,9 @@ Example:
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
-    .AddParticipant("Charlie", out var c)
+    .AddMember(Alice, out var a)
+    .AddMember(Bob, out var b)
+    .AddMember(Charlie, out var c)
     .AddNoteOver(a, b, "This is a note")
     .AddNoteRightOf(c, "This is another note")
     .SendMessage(a, b, $"Hello {b.Name}!")
@@ -474,8 +486,8 @@ Example:
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
+    .AddMember(Alice, out var a)
+    .AddMember(Bob, out var b)
     .SendMessage(a, b, "Hello Bob!")
     .AddLoop("Every minute", builder => builder
         .SendMessage(b, a, "Hello Alice!")
@@ -525,8 +537,8 @@ Example:
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
+    .AddMember(Alice, out var a)
+    .AddMember(Bob, out var b)
     .SendMessage(a, b, "Hello Bob!")
     .Alternatives(
         ("Bob is happy", builder => builder
@@ -613,11 +625,11 @@ Example:
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
-    .AddParticipant("Charlie", out var c)
-    .AddParticipant("David", out var d)
-    .AddParticipant("Eve", out var e)
+    .AddMember(Alice, out var a)
+    .AddMember(Bob, out var b)
+    .AddMember(Charlie, out var c)
+    .AddMember(David, out var d)
+    .AddMember(Eve, out var e)
     .Parallels(
         ("Alice to Bob", builder => builder
             .SendMessage(a, b, "Hello Bob!")
@@ -710,9 +722,9 @@ Example:
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Service", out var s)
-    .AddParticipant("DB 1", out var db1)
-    .AddParticipant("DB 2", out var db2)
+    .AddMember(Service, out var s)
+    .AddMember("DB 1", out var db1)
+    .AddMember("DB 2", out var db2)
     .Critical("Connect to DB1", builder => builder
         .SendMessage(s, db1, "Connect", LineType.Dotted, ArrowType.None)
         .Critical("Connect to DB2", builder => builder
@@ -793,8 +805,8 @@ Example:
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
+    .AddMember(Alice, out var a)
+    .AddMember(Bob, out var b)
     .SendMessage(a, b, "Hello!")
     .Break("Something happens", builder => builder
         .SendMessage(a, b, "Bye!"))
@@ -838,8 +850,8 @@ Example:
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
+    .AddMember(Alice, out var a)
+    .AddMember(Bob, out var b)
     .AddRectangle(Color.AliceBlue, builder => builder
         .SendMessage(a, b, "Hello Bob!")
         .SendMessage(b, a, "Hello Alice!"))
@@ -894,8 +906,8 @@ Example:
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
+    .AddMember(Alice, out var a)
+    .AddMember(Bob, out var b)
     .Comment("Alice is greeting Bob")
     .SendMessage(a, b, "Hello Bob!")
     .Comment("Bob is greeting Alice")

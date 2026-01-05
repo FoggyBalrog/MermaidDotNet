@@ -12,6 +12,7 @@ public record Link : IFlowItem
         string? text,
         LinkLineStyle lineStyle,
         LinkEnding ending,
+        CurveStyle? curveStyle,
         bool multidirectional,
         int extraLength)
     {
@@ -21,6 +22,7 @@ public record Link : IFlowItem
         Text = text;
         LineStyle = lineStyle;
         Ending = ending;
+        CurveStyle = curveStyle;
         Multidirectional = multidirectional;
         ExtraLength = extraLength;
     }
@@ -51,6 +53,11 @@ public record Link : IFlowItem
     /// The ending of the link.
     /// </summary>
     public LinkEnding Ending { get; }
+
+    /// <summary>
+    /// An optional curve style for the link.
+    /// </summary>
+    public CurveStyle? CurveStyle { get; }
 
     /// <summary>
     /// Whether the link is multidirectional or not.

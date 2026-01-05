@@ -6,5 +6,11 @@
 public enum MemberType
 {
     Participant,
-    Actor
+    Actor,
+    Boundary,
+    Control,
+    Entity,
+    Database,
+    Collections,
+    Queue
 }

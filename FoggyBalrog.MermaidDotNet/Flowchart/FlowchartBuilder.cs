@@ -98,6 +98,7 @@ public class FlowchartBuilder
     /// <param name="link">The link that was added.</param>
     /// <param name="text">An optional text to display on the link.</param>
     /// <param name="lineStyle">The style of the link line.</param>
+    /// <param name="curveStyle">An optional curve style, overriding diagram curve style for this link.</param>
     /// <param name="ending">The ending of the link.</param>
     /// <param name="multidirectional">Specifies whether the link should be multidirectional, i.e. have an arrow on both ends.</param>
     /// <param name="extraLength">Optional extra length to add to the link.</param>
@@ -112,6 +113,7 @@ public class FlowchartBuilder
         string? text = null,
         LinkLineStyle lineStyle = LinkLineStyle.Solid,
         LinkEnding ending = LinkEnding.Arrow,
+        CurveStyle? curveStyle = null,
         bool multidirectional = false,
         int extraLength = 0)
     {
@@ -123,7 +125,7 @@ public class FlowchartBuilder
             extraLength.ThrowIfStrictlyNegative();
         }
 
-        link = new Link(_linkCounter++, [from], [to], text, lineStyle, ending, multidirectional, extraLength);
+        link = new Link(_linkCounter++, [from], [to], text, lineStyle, ending, curveStyle, multidirectional, extraLength);
 
         _items.Add(link);
 
@@ -139,6 +141,7 @@ public class FlowchartBuilder
     /// <param name="text">An optional text to display on the link chain.</param>
     /// <param name="lineStyle">The style of the link line.</param>
     /// <param name="ending">The ending of the link.</param>
+    /// <param name="curveStyle">An optional curve style, overriding diagram curve style for this link.</param>
     /// <param name="multidirectional">Specifies whether the link should be multidirectional, i.e. have an arrow on both ends.</param>
     /// <param name="extraLength">Optional extra length to add to the link.</param>
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
@@ -152,6 +155,7 @@ public class FlowchartBuilder
         string? text = null,
         LinkLineStyle lineStyle = LinkLineStyle.Solid,
         LinkEnding ending = LinkEnding.Arrow,
+        CurveStyle? curveStyle = null,
         bool multidirectional = false,
         int extraLength = 0)
     {
@@ -163,7 +167,7 @@ public class FlowchartBuilder
             extraLength.ThrowIfStrictlyNegative();
         }
 
-        link = new Link(_linkCounter++, from, to, text, lineStyle, ending, multidirectional, extraLength);
+        link = new Link(_linkCounter++, from, to, text, lineStyle, ending, curveStyle, multidirectional, extraLength);
         _items.Add(link);
 
         return this;
@@ -454,7 +458,30 @@ public class FlowchartBuilder
         (string beginning, string line, string ending) = SymbolMaps.Links(link);
         string from = string.Join(" & ", link.From.Select(n => n.Id));
         string to = string.Join(" & ", link.To.Select(n => n.Id));
-        builder.AppendLine($"{Shared.Indent}{from} {beginning}{line}{ending}{text} {to}");
+        string edgeId = link.CurveStyle is not null ? $"e{link.Id}@" : "";
+
+        builder.AppendLine($"{Shared.Indent}{from} {edgeId}{beginning}{line}{ending}{text} {to}");
+
+        if (link.CurveStyle is not null)
+        {
+            string curveStyleString = link.CurveStyle switch
+            {
+                CurveStyle.Basis => "basis",
+                CurveStyle.BumpX => "bumpX",
+                CurveStyle.BumpY => "bumpY",
+                CurveStyle.Cardinal => "cardinal",
+                CurveStyle.CatmullRom => "catmullRom",
+                CurveStyle.Linear => "linear",
+                CurveStyle.MonotoneX => "monotoneX",
+                CurveStyle.MonotoneY => "monotoneY",
+                CurveStyle.Natural => "natural",
+                CurveStyle.Step => "step",
+                CurveStyle.StepAfter => "stepAfter",
+                CurveStyle.StepBefore => "stepBefore",
+                _ => throw new InvalidOperationException($"Unknown curve style: {link.CurveStyle}"),
+            };
+            builder.AppendLine($"{Shared.Indent}{edgeId}{{ curve: {curveStyleString}}}");
+        }
     }
 
     private static void BuildNode(StringBuilder builder, Node node)
@@ -469,7 +496,6 @@ public class FlowchartBuilder
             (string leftBoundary, string rightBoundary) = SymbolMaps.Nodes[(NodeShape)node.Shape];
             builder.AppendLine($"{Shared.Indent}{node.Id}{leftBoundary}\"{node.Text}\"{rightBoundary}");
         }
-
 
         switch (node.NodeClickBinding)
         {
