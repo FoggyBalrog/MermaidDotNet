@@ -603,7 +603,54 @@ flowchart TB
 
 ### Stytling curves
 
+#### Flowchart default curve style
+
 Set the `Flowchart.Curve` property of the `MermadConfig` object. See [Mermaid configuration](~/configuration.md) or [the official Mermaid documentation](https://mermaid.js.org/config/setup/interfaces/mermaid.MermaidConfig.html#flowchart) for more information.
+
+[⬆ Back to top](#flowchart)
+
+#### Individual link curve style
+
+Pass the optional `curveStyle` parameter to the `AddLink` method. Provide a value will override the default curve style set in the configuration.
+
+Example:
+
+```csharp
+string diagram = Mermaid
+    .Flowchart()
+    .AddNode("N1", out var n1)
+    .AddNode("N2", out var n2)
+    .AddNode("N3", out var n3)
+    .AddLink(n1, n2, out var _, curveStyle: CurveStyle.BumpX)
+    .AddLink(n1, n3, out var _, curveStyle: CurveStyle.BumpY)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+flowchart TB
+    id1["N1"]
+    id2["N2"]
+    id3["N3"]
+    id1 e0@--> id2
+    e0@{ curve: bumpX}
+    id1 e1@--> id3
+    e1@{ curve: bumpY}
+```
+
+That renders as:
+
+```mermaid
+flowchart TB
+    id1["N1"]
+    id2["N2"]
+    id3["N3"]
+    id1 e0@--> id2
+    e0@{ curve: bumpX}
+    id1 e1@--> id3
+    e1@{ curve: bumpY}
+```
 
 [⬆ Back to top](#flowchart)
 

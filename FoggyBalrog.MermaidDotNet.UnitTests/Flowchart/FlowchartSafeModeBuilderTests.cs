@@ -277,6 +277,60 @@ public class FlowchartSafeModeBuilderTests
     }
 
     [Fact]
+    public void CanBuildDiagramWithAllLinkCurveStyles()
+    {
+        string diagram = Mermaid
+            .Flowchart()
+            .AddNode("N1", out Node n1)
+            .AddNode("N2", out Node n2)
+            .AddNode("N3", out Node n3)
+            .AddNode("N4", out Node n4)
+            .AddLink(n1, n2, out _, "l1", curveStyle: CurveStyle.Basis)
+            .AddLink(n2, n3, out _, "l2", curveStyle: CurveStyle.BumpX)
+            .AddLink(n3, n4, out _, "l3", curveStyle: CurveStyle.BumpY)
+            .AddLink(n4, n1, out _, "l4", curveStyle: CurveStyle.Cardinal)
+            .AddLink(n1, n3, out _, "l5", curveStyle: CurveStyle.CatmullRom)
+            .AddLink(n2, n4, out _, "l6", curveStyle: CurveStyle.Linear)
+            .AddLink(n3, n1, out _, "l7", curveStyle: CurveStyle.MonotoneX)
+            .AddLink(n4, n2, out _, "l8", curveStyle: CurveStyle.MonotoneY)
+            .AddLink(n1, n4, out _, "l9", curveStyle: CurveStyle.Natural)
+            .AddLink(n2, n1, out _, "l10", curveStyle: CurveStyle.Step)
+            .AddLink(n3, n2, out _, "l11", curveStyle: CurveStyle.StepAfter)
+            .AddLink(n4, n3, out _, "l12", curveStyle: CurveStyle.StepBefore)
+            .Build();
+
+        Assert.Equal(@"flowchart TB
+    id1[""N1""]
+    id2[""N2""]
+    id3[""N3""]
+    id4[""N4""]
+    id1 e0@-->|""l1""| id2
+    e0@{ curve: basis}
+    id2 e1@-->|""l2""| id3
+    e1@{ curve: bumpX}
+    id3 e2@-->|""l3""| id4
+    e2@{ curve: bumpY}
+    id4 e3@-->|""l4""| id1
+    e3@{ curve: cardinal}
+    id1 e4@-->|""l5""| id3
+    e4@{ curve: catmullRom}
+    id2 e5@-->|""l6""| id4
+    e5@{ curve: linear}
+    id3 e6@-->|""l7""| id1
+    e6@{ curve: monotoneX}
+    id4 e7@-->|""l8""| id2
+    e7@{ curve: monotoneY}
+    id1 e8@-->|""l9""| id4
+    e8@{ curve: natural}
+    id2 e9@-->|""l10""| id1
+    e9@{ curve: step}
+    id3 e10@-->|""l11""| id2
+    e10@{ curve: stepAfter}
+    id4 e11@-->|""l12""| id3
+    e11@{ curve: stepBefore}", diagram, ignoreLineEndingDifferences: true);
+    }
+
+    [Fact]
     public void CanBuildDiagramWithMultidirectionalLinks()
     {
         string diagram = Mermaid
