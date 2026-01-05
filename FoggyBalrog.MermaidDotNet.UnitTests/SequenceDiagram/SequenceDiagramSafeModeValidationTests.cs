@@ -9,13 +9,13 @@ public class SequenceDiagramSafeModeValidationTests
     {
         Mermaid
             .SequenceDiagram()
-            .AddActor("foo", out var m1);
+            .AddMember("foo", out var m1);
 
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("bar", out var m2)
+                .AddMember("bar", out var m2)
                 .AddNoteOver(m1, m2, "Note");
         });
 
@@ -27,13 +27,13 @@ public class SequenceDiagramSafeModeValidationTests
     {
         Mermaid
             .SequenceDiagram()
-            .AddActor("bar", out var m2);
+            .AddMember("bar", out var m2);
 
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var m1)
+                .AddMember("foo", out var m1)
                 .AddNoteOver(m1, m2, "Note");
         });
 
@@ -47,8 +47,8 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var m1)
-                .AddActor("bar", out var m2)
+                .AddMember("foo", out var m1)
+                .AddMember("bar", out var m2)
                 .AddNoteOver(m1, m2, " ");
         });
 
@@ -60,7 +60,7 @@ public class SequenceDiagramSafeModeValidationTests
     {
         Mermaid
             .SequenceDiagram()
-            .AddActor("foo", out var m1);
+            .AddMember("foo", out var m1);
 
         var exception = Assert.Throws<MermaidException>(() =>
         {
@@ -79,7 +79,7 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var m1)
+                .AddMember("foo", out var m1)
                 .AddNoteRightOf(m1, " ");
         });
 
@@ -91,7 +91,7 @@ public class SequenceDiagramSafeModeValidationTests
     {
         Mermaid
             .SequenceDiagram()
-            .AddActor("foo", out var m1);
+            .AddMember("foo", out var m1);
 
         var exception = Assert.Throws<MermaidException>(() =>
         {
@@ -110,7 +110,7 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var m1)
+                .AddMember("foo", out var m1)
                 .AddNoteLeftOf(m1, " ");
         });
 
@@ -152,7 +152,7 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddMember(" ", MemberType.Actor, out var _);
+                .AddMember(" ", out var _);
         });
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
@@ -165,8 +165,8 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddMember("foo", MemberType.Actor, out var _)
-                .AddMember("foo", MemberType.Actor, out var _);
+                .AddMember("foo", out var _)
+                .AddMember("foo", out var _);
         });
 
         Assert.Equal(MermaidExceptionReason.DuplicateValue, exception.Reason);
@@ -183,7 +183,7 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddMember("foo", MemberType.Actor, out var _, box);
+                .AddMember("foo", out var _, box: box);
         });
 
         Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
@@ -194,13 +194,13 @@ public class SequenceDiagramSafeModeValidationTests
     {
         Mermaid
             .SequenceDiagram()
-            .AddActor("foo", out var sender);
+            .AddMember("foo", out var sender);
 
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("bar", out var recipient)
+                .AddMember("bar", out var recipient)
                 .SendMessage(sender, recipient, "Message");
         });
 
@@ -212,13 +212,13 @@ public class SequenceDiagramSafeModeValidationTests
     {
         Mermaid
             .SequenceDiagram()
-            .AddActor("bar", out var recipient);
+            .AddMember("bar", out var recipient);
 
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var sender)
+                .AddMember("foo", out var sender)
                 .SendMessage(sender, recipient, "Message");
         });
 
@@ -232,8 +232,8 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var sender)
-                .AddActor("bar", out var recipient)
+                .AddMember("foo", out var sender)
+                .AddMember("bar", out var recipient)
                 .SendMessage(sender, recipient, " ");
         });
 
@@ -245,13 +245,13 @@ public class SequenceDiagramSafeModeValidationTests
     {
         Mermaid
             .SequenceDiagram()
-            .AddActor("foo", out var sender);
+            .AddMember("foo", out var sender);
 
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
                 .SequenceDiagram()
-                .SendCreateMessage(sender, "baz", MemberType.Actor, out var _, "Message");
+                .SendCreateMessage(sender, "baz", out var _, "Message");
         });
 
         Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
@@ -264,8 +264,8 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var sender)
-                .SendCreateMessage(sender, " ", MemberType.Actor, out var _, "Message");
+                .AddMember("foo", out var sender)
+                .SendCreateMessage(sender, " ", out var _, "Message");
         });
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
@@ -278,8 +278,8 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var sender)
-                .SendCreateMessage(sender, "bar", MemberType.Actor, out var _, " ");
+                .AddMember("foo", out var sender)
+                .SendCreateMessage(sender, "bar", out var _, " ");
         });
 
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
@@ -290,13 +290,13 @@ public class SequenceDiagramSafeModeValidationTests
     {
         Mermaid
             .SequenceDiagram()
-            .AddActor("foo", out var sender);
+            .AddMember("foo", out var sender);
 
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("bar", out var recipient)
+                .AddMember("bar", out var recipient)
                 .SendDestroyMessage(sender, recipient, DestructionTarget.Recipient, "Message");
         });
 
@@ -308,13 +308,13 @@ public class SequenceDiagramSafeModeValidationTests
     {
         Mermaid
             .SequenceDiagram()
-            .AddActor("bar", out var recipient);
+            .AddMember("bar", out var recipient);
 
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var sender)
+                .AddMember("foo", out var sender)
                 .SendDestroyMessage(sender, recipient, DestructionTarget.Recipient, "Message");
         });
 
@@ -328,8 +328,8 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var sender)
-                .AddActor("bar", out var recipient)
+                .AddMember("foo", out var sender)
+                .AddMember("bar", out var recipient)
                 .SendDestroyMessage(sender, recipient, DestructionTarget.Recipient, " ");
         });
 
@@ -458,7 +458,7 @@ public class SequenceDiagramSafeModeValidationTests
     {
         Mermaid
             .SequenceDiagram()
-            .AddActor("foo", out var member);
+            .AddMember("foo", out var member);
 
         var exception = Assert.Throws<MermaidException>(() =>
         {
@@ -477,7 +477,7 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var member)
+                .AddMember("foo", out var member)
                 .AddLink(member, " ", "uri");
         });
 
@@ -491,7 +491,7 @@ public class SequenceDiagramSafeModeValidationTests
         {
             Mermaid
                 .SequenceDiagram()
-                .AddActor("foo", out var member)
+                .AddMember("foo", out var member)
                 .AddLink(member, "title", " ");
         });
 

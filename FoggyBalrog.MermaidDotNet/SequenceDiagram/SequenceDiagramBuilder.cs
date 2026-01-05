@@ -148,14 +148,14 @@ public class SequenceDiagramBuilder
     /// Adds a member to the diagram.
     /// </summary>
     /// <param name="name">The name of the member.</param>
-    /// <param name="memberType">The type of the member.</param>
     /// <param name="member">The member that was created.</param>
+    /// <param name="memberType">The type of the member.</param>
     /// <param name="box">An optional box to add the member to.</param>
     /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     /// <exception cref="MermaidException">Thrown when a member with the same name already exists in the diagram, with the reason <see cref="MermaidExceptionReason.DuplicateValue"/>.</exception>
     /// <exception cref="MermaidException">Thrown when <paramref name="box"/> is not null and not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
-    public SequenceDiagramBuilder AddMember(string name, MemberType memberType, out Member member, Box? box = null)
+    public SequenceDiagramBuilder AddMember(string name, out Member member, MemberType memberType = MemberType.Participant, Box? box = null)
     {
         if (_isSafe)
         {
@@ -176,36 +176,6 @@ public class SequenceDiagramBuilder
         }
 
         return this;
-    }
-
-    /// <summary>
-    /// Adds a participant (member of type <see cref="MemberType.Participant"/>) to the diagram.
-    /// </summary>
-    /// <param name="name">The name of the participant.</param>
-    /// <param name="member">The participant that was created.</param>
-    /// <param name="box">An optional box to add the participant to.</param>
-    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
-    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-    /// <exception cref="MermaidException">Thrown when a member with the same name already exists in the diagram, with the reason <see cref="MermaidExceptionReason.DuplicateValue"/>.</exception>
-    /// <exception cref="MermaidException">Thrown when <paramref name="box"/> is not null and not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
-    public SequenceDiagramBuilder AddParticipant(string name, out Member member, Box? box = null)
-    {
-        return AddMember(name, MemberType.Participant, out member, box);
-    }
-
-    /// <summary>
-    /// Adds an actor (member of type <see cref="MemberType.Actor"/>) to the diagram.
-    /// </summary>
-    /// <param name="name">The name of the actor.</param>
-    /// <param name="member">The actor that was created.</param>
-    /// <param name="box">An optional box to add the actor to.</param>
-    /// <returns>The current <see cref="SequenceDiagramBuilder"/> instance.</returns>
-    /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-    /// <exception cref="MermaidException">Thrown when a member with the same name already exists in the diagram, with the reason <see cref="MermaidExceptionReason.DuplicateValue"/>.</exception>
-    /// <exception cref="MermaidException">Thrown when <paramref name="box"/> is not null and not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
-    public SequenceDiagramBuilder AddActor(string name, out Member member, Box? box = null)
-    {
-        return AddMember(name, MemberType.Actor, out member, box);
     }
 
     /// <summary>
@@ -244,9 +214,9 @@ public class SequenceDiagramBuilder
     /// </summary>
     /// <param name="sender">The sender of the message.</param>
     /// <param name="name">The name of the new member.</param>
-    /// <param name="memberType">The type of the new member.</param>
     /// <param name="recipient">The new member that was created.</param>
     /// <param name="description">The description of the message.</param>
+    /// <param name="memberType">The type of the new member.</param>
     /// <param name="lineType">The type of the line.</param>
     /// <param name="arrowType">The type of the arrow.</param>
     /// <param name="activationType">The type of activation.</param>
@@ -256,9 +226,9 @@ public class SequenceDiagramBuilder
     public SequenceDiagramBuilder SendCreateMessage(
         Member sender,
         string name,
-        MemberType memberType,
         out Member recipient,
         string description,
+        MemberType memberType = MemberType.Participant,
         LineType lineType = LineType.Solid,
         ArrowType arrowType = ArrowType.Filled,
         ActivationType activationType = ActivationType.None)
@@ -621,8 +591,8 @@ public class SequenceDiagramBuilder
     {
         foreach (Member? member in members)
         {
-            string memberType = SymbolMaps.MemberTypes[member.Type];
-            builder.AppendLine($"{indent}{memberType} {member.Name}");
+            string memberString = GetMemberString(member.Type, member.Name);
+            builder.AppendLine($"{indent}{memberString}");
         }
     }
 
@@ -652,8 +622,8 @@ public class SequenceDiagramBuilder
 
         if (message is CreateMessage createMessage)
         {
-            string memberType = SymbolMaps.MemberTypes[createMessage.Recipient.Type];
-            builder.AppendLine($"{indent}create {memberType} {createMessage.Recipient.Name}");
+            string memberString = GetMemberString(createMessage.Recipient.Type, createMessage.Recipient.Name);
+            builder.AppendLine($"{indent}create {memberString}");
         }
 
         builder.AppendLine($"{indent}{message.Sender.Name} {lineType}{arrowType}{activation} {message.Recipient.Name}: {message.Description}");
@@ -665,5 +635,22 @@ public class SequenceDiagramBuilder
             _boxes.SelectMany(b => b.Members),
             _membersOutsideBoxes,
             _sequenceItems.OfType<CreateMessage>().Select(m => m.Recipient)]);
+    }
+
+    private static string GetMemberString(MemberType type, string name)
+    {
+        if (type is MemberType.Actor)
+        {
+            return $"actor {name}";
+        }
+
+        string str = $"participant {name}";
+
+        if (type is not MemberType.Participant)
+        {
+            str += $"@{{ \"type\" : \"{SymbolMaps.MemberTypes[type]}\" }}";
+        }
+
+        return str;
     }
 }

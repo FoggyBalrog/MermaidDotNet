@@ -10,12 +10,12 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var m1);
+            .AddMember("foo", out var m1);
 
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("bar", out var m2)
+            .AddMember("bar", out var m2)
             .AddNoteOver(m1, m2, "Note")
             .Build();
     }
@@ -26,12 +26,12 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("bar", out var m2);
+            .AddMember("bar", out var m2);
 
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var m1)
+            .AddMember("foo", out var m1)
             .AddNoteOver(m1, m2, "Note")
             .Build();
     }
@@ -42,8 +42,8 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var m1)
-            .AddActor("bar", out var m2)
+            .AddMember("foo", out var m1)
+            .AddMember("bar", out var m2)
             .AddNoteOver(m1, m2, " ")
             .Build();
     }
@@ -54,7 +54,7 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var m1);
+            .AddMember("foo", out var m1);
 
         Mermaid
             .Unsafe
@@ -69,7 +69,7 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var m1)
+            .AddMember("foo", out var m1)
             .AddNoteRightOf(m1, " ")
             .Build();
     }
@@ -80,7 +80,7 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var m1);
+            .AddMember("foo", out var m1);
 
         Mermaid
             .Unsafe
@@ -95,7 +95,7 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var m1)
+            .AddMember("foo", out var m1)
             .AddNoteLeftOf(m1, " ")
             .Build();
     }
@@ -128,7 +128,7 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddMember(" ", MemberType.Actor, out var _)
+            .AddMember(" ", out var _)
             .Build();
     }
 
@@ -138,8 +138,8 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddMember("foo", MemberType.Actor, out var _)
-            .AddMember("foo", MemberType.Actor, out var _)
+            .AddMember("foo", out var _)
+            .AddMember("foo", out var _)
             .Build();
     }
 
@@ -154,7 +154,7 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddMember("foo", MemberType.Actor, out var _, box)
+            .AddMember("foo", out var _, box: box)
             .Build();
     }
 
@@ -164,12 +164,12 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var sender);
+            .AddMember("foo", out var sender);
 
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("bar", out var recipient)
+            .AddMember("bar", out var recipient)
             .SendMessage(sender, recipient, "Message")
             .Build();
     }
@@ -180,12 +180,12 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("bar", out var recipient);
+            .AddMember("bar", out var recipient);
 
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var sender)
+            .AddMember("foo", out var sender)
             .SendMessage(sender, recipient, "Message")
             .Build();
     }
@@ -196,8 +196,8 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var sender)
-            .AddActor("bar", out var recipient)
+            .AddMember("foo", out var sender)
+            .AddMember("bar", out var recipient)
             .SendMessage(sender, recipient, " ")
             .Build();
     }
@@ -208,12 +208,12 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var sender);
+            .AddMember("foo", out var sender);
 
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .SendCreateMessage(sender, "baz", MemberType.Actor, out var _, "Message")
+            .SendCreateMessage(sender, "baz", out var _, "Message")
             .Build();
     }
 
@@ -223,8 +223,8 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var sender)
-            .SendCreateMessage(sender, " ", MemberType.Actor, out var _, "Message")
+            .AddMember("foo", out var sender)
+            .SendCreateMessage(sender, " ", out var _, "Message")
             .Build();
     }
 
@@ -234,8 +234,8 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var sender)
-            .SendCreateMessage(sender, "bar", MemberType.Actor, out var _, " ")
+            .AddMember("foo", out var sender)
+            .SendCreateMessage(sender, "bar", out var _, " ")
             .Build();
     }
 
@@ -245,12 +245,12 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var sender);
+            .AddMember("foo", out var sender);
 
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("bar", out var recipient)
+            .AddMember("bar", out var recipient)
             .SendDestroyMessage(sender, recipient, DestructionTarget.Recipient, "Message")
             .Build();
     }
@@ -261,12 +261,12 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("bar", out var recipient);
+            .AddMember("bar", out var recipient);
 
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var sender)
+            .AddMember("foo", out var sender)
             .SendDestroyMessage(sender, recipient, DestructionTarget.Recipient, "Message")
             .Build();
     }
@@ -277,8 +277,8 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var sender)
-            .AddActor("bar", out var recipient)
+            .AddMember("foo", out var sender)
+            .AddMember("bar", out var recipient)
             .SendDestroyMessage(sender, recipient, DestructionTarget.Recipient, " ")
             .Build();
     }
@@ -385,7 +385,7 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var member);
+            .AddMember("foo", out var member);
 
         Mermaid
             .Unsafe
@@ -400,7 +400,7 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var member)
+            .AddMember("foo", out var member)
             .AddLink(member, " ", "uri")
             .Build();
     }
@@ -411,7 +411,7 @@ public class SequenceDiagramUnsafeModeValidationTests
         Mermaid
             .Unsafe
             .SequenceDiagram()
-            .AddActor("foo", out var member)
+            .AddMember("foo", out var member)
             .AddLink(member, "title", " ")
             .Build();
     }
