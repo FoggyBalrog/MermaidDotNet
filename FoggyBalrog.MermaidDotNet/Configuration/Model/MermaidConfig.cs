@@ -95,6 +95,9 @@ public record MermaidConfig
     [YamlMember(Alias = "requirement")]
     public RequirementDiagramConfig? Requirement { get; set; }
 
+    [YamlMember(Alias = "sankey")]
+    public SankeyDiagramConfig? Sankey { get; set; }
+
     [YamlMember(Alias = "secure")]
     public string[]? Secure { get; set; }
 

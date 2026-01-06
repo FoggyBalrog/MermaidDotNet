@@ -234,6 +234,13 @@ config:
     line_height: 20
     useWidth: 70
     useMaxWidth: true
+  sankey:
+    height: 10
+    width: 20
+    linkColor: '#ff0000'
+    nodeAlignment: justify
+    useWidth: 30
+    useMaxWidth: true
   secure:
     - foo
     - bar

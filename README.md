@@ -31,6 +31,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Quadrant chart](#quadrant-chart)
   - [Requirement diagram](#requirement-diagram)
   - [Timeline diagram](#timeline-diagram)
+  - [Sankey diagram](#sankey-diagram)
   - [XY Chart](#xy-chart)
 - [Unsafe mode](#unsafe-mode)
 - [License](#license)
@@ -382,6 +383,28 @@ timeline
 ```
 
 Read more at [timeline-diagram.md](./docs/diagrams/timeline-diagram.md).
+
+### Sankey diagram
+
+```csharp
+var diagram = Mermaid
+    .SankeyDiagram()
+    .AddFlow("A", "B", 30)
+    .AddEmptyLine()
+    .AddFlow("B", "C", 20)
+    .AddFlow("B", "D", 10)
+    .Build();
+```
+
+```mermaid
+sankey
+A,B,30
+
+B,C,20
+B,D,10
+```
+
+Read more at [sankey-diagram.md](./docs/diagrams/sankey-diagram.md).
 
 ### XY Chart
 
