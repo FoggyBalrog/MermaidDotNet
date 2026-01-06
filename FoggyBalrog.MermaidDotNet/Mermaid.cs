@@ -10,6 +10,7 @@ using FoggyBalrog.MermaidDotNet.MindMap;
 using FoggyBalrog.MermaidDotNet.PieChart;
 using FoggyBalrog.MermaidDotNet.QuadrantChart;
 using FoggyBalrog.MermaidDotNet.RequirementDiagram;
+using FoggyBalrog.MermaidDotNet.SankeyDiagram;
 using FoggyBalrog.MermaidDotNet.SequenceDiagram;
 using FoggyBalrog.MermaidDotNet.StateDiagram;
 using FoggyBalrog.MermaidDotNet.StateDiagram.Model;
@@ -154,6 +155,16 @@ public static class Mermaid
         /// <param name="config">An optional configuration for the diagram.</param>
         /// <returns>A new <see cref="RequirementDiagramBuilder"/> instance.</returns>
         public static RequirementDiagramBuilder RequirementDiagram(
+            string? title = null,
+            MermaidConfig? config = null) => new(title, config, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a sankey diagram, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <param name="config">An optional configuration for the diagram.</param>
+        /// <returns>A new <see cref="SankeyDiagramBuilder"/> instance.</returns>
+        public static SankeyDiagramBuilder SankeyDiagram(
             string? title = null,
             MermaidConfig? config = null) => new(title, config, isSafe: false);
 
@@ -331,6 +342,16 @@ public static class Mermaid
     /// <param name="config">An optional configuration for the diagram.</param>
     /// <returns>A new <see cref="RequirementDiagramBuilder"/> instance.</returns>
     public static RequirementDiagramBuilder RequirementDiagram(
+        string? title = null,
+        MermaidConfig? config = null) => new(title, config, isSafe: true);
+
+    /// <summary>
+    /// Starts creating a sankey diagram.
+    /// </summary>
+    /// <param name="title">An optional title for the diagram.</param>
+    /// <param name="config">An optional configuration for the diagram.</param>
+    /// <returns>A new <see cref="SankeyDiagramBuilder"/> instance.</returns>
+    public static SankeyDiagramBuilder SankeyDiagram(
         string? title = null,
         MermaidConfig? config = null) => new(title, config, isSafe: true);
 
