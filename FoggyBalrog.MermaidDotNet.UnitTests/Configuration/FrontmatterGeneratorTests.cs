@@ -335,6 +335,41 @@ config:
     useWidth: 160
     useMaxWidth: true
   wrap: true
+  xyChart:
+    width: 800
+    height: 600
+    titlePadding: 15
+    titleFontSize: 25
+    showTitle: true
+    xAxis:
+      showLabel: true
+      labelFontSize: 12
+      labelPadding: 4
+      showTitle: true
+      titleFontSize: 14
+      titlePadding: 6
+      showTick: true
+      tickLength: 6
+      tickWidth: 3
+      showAxisLine: true
+      axisLineWidth: 1
+    yAxis:
+      showLabel: false
+      labelFontSize: 10
+      labelPadding: 2
+      showTitle: false
+      titleFontSize: 12
+      titlePadding: 4
+      showTick: false
+      tickLength: 4
+      tickWidth: 1
+      showAxisLine: false
+      axisLineWidth: 3
+    chartOrientation: horizontal
+    plotReservedSpacePercent: 60
+    showDataLabel: true
+    useWidth: 900
+    useMaxWidth: false
 ---
 ", result, ignoreLineEndingDifferences: true);
     }

@@ -31,6 +31,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Quadrant chart](#quadrant-chart)
   - [Requirement diagram](#requirement-diagram)
   - [Timeline diagram](#timeline-diagram)
+  - [XY Chart](#xy-chart)
 - [Unsafe mode](#unsafe-mode)
 - [License](#license)
 - [Credits](#credits)
@@ -381,6 +382,31 @@ timeline
 ```
 
 Read more at [timeline-diagram.md](./docs/diagrams/timeline-diagram.md).
+
+### XY Chart
+
+```csharp
+string diagram = Mermaid
+    .XYChart("Some title")
+    .WithCategoricalXAxis(["Jan", "Feb", "Mar", "Apr", "May"], "Months")
+    .WithNumericYAxis(0, 100, "Percentage")
+    .AddBarSeries([20, 40, 60, 80, 100])
+    .AddLineSeries([15, 95, 25, 75, 35])
+    .Build();
+```
+
+```mermaid
+---
+title: Some title
+---
+xychart
+x-axis "Months" ["Jan", "Feb", "Mar", "Apr", "May"]
+y-axis "Percentage" 0 --> 100
+bar [20, 40, 60, 80, 100]
+line [15, 95, 25, 75, 35]
+```
+
+Read more at [xy-chart.md](./docs/diagrams/xy-chart.md).
 
 ## Unsafe mode
 

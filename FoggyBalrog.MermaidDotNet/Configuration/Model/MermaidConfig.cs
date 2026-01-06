@@ -127,4 +127,7 @@ public record MermaidConfig
 
     [YamlMember(Alias = "wrap")]
     public bool? Wrap { get; set; }
+
+    [YamlMember(Alias = "xyChart")]
+    public XYChartConfig? XYChart { get; set; }
 }

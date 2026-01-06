@@ -15,6 +15,8 @@ using FoggyBalrog.MermaidDotNet.StateDiagram;
 using FoggyBalrog.MermaidDotNet.StateDiagram.Model;
 using FoggyBalrog.MermaidDotNet.TimelineDiagram;
 using FoggyBalrog.MermaidDotNet.UserJourneyDiagram;
+using FoggyBalrog.MermaidDotNet.XYChart;
+using FoggyBalrog.MermaidDotNet.XYChart.Model;
 
 namespace FoggyBalrog.MermaidDotNet;
 
@@ -203,6 +205,18 @@ public static class Mermaid
         public static UserJourneyDiagramBuilder UserJourneyDiagram(
             string? title = null,
             MermaidConfig? config = null) => new(title, config, isSafe: false);
+
+        /// <summary>
+        /// Starts creating an XY chart, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the chart.</param>
+        /// <param name="config">An optional Mermaid configuration for the chart.</param>
+        /// <param name="orientation">An optional orientation for the chart.</param>
+        /// <returns>A new <see cref="XYChartBuilder"/> instance.</returns>
+        public static XYChartBuilder XYChart(
+            string? title = null,
+            MermaidConfig? config = null,
+            XYChartOrientation? orientation = null) => new(title, config, orientation, isSafe: false);
     }
 
     /// <summary>
@@ -380,4 +394,17 @@ public static class Mermaid
     public static UserJourneyDiagramBuilder UserJourneyDiagram(
         string? title = null,
         MermaidConfig? config = null) => new(title, config, isSafe: true);
+
+    /// <summary>
+    /// Starts creating an XY chart.
+    /// </summary>
+    /// <param name="title">An optional title for the chart.</param>
+    /// <param name="config">An optional Mermaid configuration for the chart.</param>
+    /// <param name="orientation">An optional orientation for the chart.</param>
+    /// <returns>A new <see cref="XYChartBuilder"/> instance.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    public static XYChartBuilder XYChart(
+        string? title = null,
+        MermaidConfig? config = null,
+        XYChartOrientation? orientation = null) => new(title, config, orientation, isSafe: true);
 }
