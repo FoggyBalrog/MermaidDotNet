@@ -57,7 +57,8 @@ internal static class MermaidConfigTestBuilder
                 { "secondaryColor", "#00ff00" }
             },
             Timeline = BuildTimelineDiagramConfig(),
-            Wrap = true
+            Wrap = true,
+            XYChart = BuildXYChartConfig()
         };
     }
 
@@ -419,6 +420,55 @@ internal static class MermaidConfigTestBuilder
             // Properties from BaseDiagramConfig
             UseMaxWidth = true,
             UseWidth = 160
+        };
+    }
+
+    public static XYChartConfig BuildXYChartConfig()
+    {
+        return new XYChartConfig
+        {
+            Width = 800,
+            Height = 600,
+            TitlePadding = 15,
+            TitleFontSize = 25,
+            ShowTitle = true,
+            ChartOrientation = "horizontal",
+            PlotReservedSpacePercent = 60,
+            ShowDataLabel = true,
+
+            XAxis = new XYAxisConfig
+            {
+                ShowLabel = true,
+                LabelFontSize = 12,
+                LabelPadding = 4,
+                ShowTitle = true,
+                TitleFontSize = 14,
+                TitlePadding = 6,
+                ShowTick = true,
+                TickLength = 6,
+                TickWidth = 3,
+                ShowAxisLine = true,
+                AxisLineWidth = 1
+            },
+
+            YAxis = new XYAxisConfig
+            {
+                ShowLabel = false,
+                LabelFontSize = 10,
+                LabelPadding = 2,
+                ShowTitle = false,
+                TitleFontSize = 12,
+                TitlePadding = 4,
+                ShowTick = false,
+                TickLength = 4,
+                TickWidth = 1,
+                ShowAxisLine = false,
+                AxisLineWidth = 3
+            },
+
+            // Properties from BaseDiagramConfig
+            UseMaxWidth = false,
+            UseWidth = 900
         };
     }
 }
