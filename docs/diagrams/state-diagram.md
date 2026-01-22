@@ -499,18 +499,18 @@ stateDiagram-v2
 
 ## Custom styling
 
-States can be styled by using the `StyleWithRawCss` method, when using raw CSS, or the `StyleWithCssClass` method, when using a CSS class. CSS classes can be applied to multiple states at once.
+States can be styled by using the `DefineCssClass` and `StyleWithCssClass` methods. CSS classes can be applied to multiple states at once.
 
 Example:
 
 ```csharp
-var diagram = Mermaid
+string diagram = Mermaid
     .StateDiagram()
-    .AddState("State 1", out var s1)
-    .AddState("State 2", out var s2)
-    .AddState("State 3", out var s3)
-    .StyleWithRawCss(s1, "fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow")
-    .StyleWithCssClass("foo", s2, s3)
+    .AddState("State 1", out State s1)
+    .AddState("State 2", out State s2)
+    .AddState("State 3", out State s3)
+    .DefineCssClass("foo", "fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow", out var fooCssClass)
+    .StyleWithCssClass(fooCssClass, s2, s3)
     .AddTransitionFromStart(s1)
     .AddStateTransition(s1, s2)
     .AddStateTransition(s2, s3)
@@ -522,10 +522,10 @@ The code above generates the following Mermaid code:
 
 ```text
 stateDiagram-v2
+    classDef foo fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
     s1 : State 1
     s2 : State 2
     s3 : State 3
-    classDef s1 fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
     class s2,s3 foo
     [*] --> s1
     s1 --> s2
@@ -537,10 +537,10 @@ That renders as:
 
 ```mermaid
 stateDiagram-v2
+    classDef foo fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
     s1 : State 1
     s2 : State 2
     s3 : State 3
-    classDef s1 fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
     class s2,s3 foo
     [*] --> s1
     s1 --> s2

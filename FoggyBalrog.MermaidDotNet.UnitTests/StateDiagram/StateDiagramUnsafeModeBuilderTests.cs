@@ -324,8 +324,8 @@ stateDiagram-v2
             .AddState("State 1", out State s1)
             .AddState("State 2", out State s2)
             .AddState("State 3", out State s3)
-            .StyleWithRawCss(s1, "fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow")
-            .StyleWithCssClass("foo", s2, s3)
+            .DefineCssClass("foo", "fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow", out var fooCssClass)
+            .StyleWithCssClass(fooCssClass, s2, s3)
             .AddTransitionFromStart(s1)
             .AddStateTransition(s1, s2)
             .AddStateTransition(s2, s3)
@@ -333,10 +333,10 @@ stateDiagram-v2
             .Build();
 
         Assert.Equal(@"stateDiagram-v2
+    classDef foo fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
     s1 : State 1
     s2 : State 2
     s3 : State 3
-    classDef s1 fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
     class s2,s3 foo
     [*] --> s1
     s1 --> s2

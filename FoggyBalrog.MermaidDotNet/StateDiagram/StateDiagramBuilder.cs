@@ -16,6 +16,7 @@ public class StateDiagramBuilder
     private readonly StateDiagramDirection? _direction;
     private readonly bool _isSafe;
     private readonly List<IStateDiagramItem> _items = [];
+    private readonly List<CssClass> _cssClasses = [];
 
     internal StateDiagramBuilder(string? title, MermaidConfig? config, StateDiagramDirection? direction, bool isSafe)
     {
@@ -246,22 +247,23 @@ public class StateDiagramBuilder
     }
 
     /// <summary>
-    /// Styles a state with raw CSS.
+    /// Defines a CSS class to be used to style nodes.
     /// </summary>
-    /// <param name="state">The state to style.</param>
-    /// <param name="css">The raw CSS to apply to the state.</param>
-    /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
-    /// <exception cref="MermaidException">Thrown when <paramref name="state"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
-    /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
-    public StateDiagramBuilder StyleWithRawCss(State state, string css)
+    /// <param name="name">The name of the CSS class.</param>
+    /// <param name="css">The CSS style to apply to the class.</param>
+    /// <param name="class">The CSS class that was defined.</param>
+    /// <returns>The current <see cref="StateDiagramBuilder"/> instance.</returns>
+    public StateDiagramBuilder DefineCssClass(string name, string css, out CssClass @class)
     {
         if (_isSafe)
         {
-            state.ThrowIfForeignTo(_items);
+            name.ThrowIfWhiteSpace();
             css.ThrowIfWhiteSpace();
         }
 
-        _items.Add(new RawCssStyle(state, css));
+        @class = new CssClass(name, css);
+        _cssClasses.Add(@class);
+
         return this;
     }
 
@@ -271,15 +273,15 @@ public class StateDiagramBuilder
     /// <param name="cssClass">The CSS class to apply to the states.</param>
     /// <param name="states">The states to style.</param>
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
-    public StateDiagramBuilder StyleWithCssClass(string cssClass, params State[] states)
+    public StateDiagramBuilder StyleWithCssClass(CssClass cssClass, params State[] states)
     {
         if (_isSafe)
         {
-            cssClass.ThrowIfWhiteSpace();
+            cssClass.ThrowIfForeignTo(_cssClasses);
             states.ThrowIfAnyForeignTo(_items);
         }
 
-        _items.Add(new CssClassStyle(states, cssClass));
+        _items.Add(new CssClassStyle(states, cssClass.Name));
         return this;
     }
 
@@ -299,6 +301,11 @@ public class StateDiagramBuilder
         {
             string directionString = SymbolMaps.Directions[_direction.Value];
             builder.AppendLine($"{_indent}direction {directionString}");
+        }
+
+        foreach (CssClass cssClass in _cssClasses)
+        {
+            builder.AppendLine($"{_indent}classDef {cssClass.Name} {cssClass.Css}");
         }
 
         foreach (IStateDiagramItem? item in _items)
@@ -358,10 +365,6 @@ public class StateDiagramBuilder
 
                 case ConcurrencySeparator:
                     builder.AppendLine($"{_indent}--");
-                    break;
-
-                case RawCssStyle rawCssStyle:
-                    builder.AppendLine($"{_indent}classDef {rawCssStyle.State.Id} {rawCssStyle.Css}");
                     break;
 
                 case CssClassStyle cssClassStyle:

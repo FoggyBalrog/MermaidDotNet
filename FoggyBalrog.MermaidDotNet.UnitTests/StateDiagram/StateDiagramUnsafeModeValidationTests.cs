@@ -207,41 +207,20 @@ public class StateDiagramUnsafeModeValidationTests
     }
 
     [Fact]
-    public void StyleWithRawCss_DoesNotThrowIfStateIsForeign()
+    public void StyleWithCssClass_DoesNotThrowIfCssClassIsForeign()
     {
         Mermaid
             .Unsafe
             .StateDiagram()
-            .AddState("State", out var state);
+            .DefineCssClass("css-class", "color: red;", out var cssClass);
 
-        Mermaid
-            .Unsafe
-            .StateDiagram()
-            .StyleWithRawCss(state, "fill: red;")
-            .Build();
-    }
-
-    [Fact]
-    public void StyleWithRawCss_DoesNotThrowIfCssIsWhitespace()
-    {
-        Mermaid
-            .Unsafe
-            .StateDiagram()
-            .AddState("State", out var state)
-            .StyleWithRawCss(state, " ")
-            .Build();
-    }
-
-    [Fact]
-    public void StyleWithCssClass_DoesNotThrowIfCssClassIsWhitespace()
-    {
         Mermaid
             .Unsafe
             .StateDiagram()
             .AddState("State 1", out var state1)
             .AddState("State 2", out var state2)
             .AddState("State 3", out var state3)
-            .StyleWithCssClass(" ", state1, state2, state3)
+            .StyleWithCssClass(cssClass, state1, state2, state3)
             .Build();
     }
 
@@ -258,7 +237,8 @@ public class StateDiagramUnsafeModeValidationTests
             .StateDiagram()
             .AddState("State 1", out var state1)
             .AddState("State 3", out var state3)
-            .StyleWithCssClass("css-class", state1, state2, state3)
+            .DefineCssClass("css-class", "color: red;", out var cssClass)
+            .StyleWithCssClass(cssClass, state1, state2, state3)
             .Build();
     }
 }

@@ -248,39 +248,12 @@ public class StateDiagramSafeModeValidationTests
     }
 
     [Fact]
-    public void StyleWithRawCss_ThrowsIfStateIsForeign()
+    public void StyleWithCssClass_ThrowsIfCssClassIsForeign()
     {
         Mermaid
             .StateDiagram()
-            .AddState("State", out var state);
+            .DefineCssClass("css-class", "color: red;", out var cssClass);
 
-        var exception = Assert.Throws<MermaidException>(() =>
-        {
-            Mermaid
-                .StateDiagram()
-                .StyleWithRawCss(state, "fill: red;");
-        });
-
-        Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
-    }
-
-    [Fact]
-    public void StyleWithRawCss_ThrowsIfCssIsWhitespace()
-    {
-        var exception = Assert.Throws<MermaidException>(() =>
-        {
-            Mermaid
-                .StateDiagram()
-                .AddState("State", out var state)
-                .StyleWithRawCss(state, " ");
-        });
-
-        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
-    }
-
-    [Fact]
-    public void StyleWithCssClass_ThrowsIfCssClassIsWhitespace()
-    {
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
@@ -288,10 +261,10 @@ public class StateDiagramSafeModeValidationTests
                 .AddState("State 1", out var state1)
                 .AddState("State 2", out var state2)
                 .AddState("State 3", out var state3)
-                .StyleWithCssClass(" ", state1, state2, state3);
+                .StyleWithCssClass(cssClass, state1, state2, state3);
         });
 
-        Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
+        Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
     }
 
     [Fact]
@@ -307,7 +280,8 @@ public class StateDiagramSafeModeValidationTests
                 .StateDiagram()
                 .AddState("State 1", out var state1)
                 .AddState("State 3", out var state3)
-                .StyleWithCssClass("css-class", state1, state2, state3);
+                .DefineCssClass("css-class", "color: red;", out var cssClass)
+                .StyleWithCssClass(cssClass, state1, state2, state3);
         });
 
         Assert.Equal(MermaidExceptionReason.ForeignItem, exception.Reason);
