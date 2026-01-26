@@ -33,6 +33,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Timeline diagram](#timeline-diagram)
   - [Sankey diagram](#sankey-diagram)
   - [XY Chart](#xy-chart)
+  - [Block Diagram](#block-diagram)
 - [Unsafe mode](#unsafe-mode)
 - [License](#license)
 - [Credits](#credits)
@@ -430,6 +431,34 @@ line [15, 95, 25, 75, 35]
 ```
 
 Read more at [xy-chart.md](./docs/diagrams/xy-chart.md).
+
+### Block Diagram
+
+```csharp
+var diagram = Mermaid
+    .BlockDiagram()
+    .AddBlock("Frontend", out var frontend)
+    .AddSpace()
+    .AddBlock("Backend", out var backend)
+    .AddSpace()
+    .AddBlock("Database", out var database, shape: BlockShape.Cylindrical)
+    .AddLink(frontend, backend, "HTTP")
+    .AddLink(backend, database, "TCP")
+    .Build();
+```
+
+```mermaid
+block
+    b0["Frontend"]
+    space
+    b1["Backend"]
+    space
+    b2[("Database")]
+    b0 --"HTTP"--> b1
+    b1 --"TCP"--> b2
+```
+
+Read more at [block-diagram.md](./docs/diagrams/block-diagram.md).
 
 ## Unsafe mode
 
