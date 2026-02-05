@@ -27,6 +27,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Gantt diagram](#gantt-diagram)
   - [Git graph](#git-graph)
   - [Mind Map](#mind-map)
+  - [Packet diagram](#packet-diagram)
   - [Pie chart](#pie-chart)
   - [Quadrant chart](#quadrant-chart)
   - [Requirement diagram](#requirement-diagram)
@@ -297,6 +298,29 @@ mindmap
 ```
 
 Read more at [mind-map.md](./docs/diagrams/mind-map.md).
+
+### Packet diagram
+
+```csharp
+string diagram = Mermaid
+    .PacketDiagram("some title")
+    .AddFieldWithEnd(10, "foo")
+    .AddFieldWithBits(5, "bar")
+    .AddFieldWithEnd(25, "baz")
+    .Build();
+```
+
+```mermaid
+---
+title: some title
+---
+packet
+0-10: "foo"
++5: "bar"
+16-25: "baz"
+```
+
+Read more at [packet-diagram.md](./docs/diagrams/packet-diagram.md).
 
 ### Pie chart
 

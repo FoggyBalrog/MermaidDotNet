@@ -8,6 +8,7 @@ using FoggyBalrog.MermaidDotNet.Flowchart.Model;
 using FoggyBalrog.MermaidDotNet.GanttDiagram;
 using FoggyBalrog.MermaidDotNet.GitGraph;
 using FoggyBalrog.MermaidDotNet.MindMap;
+using FoggyBalrog.MermaidDotNet.PacketDiagram;
 using FoggyBalrog.MermaidDotNet.PieChart;
 using FoggyBalrog.MermaidDotNet.QuadrantChart;
 using FoggyBalrog.MermaidDotNet.RequirementDiagram;
@@ -130,6 +131,15 @@ public static class Mermaid
             bool rootIsMarkdown = false,
             string? rootIcon = null,
             params string[] rootClasses) => new(rootText, title, config, rootShape, rootIsMarkdown, rootIcon, rootClasses, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a packet diagram, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <param name="config">An optional configuration for the diagram.</param>
+        public static PacketDiagramBuilder PacketDiagram(
+            string? title = null,
+            MermaidConfig? config = null) => new(title, config, isSafe: false);
 
         /// <summary>
         /// Starts creating a pie chart, in unsafe mode.
@@ -341,6 +351,15 @@ public static class Mermaid
         bool rootIsMarkdown = false,
         string? rootIcon = null,
         params string[] rootClasses) => new(rootText, title, config, rootShape, rootIsMarkdown, rootIcon, rootClasses, isSafe: true);
+
+    /// <summary>
+    /// Starts creating a packet diagram.
+    /// </summary>
+    /// <param name="title">An optional title for the diagram.</param>
+    /// <param name="config">An optional configuration for the diagram.</param>
+    public static PacketDiagramBuilder PacketDiagram(
+        string? title = null,
+        MermaidConfig? config = null) => new(title, config, isSafe: true);
 
     /// <summary>
     /// Starts creating a pie chart.
