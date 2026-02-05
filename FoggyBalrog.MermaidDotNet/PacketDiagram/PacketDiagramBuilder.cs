@@ -15,7 +15,7 @@ public class PacketDiagramBuilder
     private readonly bool _isSafe;
     private readonly List<AbstractField> _fields = [];
 
-    public PacketDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
+    internal PacketDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
     {
         if (isSafe)
         {

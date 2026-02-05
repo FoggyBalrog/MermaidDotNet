@@ -62,6 +62,9 @@ public record MermaidConfig
     [YamlMember(Alias = "journey")]
     public JourneyDiagramConfig? Journey { get; set; }
 
+    [YamlMember(Alias = "kanban")]
+    public KanbanDiagramConfig? Kanban { get; set; }
+
     [YamlMember(Alias = "layout")]
     public string? Layout { get; set; }
 

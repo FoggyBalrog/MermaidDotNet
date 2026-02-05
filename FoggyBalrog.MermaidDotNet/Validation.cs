@@ -53,6 +53,14 @@ internal static class Validation
         }
     }
 
+    public static void ThrowIfEmpty(this string item, [CallerArgumentExpression(nameof(item))] string? itemName = null)
+    {
+        if (item.Length == 0)
+        {
+            throw MermaidException.Empty(itemName ?? "Unknown");
+        }
+    }
+
     public static void ThrowIfEmpty<T>(this ICollection<T> items, [CallerArgumentExpression(nameof(items))] string? itemName = null)
     {
         if (items.Count == 0)

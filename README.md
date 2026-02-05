@@ -27,6 +27,7 @@ A .NET library to generate Mermaid diagrams code.
   - [Gantt diagram](#gantt-diagram)
   - [Git graph](#git-graph)
   - [Mind Map](#mind-map)
+  - [Kanban diagram](#kanban-diagram)
   - [Packet diagram](#packet-diagram)
   - [Pie chart](#pie-chart)
   - [Quadrant chart](#quadrant-chart)
@@ -298,6 +299,37 @@ mindmap
 ```
 
 Read more at [mind-map.md](./docs/diagrams/mind-map.md).
+
+### Kanban diagram
+
+```csharp
+string diagram = Mermaid
+    .KanbanDiagram("some title")
+    .AddColumn("foo", x => x
+        .AddTask("t1")
+        .AddTask("t2", assigned: "Alice", ticket: "JIRA-123", priority: Priority.VeryHigh))
+    .AddColumn("bar", x => x
+        .AddTask("t3", assigned: "Alice", priority: Priority.VeryHigh)
+        .AddTask("t4", ticket: "JIRA-123"))
+    .AddColumn("baz")
+    .Build();
+```
+
+```mermaid
+---
+title: some title
+---
+kanban
+    column0[foo]
+        task00[t1]
+        task01[t2]@{ assigned: 'Alice', ticket: JIRA-123, priority: 'Very High' }
+    column1[bar]
+        task10[t3]@{ assigned: 'Alice', priority: 'Very High' }
+        task11[t4]@{ ticket: JIRA-123 }
+    column2[baz]
+```
+
+Read more at [kanban-diagram.md](./docs/diagrams/kanban-diagram.md).
 
 ### Packet diagram
 
