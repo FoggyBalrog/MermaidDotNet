@@ -7,6 +7,7 @@ using FoggyBalrog.MermaidDotNet.Flowchart;
 using FoggyBalrog.MermaidDotNet.Flowchart.Model;
 using FoggyBalrog.MermaidDotNet.GanttDiagram;
 using FoggyBalrog.MermaidDotNet.GitGraph;
+using FoggyBalrog.MermaidDotNet.KanbanDiagram;
 using FoggyBalrog.MermaidDotNet.MindMap;
 using FoggyBalrog.MermaidDotNet.PacketDiagram;
 using FoggyBalrog.MermaidDotNet.PieChart;
@@ -110,6 +111,15 @@ public static class Mermaid
             string? title = null,
             MermaidConfig? config = null,
             bool vertical = false) => new(title, config, vertical, isSafe: false);
+
+        /// <summary>
+        /// Starts creating a kanban diagram, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <param name="config">An optional configuration for the diagram.</param>
+        public static KanbanDiagramBuilder KanbanDiagram(
+            string? title = null,
+            MermaidConfig? config = null) => new(title, config, isSafe: false);
 
         /// <summary>
         /// Starts creating a mind map, in unsafe mode.
@@ -317,6 +327,15 @@ public static class Mermaid
         bool hideTodayMarker = false,
         string? todayMarkerCss = null,
         string dateFormat = "YYYY-MM-DD") => new(title, config, hideTodayMarker, todayMarkerCss, dateFormat, isSafe: true);
+
+    /// <summary>
+    /// Starts creating a kanban diagram.
+    /// </summary>
+    /// <param name="title">An optional title for the diagram.</param>
+    /// <param name="config">An optional configuration for the diagram.</param>
+    public static KanbanDiagramBuilder KanbanDiagram(
+        string? title = null,
+        MermaidConfig? config = null) => new(title, config, isSafe: true);
 
     /// <summary>
     /// Starts creating a Git graph.
