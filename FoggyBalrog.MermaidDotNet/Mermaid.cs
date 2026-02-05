@@ -1,4 +1,5 @@
-﻿using FoggyBalrog.MermaidDotNet.ClassDiagram;
+﻿using FoggyBalrog.MermaidDotNet.BlockDiagram;
+using FoggyBalrog.MermaidDotNet.ClassDiagram;
 using FoggyBalrog.MermaidDotNet.ClassDiagram.Model;
 using FoggyBalrog.MermaidDotNet.Configuration.Model;
 using FoggyBalrog.MermaidDotNet.EntityRelationshipDiagram;
@@ -31,6 +32,18 @@ public static class Mermaid
     /// </summary>
     public static class Unsafe
     {
+        /// <summary>
+        /// Starts creating a block diagram, in unsafe mode.
+        /// </summary>
+        /// <param name="title">An optional title for the diagram.</param>
+        /// <param name="config">An optional configuration for the diagram.</param>
+        /// <param name="columns">An optional number of columns for the diagram.</param>
+        /// <returns>A new <see cref="BlockDiagramBuilder"/> instance.</returns>
+        public static BlockDiagramBuilder BlockDiagram(
+            string? title = null,
+            MermaidConfig? config = null,
+            int? columns = null) => new(title, config, isSafe: false, columns);
+
         /// <summary>
         /// Starts creating a class diagram, in unsafe mode.
         /// </summary>
@@ -229,6 +242,18 @@ public static class Mermaid
             MermaidConfig? config = null,
             XYChartOrientation? orientation = null) => new(title, config, orientation, isSafe: false);
     }
+
+    /// <summary>
+    /// Starts creating a block diagram.
+    /// </summary>
+    /// <param name="title">An optional title for the diagram.</param>
+    /// <param name="config">An optional configuration for the diagram.</param>
+    /// <param name="columns">An optional number of columns for the diagram.</param>
+    /// <returns>A new <see cref="BlockDiagramBuilder"/> instance.</returns>
+    public static BlockDiagramBuilder BlockDiagram(
+        string? title = null,
+        MermaidConfig? config = null,
+        int? columns = null) => new(title, config, isSafe: true, columns);
 
     /// <summary>
     /// Starts creating a class diagram.
