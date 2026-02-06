@@ -8,7 +8,6 @@ on:
 
 jobs:
   publish-docs:
-    if: ${{ !contains(github.ref, '-') }}
     runs-on: ubuntu-latest
     
     permissions:
@@ -33,9 +32,11 @@ jobs:
       run: dotnet tool update -g docfx
 
     - name: Generate diagrams TOC
+      shell: bash
       run: ./.github/scripts/docfx/generate-diagrams-toc.sh
 
     - name: Get Quick Start section from README
+      shell: bash
       run: ./.github/scripts/docfx/get-quick-start-from-readme.sh
 
     - name: Run DocFX

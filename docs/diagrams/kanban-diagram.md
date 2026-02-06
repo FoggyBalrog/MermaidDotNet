@@ -41,7 +41,7 @@ kanban
     column1[bar]
         task10[t3]@{ assigned: 'Alice', priority: 'Very High' }
         task11[t4]@{ ticket: JIRA-123 }
-    column2[baz]"
+    column2[baz]
 ```
 
 That renders as:
@@ -57,7 +57,7 @@ kanban
     column1[bar]
         task10[t3]@{ assigned: 'Alice', priority: 'Very High' }
         task11[t4]@{ ticket: JIRA-123 }
-    column2[baz]"
+    column2[baz]
 ```
 
 [⬆ Back to top](#kanban-diagram)
