@@ -5,43 +5,39 @@ README="README.md"
 INDEX="docs/index.md"
 PLACEHOLDER="<!-- Quick Start Placeholder -->"
 
-# Extract the "## Quick Start" section from README.md (up to, but not including, the next H2)
 qs_tmp="$(mktemp)"
 trap 'rm -f "$qs_tmp"' EXIT
 
+# Extract "## Quick Start" section (until next H2)
 awk '
-  BEGIN { in=0 }
-  # Start when we hit the exact H2 title "## Quick Start"
-  /^##[[:space:]]+Quick Start[[:space:]]*$/ { in=1; print; next }
-  # Stop at the next H2 once we are inside the section
-  in && /^##[[:space:]]+/ { exit }
-  # Print lines while inside the section
-  in { print }
+  BEGIN { in_section=0 }
+  /^##[[:space:]]+Quick Start[[:space:]]*$/ { in_section=1; print; next }
+  in_section && /^##[[:space:]]+/ { exit }
+  in_section { print }
 ' "$README" > "$qs_tmp"
 
-# Check if section found
+# Sanity check
 if ! grep -qE '^##[[:space:]]+Quick Start([[:space:]]*)$' "$qs_tmp"; then
   echo "Error: Could not find a '## Quick Start' section in $README" >&2
   exit 1
 fi
 
-# Replace "./docs" with "~" inside the extracted section
+# Replace literal "./docs" with "~" inside the extracted section
 perl -pe 's/\Q.\/docs\E/~/g' -i "$qs_tmp"
 
-# Replace the placeholder in docs/index.md
-perl -0777 -i -pe '
-  my $ph = $ENV{PH};
-  my $qs_path = $ENV{QS};
+# Replace placeholder in docs/index.md with extracted section
+PH="$PLACEHOLDER" QS="$qs_tmp" perl -0777 -i -pe '
+  my $ph = $ENV{PH} // die "PH not set\n";
+  my $qs_path = $ENV{QS} // die "QS not set\n";
 
-  open my $fh, "<", $qs_path or die "Cannot open extracted section: $qs_path ($!)";
+  open my $fh, "<", $qs_path or die "Cannot open extracted section: $qs_path ($!)\n";
   local $/;
   my $qs = <$fh>;
   close $fh;
 
   die "Error: placeholder not found in index file\n" if index($_, $ph) < 0;
 
-  $_ =~ s/\Q$ph\E/$qs/g;
-' "$INDEX" \
-  PH="$PLACEHOLDER" QS="$qs_tmp"
+  s/\Q$ph\E/$qs/g;
+' "$INDEX"
 
-echo "Updated
+echo "Updated $INDEX"
