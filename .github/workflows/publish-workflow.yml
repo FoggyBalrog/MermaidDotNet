@@ -1,6 +1,7 @@
 name: Publish Workflow
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - "v*"
@@ -30,6 +31,12 @@ jobs:
 
     - name: Install DocFX
       run: dotnet tool update -g docfx
+
+    - name: Generate diagrams TOC
+      run: ./.github/scripts/docfx/generate-diagrams-toc.sh
+
+    - name: Get Quick Start section from README
+      run: ./.github/scripts/docfx/get-quick-start-from-readme.sh
 
     - name: Run DocFX
       run: docfx ./docs/docfx.json
