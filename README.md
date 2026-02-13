@@ -89,8 +89,8 @@ Read more at [flowchart.md](./docs/diagrams/flowchart.md).
 ```csharp
 string diagram = Mermaid
     .SequenceDiagram()
-    .AddParticipant("Alice", out var a)
-    .AddParticipant("Bob", out var b)
+    .AddMember("Alice", out var a)
+    .AddMember("Bob", out var b)
     .SendMessage(a, b, $"Hello {b.Name}!")
     .SendMessage(b, a, $"Hello {a.Name}!")
     .Build();
