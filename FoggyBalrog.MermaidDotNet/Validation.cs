@@ -96,4 +96,85 @@ internal static class Validation
             throw MermaidException.OutOfRange(valueName ?? "Unknown", value, min, max);
         }
     }
+
+    public static void ThrowIfInvalidUri(this string value, [CallerArgumentExpression(nameof(value))] string? valueName = null)
+    {
+        if (string.IsNullOrWhiteSpace(value) || !Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _))
+        {
+            throw MermaidException.InvalidUri(valueName ?? "Unknown", value);
+        }
+    }
+
+    public static void ThrowIfContainsInvalidCharacters(
+        this string value,
+        char[] invalidCharacters,
+        [CallerArgumentExpression(nameof(value))] string? valueName = null)
+    {
+        if (invalidCharacters.Length == 0)
+        {
+            return;
+        }
+
+        for (int i = 0; i < value.Length; i++)
+        {
+            if (TrySkipEscapedCharacterCode(value, ref i)) // e.g. "#123;"
+            {
+                continue;
+            }
+
+            if (TrySkipLineBreakTag(value, ref i)) // "<br/>"
+            {
+                continue;
+            }
+
+            if (Array.IndexOf(invalidCharacters, value[i]) >= 0)
+            {
+                throw MermaidException.InvalidCharacter(valueName ?? "Unknown", value[i], i);
+            }
+        }
+    }
+
+    private static bool TrySkipEscapedCharacterCode(string value, ref int index)
+    {
+        if (value[index] != '#')
+        {
+            return false;
+        }
+
+        int cursor = index + 1;
+
+        if (cursor >= value.Length || !char.IsDigit(value[cursor]))
+        {
+            return false;
+        }
+
+        while (cursor < value.Length && char.IsDigit(value[cursor]))
+        {
+            cursor++;
+        }
+
+        if (cursor < value.Length && value[cursor] == ';')
+        {
+            index = cursor;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TrySkipLineBreakTag(string value, ref int index)
+    {
+        if (index + 4 >= value.Length)
+        {
+            return false;
+        }
+
+        if(value[index..(index + 5)] == "<br/>")
+        {
+            index += 4;
+            return true;
+        }
+
+        return false;
+    }
 }

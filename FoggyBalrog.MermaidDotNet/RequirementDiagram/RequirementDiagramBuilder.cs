@@ -14,13 +14,13 @@ public class RequirementDiagramBuilder
     private readonly List<Relationship> _relationships = [];
     private readonly string? _title;
     private readonly MermaidConfig? _config;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
 
-    internal RequirementDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
+    internal RequirementDiagramBuilder(string? title, MermaidConfig? config, MermaidDotNetOptions? options)
     {
         _title = title;
         _config = config;
-        _isSafe = isSafe;
+        _options = options ?? new MermaidDotNetOptions();
     }
 
     /// <summary>
@@ -44,11 +44,29 @@ public class RequirementDiagramBuilder
         RequirementRisk risk = RequirementRisk.Undefined,
         RequirementVerificationMethod verificationMethod = RequirementVerificationMethod.Undefined)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            name = RequirementDiagramSanitizer.SanitizeText(name);
+            id = id is null ? null : RequirementDiagramSanitizer.SanitizeText(id);
+            text = text is null ? null : RequirementDiagramSanitizer.SanitizeText(text);
+        }
+
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             id.ThrowIfWhiteSpace();
             text.ThrowIfWhiteSpace();
+            RequirementDiagramSanitizer.ValidateText(name);
+
+            if (id is not null)
+            {
+                RequirementDiagramSanitizer.ValidateText(id);
+            }
+
+            if (text is not null)
+            {
+                RequirementDiagramSanitizer.ValidateText(text);
+            }
         }
 
         requirement = new Requirement(name, id, text, type, risk, verificationMethod);
@@ -71,11 +89,29 @@ public class RequirementDiagramBuilder
         string? type = null,
         string? docRef = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            name = RequirementDiagramSanitizer.SanitizeText(name);
+            type = type is null ? null : RequirementDiagramSanitizer.SanitizeText(type);
+            docRef = docRef is null ? null : RequirementDiagramSanitizer.SanitizeText(docRef);
+        }
+
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             type.ThrowIfWhiteSpace();
             docRef.ThrowIfWhiteSpace();
+            RequirementDiagramSanitizer.ValidateText(name);
+
+            if (type is not null)
+            {
+                RequirementDiagramSanitizer.ValidateText(type);
+            }
+
+            if (docRef is not null)
+            {
+                RequirementDiagramSanitizer.ValidateText(docRef);
+            }
         }
 
         element = new Element(name, type, docRef);
@@ -93,7 +129,7 @@ public class RequirementDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="source"/> or <paramref name="target"/> is not part of the current diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public RequirementDiagramBuilder AddRelationship(IRequirementNode source, IRequirementNode target, RelationshipType type)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             source.ThrowIfForeignTo(_nodes);
             target.ThrowIfForeignTo(_nodes);

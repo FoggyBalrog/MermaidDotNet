@@ -14,16 +14,16 @@ public class EntityRelationshipDiagramBuilder
     private readonly List<Relationship> _relationships = [];
     private readonly string? _title;
     private readonly MermaidConfig? _config;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
 
     internal EntityRelationshipDiagramBuilder(
         string? title,
         MermaidConfig? config,
-        bool isSafe)
+        MermaidDotNetOptions? options)
     {
         _title = title;
         _config = config;
-        _isSafe = isSafe;
+        _options = options ?? new MermaidDotNetOptions();
     }
 
     /// <summary>
@@ -36,10 +36,24 @@ public class EntityRelationshipDiagramBuilder
     /// <exception cref="MermaidException">Thrown when an entity with the same name already exists in the diagram, with reason <see cref="MermaidExceptionReason.DuplicateValue"/>.</exception>
     public EntityRelationshipDiagramBuilder AddEntity(string name, out Entity entity, params EntityAttribute[] attributes)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            name = EntityRelationshipDiagramSanitizer.SanitizeEntityName(name);
+            attributes = [.. attributes.Select(a => a with
+            {
+                Comment = EntityRelationshipDiagramSanitizer.SanitizeEntityAttributeComment(a.Comment)
+            })];
+        }
+
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             _entities.ThrowIfDuplicate(name, e => e.Name);
+            EntityRelationshipDiagramSanitizer.ValidateEntityName(name);
+            foreach (EntityAttribute attribute in attributes)
+            {
+                EntityRelationshipDiagramSanitizer.ValidateEntityAttributeComment(attribute.Comment);
+            }
         }
 
         entity = new Entity(name, attributes);
@@ -66,11 +80,16 @@ public class EntityRelationshipDiagramBuilder
         string label,
         RelationshipType type = RelationshipType.Identifying)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            label = EntityRelationshipDiagramSanitizer.SanitizeRelationshipLabel(label);
+        }
+
+        if (_options.ValidateInputs)
         {
             fromEntity.ThrowIfForeignTo(_entities);
             toEntity.ThrowIfForeignTo(_entities);
-            label.ThrowIfWhiteSpace();
+            EntityRelationshipDiagramSanitizer.ValidateRelationshipLabel(label);
         }
 
         _relationships.Add(new Relationship(fromCardinality, fromEntity, toCardinality, toEntity, label, type));

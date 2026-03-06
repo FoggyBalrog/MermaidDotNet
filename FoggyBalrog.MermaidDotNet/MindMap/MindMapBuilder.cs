@@ -15,7 +15,7 @@ public class MindMapBuilder
     private readonly HashSet<Node> _nodes;
     private readonly string? _title;
     private readonly MermaidConfig? _config;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
 
     internal MindMapBuilder(
         string rootText,
@@ -25,23 +25,42 @@ public class MindMapBuilder
         bool rootIsMarkdown,
         string? rootIcon,
         string[]? rootClasses,
-        bool isSafe)
+        MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.SanitizeInputs)
+        {
+            rootText = MindMapSanitizer.SanitizeNodeText(rootText);
+            rootIcon = rootIcon is null ? null : MindMapSanitizer.SanitizeIcon(rootIcon);
+            rootClasses = rootClasses?.Select(MindMapSanitizer.SanitizeCssClass).ToArray();
+        }
+
+        if (_options.ValidateInputs)
         {
             rootText.ThrowIfWhiteSpace();
-
             if (rootIsMarkdown && rootShape == NodeShape.Default)
             {
                 throw MermaidException.InvalidOperation("Markdown nodes with default shape are not supported by Mermaid.");
+            }
+
+            MindMapSanitizer.ValidateNodeText(rootText);
+
+            if (rootIcon is not null)
+            {
+                MindMapSanitizer.ValidateIcon(rootIcon);
+            }
+
+            foreach (string rootClass in rootClasses ?? [])
+            {
+                MindMapSanitizer.ValidateCssClass(rootClass);
             }
         }
 
         _root = new Node(rootText, rootShape, rootIsMarkdown, rootIcon, rootClasses);
         _nodes = [_root];
         _title = title;
-        _config = config;
-        _isSafe = isSafe;
+        _config = config;
     }
 
     /// <summary>
@@ -65,16 +84,34 @@ public class MindMapBuilder
         string? icon = null,
         string[]? classes = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            text = MindMapSanitizer.SanitizeNodeText(text);
+            icon = icon is null ? null : MindMapSanitizer.SanitizeIcon(icon);
+            classes = classes?.Select(MindMapSanitizer.SanitizeCssClass).ToArray();
+        }
+
+        if (_options.ValidateInputs)
         {
             text.ThrowIfWhiteSpace();
             parent?.ThrowIfForeignTo(_nodes);
             icon?.ThrowIfWhiteSpace();
             classes?.ThrowIfAnyWhitespace();
-
             if (isMarkdown && shape == NodeShape.Default)
             {
                 throw MermaidException.InvalidOperation("Markdown nodes with default shape are not supported by Mermaid.");
+            }
+
+            MindMapSanitizer.ValidateNodeText(text);
+
+            if (icon is not null)
+            {
+                MindMapSanitizer.ValidateIcon(icon);
+            }
+
+            foreach (string cssClass in classes ?? [])
+            {
+                MindMapSanitizer.ValidateCssClass(cssClass);
             }
         }
 

@@ -14,13 +14,15 @@ public class StateDiagramBuilder
     private readonly string? _title;
     private readonly MermaidConfig? _config;
     private readonly StateDiagramDirection? _direction;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly List<IStateDiagramItem> _items = [];
     private readonly List<CssClass> _cssClasses = [];
 
-    internal StateDiagramBuilder(string? title, MermaidConfig? config, StateDiagramDirection? direction, bool isSafe)
+    internal StateDiagramBuilder(string? title, MermaidConfig? config, StateDiagramDirection? direction, MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.ValidateInputs)
         {
             title?.ThrowIfWhiteSpace();
         }
@@ -28,7 +30,6 @@ public class StateDiagramBuilder
         _title = title;
         _config = config;
         _direction = direction;
-        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -40,9 +41,14 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddState(string description, out State state)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            description.ThrowIfWhiteSpace();
+            description = StateDiagramSanitizer.SanitizeStateDescription(description);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            StateDiagramSanitizer.ValidateStateDescription(description);
         }
 
         state = new State($"s{_items.Count + 1}", description, StateKind.Simple);
@@ -60,9 +66,14 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddCompositeState(string description, out State state, Action<StateDiagramBuilder> action)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            description.ThrowIfWhiteSpace();
+            description = StateDiagramSanitizer.SanitizeStateDescription(description);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            StateDiagramSanitizer.ValidateStateDescription(description);
         }
 
         state = new State($"s{_items.Count + 1}", description, StateKind.Composite);
@@ -120,12 +131,24 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddStateLink(State state, string url, string? tooltip = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            url = StateDiagramSanitizer.SanitizeLinkUrl(url);
+            tooltip = tooltip is null ? null : StateDiagramSanitizer.SanitizeLinkTooltip(tooltip);
+        }
+
+        if (_options.ValidateInputs)
         {
             state.ThrowIfForeignTo(_items);
             url.ThrowIfWhiteSpace();
             tooltip?.ThrowIfWhiteSpace();
+            StateDiagramSanitizer.ValidateLinkUrl(url);
+            if (tooltip is not null)
+            {
+                StateDiagramSanitizer.ValidateLinkTooltip(tooltip);
+            }
         }
+
         _items.Add(new StateLink(state, url, tooltip));
         return this;
     }
@@ -141,10 +164,15 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddNote(State state, NotePosition position, string text)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            text = StateDiagramSanitizer.SanitizeNoteText(text);
+        }
+
+        if (_options.ValidateInputs)
         {
             state.ThrowIfForeignTo(_items);
-            text.ThrowIfWhiteSpace();
+            StateDiagramSanitizer.ValidateNoteText(text);
         }
 
         _items.Add(new Note(state, position, text));
@@ -162,11 +190,20 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddStateTransition(State from, State to, string? description = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            description = description is null ? null : StateDiagramSanitizer.SanitizeTransitionDescription(description);
+        }
+
+        if (_options.ValidateInputs)
         {
             from.ThrowIfForeignTo(_items);
             to.ThrowIfForeignTo(_items);
             description.ThrowIfWhiteSpace();
+            if (description is not null)
+            {
+                StateDiagramSanitizer.ValidateTransitionDescription(description);
+            }
         }
 
         _items.Add(new StateTransition(from, to, description));
@@ -183,10 +220,19 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddTransitionFromStart(State to, string? description = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            description = description is null ? null : StateDiagramSanitizer.SanitizeTransitionDescription(description);
+        }
+
+        if (_options.ValidateInputs)
         {
             to.ThrowIfForeignTo(_items);
             description.ThrowIfWhiteSpace();
+            if (description is not null)
+            {
+                StateDiagramSanitizer.ValidateTransitionDescription(description);
+            }
         }
 
         _items.Add(new TransitionFromStart(to, description));
@@ -203,10 +249,19 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddTransitionToEnd(State from, string? description = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            description = description is null ? null : StateDiagramSanitizer.SanitizeTransitionDescription(description);
+        }
+
+        if (_options.ValidateInputs)
         {
             from.ThrowIfForeignTo(_items);
             description.ThrowIfWhiteSpace();
+            if (description is not null)
+            {
+                StateDiagramSanitizer.ValidateTransitionDescription(description);
+            }
         }
 
         _items.Add(new TransitionToEnd(from, description));
@@ -223,9 +278,14 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddConcurrency(string description, out State state, params Action<StateDiagramBuilder>[] actions)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            description.ThrowIfWhiteSpace();
+            description = StateDiagramSanitizer.SanitizeStateDescription(description);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            StateDiagramSanitizer.ValidateStateDescription(description);
         }
 
         state = new State($"s{_items.Count + 1}", description, StateKind.Composite);
@@ -255,7 +315,7 @@ public class StateDiagramBuilder
     /// <returns>The current <see cref="StateDiagramBuilder"/> instance.</returns>
     public StateDiagramBuilder DefineCssClass(string name, string css, out CssClass @class)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             css.ThrowIfWhiteSpace();
@@ -275,7 +335,7 @@ public class StateDiagramBuilder
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
     public StateDiagramBuilder StyleWithCssClass(CssClass cssClass, params State[] states)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             cssClass.ThrowIfForeignTo(_cssClasses);
             states.ThrowIfAnyForeignTo(_items);

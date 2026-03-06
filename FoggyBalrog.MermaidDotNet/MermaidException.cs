@@ -60,4 +60,27 @@ public class MermaidException : Exception
     {
         return new MermaidException(MermaidExceptionReason.InvalidOperation, comment);
     }
+
+    internal static Exception InvalidUri(string valueName, string value)
+    {
+        return new MermaidException(MermaidExceptionReason.InvalidUri, $"Value '{valueName}' is not a valid relative or absolute URI.");
+    }
+
+    internal static MermaidException InvalidCharacter(string valueName, char invalidCharacter, int index)
+    {
+        return new MermaidException(MermaidExceptionReason.InvalidCharacter, $"Value '{valueName}' contains invalid character: {FormatChar(invalidCharacter)} at index {index}.");
+    }
+
+    private static string FormatChar(char value)
+    {
+        return value switch
+        {
+            '\r' => @"'\r'",
+            '\n' => @"'\n'",
+            '\t' => @"'\t'",
+            '\'' => @"'\''",
+            '\\' => @"'\\'",
+            _ => $"'{value}'"
+        };
+    }
 }

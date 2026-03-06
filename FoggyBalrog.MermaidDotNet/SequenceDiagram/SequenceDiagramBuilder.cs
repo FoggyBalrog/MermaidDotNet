@@ -15,17 +15,18 @@ public class SequenceDiagramBuilder
     private readonly string? _title;
     private readonly MermaidConfig? _config;
     private readonly bool _autonumber;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly List<Box> _boxes = [];
     private readonly List<Member> _membersOutsideBoxes = [];
     private readonly List<ISequenceItem> _sequenceItems = [];
+    private int _memberCount = 0;
 
-    internal SequenceDiagramBuilder(string? title, MermaidConfig? config, bool autonumber, bool isSafe)
+    internal SequenceDiagramBuilder(string? title, MermaidConfig? config, bool autonumber, MermaidDotNetOptions? options)
     {
         _title = title;
         _config = config;
         _autonumber = autonumber;
-        _isSafe = isSafe;
+        _options = options ?? new MermaidDotNetOptions();
     }
 
     /// <summary>
@@ -39,7 +40,7 @@ public class SequenceDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddNoteOver(Member m1, Member m2, string text)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             ThrowIfForeign(m1);
             ThrowIfForeign(m2);
@@ -60,7 +61,7 @@ public class SequenceDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddNoteRightOf(Member m, string text)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             ThrowIfForeign(m);
             text.ThrowIfWhiteSpace();
@@ -80,7 +81,7 @@ public class SequenceDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddNoteLeftOf(Member m, string text)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             ThrowIfForeign(m);
             text.ThrowIfWhiteSpace();
@@ -100,7 +101,7 @@ public class SequenceDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddBox(string name, out Box box, Color? color = null)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
         }
@@ -133,7 +134,7 @@ public class SequenceDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddLoop(string description, Action<SequenceDiagramBuilder> action)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             description.ThrowIfWhiteSpace();
         }
@@ -157,14 +158,20 @@ public class SequenceDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="box"/> is not null and not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public SequenceDiagramBuilder AddMember(string name, out Member member, MemberType memberType = MemberType.Participant, Box? box = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            name = SequenceDiagramSanitizer.SanitizeParticipantName(name);
+        }
+
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             _membersOutsideBoxes.Union(_boxes.SelectMany(b => b.Members)).ThrowIfDuplicate(name, m => m.Name);
             box?.ThrowIfForeignTo(_boxes);
+            SequenceDiagramSanitizer.ValidateParticipantName(name);
         }
 
-        member = new Member(name, memberType);
+        member = new Member($"m{_memberCount++}", name, memberType);
 
         if (box is not null)
         {
@@ -198,11 +205,16 @@ public class SequenceDiagramBuilder
        ArrowType arrowType = ArrowType.Filled,
        ActivationType activationType = ActivationType.None)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            description = SequenceDiagramSanitizer.SanitizeMessageDescription(description);
+        }
+
+        if (_options.ValidateInputs)
         {
             ThrowIfForeign(sender);
             ThrowIfForeign(recipient);
-            description.ThrowIfWhiteSpace();
+            SequenceDiagramSanitizer.ValidateMessageDescription(description);
         }
 
         _sequenceItems.Add(new Message(sender, recipient, description, lineType, arrowType, activationType));
@@ -233,14 +245,22 @@ public class SequenceDiagramBuilder
         ArrowType arrowType = ArrowType.Filled,
         ActivationType activationType = ActivationType.None)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            name = SequenceDiagramSanitizer.SanitizeParticipantName(name);
+            description = SequenceDiagramSanitizer.SanitizeMessageDescription(description);
+        }
+
+        if (_options.ValidateInputs)
         {
             ThrowIfForeign(sender);
             name.ThrowIfWhiteSpace();
             description.ThrowIfWhiteSpace();
+            SequenceDiagramSanitizer.ValidateParticipantName(name);
+            SequenceDiagramSanitizer.ValidateMessageDescription(description);
         }
 
-        recipient = new Member(name, memberType);
+        recipient = new Member($"m{_memberCount++}", name, memberType);
         _sequenceItems.Add(new CreateMessage(sender, recipient, description, lineType, arrowType, activationType));
         return this;
     }
@@ -267,11 +287,16 @@ public class SequenceDiagramBuilder
         ArrowType arrowType = ArrowType.Filled,
         ActivationType activationType = ActivationType.None)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            description = SequenceDiagramSanitizer.SanitizeMessageDescription(description);
+        }
+
+        if (_options.ValidateInputs)
         {
             ThrowIfForeign(sender);
             ThrowIfForeign(recipient);
-            description.ThrowIfWhiteSpace();
+            SequenceDiagramSanitizer.ValidateMessageDescription(description);
         }
 
         _sequenceItems.Add(new DestroyMessage(sender, recipient, description, lineType, arrowType, target, activationType));
@@ -291,7 +316,7 @@ public class SequenceDiagramBuilder
             return this;
         }
 
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             alternatives.Select(a => a.description).ThrowIfAnyWhitespace();
         }
@@ -323,7 +348,7 @@ public class SequenceDiagramBuilder
             return this;
         }
 
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             parallels.Select(p => p.description).ThrowIfAnyWhitespace();
         }
@@ -351,7 +376,7 @@ public class SequenceDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder Optional(string description, Action<SequenceDiagramBuilder> action)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             description.ThrowIfWhiteSpace();
         }
@@ -376,7 +401,7 @@ public class SequenceDiagramBuilder
         Action<SequenceDiagramBuilder> action,
         params (string description, Action<SequenceDiagramBuilder> action)[] options)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             description.ThrowIfWhiteSpace();
             options.Select(o => o.description).ThrowIfAnyWhitespace();
@@ -407,7 +432,7 @@ public class SequenceDiagramBuilder
         string description,
         Action<SequenceDiagramBuilder> action)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             description.ThrowIfWhiteSpace();
         }
@@ -427,7 +452,7 @@ public class SequenceDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder Comment(string text)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             text.ThrowIfWhiteSpace();
         }
@@ -447,11 +472,17 @@ public class SequenceDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> or <paramref name="uri"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SequenceDiagramBuilder AddLink(Member member, string title, string uri)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            title = SequenceDiagramSanitizer.SanitizeLinkTitle(title);
+            uri = SequenceDiagramSanitizer.SanitizeLinkUri(uri);
+        }
+
+        if (_options.ValidateInputs)
         {
             ThrowIfForeign(member);
-            title.ThrowIfWhiteSpace();
-            uri.ThrowIfWhiteSpace();
+            SequenceDiagramSanitizer.ValidateLinkTitle(title);
+            SequenceDiagramSanitizer.ValidateLinkUri(uri);
         }
 
         _sequenceItems.Add(new Link(member, title, uri));
@@ -561,7 +592,7 @@ public class SequenceDiagramBuilder
                     break;
 
                 case Link link:
-                    builder.AppendLine($"{indent}link {link.Member.Name}: {link.Title} @ {link.Uri}");
+                    builder.AppendLine($"{indent}link {link.Member.Id}: {link.Title} @ {link.Uri}");
                     break;
 
                 case End:
@@ -591,7 +622,7 @@ public class SequenceDiagramBuilder
     {
         foreach (Member? member in members)
         {
-            string memberString = GetMemberString(member.Type, member.Name);
+            string memberString = GetMemberString(member.Id, member.Type, member.Name);
             builder.AppendLine($"{indent}{memberString}");
         }
     }
@@ -599,7 +630,7 @@ public class SequenceDiagramBuilder
     private static void BuildNote(string indent, StringBuilder builder, Note note)
     {
         string notePosition = SymbolMaps.NotePositions[note.Position];
-        string members = string.Join(", ", note.Members.Select(m => m.Name));
+        string members = string.Join(", ", note.Members.Select(m => m.Id));
         builder.AppendLine($"{indent}note {notePosition} {members}: {note.Text}");
     }
 
@@ -613,8 +644,8 @@ public class SequenceDiagramBuilder
         {
             string targetName = destroyMessage.Target switch
             {
-                DestructionTarget.Sender => destroyMessage.Sender.Name,
-                DestructionTarget.Recipient => destroyMessage.Recipient.Name,
+                DestructionTarget.Sender => destroyMessage.Sender.Id,
+                DestructionTarget.Recipient => destroyMessage.Recipient.Id,
                 _ => throw new InvalidOperationException($"Unknown destruction target: {destroyMessage.Target}")
             };
             builder.AppendLine($"{indent}destroy {targetName}");
@@ -622,11 +653,11 @@ public class SequenceDiagramBuilder
 
         if (message is CreateMessage createMessage)
         {
-            string memberString = GetMemberString(createMessage.Recipient.Type, createMessage.Recipient.Name);
+            string memberString = GetMemberString(createMessage.Recipient.Id, createMessage.Recipient.Type, createMessage.Recipient.Name);
             builder.AppendLine($"{indent}create {memberString}");
         }
 
-        builder.AppendLine($"{indent}{message.Sender.Name} {lineType}{arrowType}{activation} {message.Recipient.Name}: {message.Description}");
+        builder.AppendLine($"{indent}{message.Sender.Id} {lineType}{arrowType}{activation} {message.Recipient.Id}: {message.Description}");
     }
 
     private void ThrowIfForeign(Member member)
@@ -637,14 +668,14 @@ public class SequenceDiagramBuilder
             _sequenceItems.OfType<CreateMessage>().Select(m => m.Recipient)]);
     }
 
-    private static string GetMemberString(MemberType type, string name)
+    private static string GetMemberString(string memberId, MemberType type, string name)
     {
         if (type is MemberType.Actor)
         {
-            return $"actor {name}";
+            return $"actor {memberId} as {name}";
         }
 
-        string str = $"participant {name}";
+        string str = $"participant {memberId} as {name}";
 
         if (type is not MemberType.Participant)
         {

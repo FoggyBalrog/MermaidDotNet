@@ -14,16 +14,18 @@ public class GitGraphBuilder
     private readonly string? _title;
     private readonly MermaidConfig? _config;
     private readonly bool _vertical;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly List<IGitCommand> _commands = [];
 
     internal GitGraphBuilder(
         string? title,
         MermaidConfig? config,
         bool vertical,
-        bool isSafe)
+        MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.ValidateInputs)
         {
             title.ThrowIfWhiteSpace();
         }
@@ -31,7 +33,6 @@ public class GitGraphBuilder
         _title = title;
         _config = config;
         _vertical = vertical;
-        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -44,10 +45,25 @@ public class GitGraphBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="id"/> or <paramref name="tag"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GitGraphBuilder Commit(string? id = null, CommitType type = CommitType.Normal, string? tag = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            id = id is null ? null : GitGraphSanitizer.SanitizeCommitOrTag(id);
+            tag = tag is null ? null : GitGraphSanitizer.SanitizeCommitOrTag(tag);
+        }
+
+        if (_options.ValidateInputs)
         {
             id.ThrowIfWhiteSpace();
             tag.ThrowIfWhiteSpace();
+            if (id is not null)
+            {
+                GitGraphSanitizer.ValidateCommitOrTag(id);
+            }
+
+            if (tag is not null)
+            {
+                GitGraphSanitizer.ValidateCommitOrTag(tag);
+            }
         }
 
         _commands.Add(new Commit(id, type, tag));
@@ -64,9 +80,14 @@ public class GitGraphBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GitGraphBuilder Branch(string name, out Branch branch, int? order = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            name.ThrowIfWhiteSpace();
+            name = GitGraphSanitizer.SanitizeBranchName(name);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            GitGraphSanitizer.ValidateBranchName(name);
         }
 
         branch = new Branch(name, order);
@@ -82,7 +103,7 @@ public class GitGraphBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="branch"/> is not part of the current diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public GitGraphBuilder Checkout(Branch branch)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             branch.ThrowIfForeignTo(_commands);
         }
@@ -113,11 +134,26 @@ public class GitGraphBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="id"/> or <paramref name="tag"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GitGraphBuilder Merge(Branch branch, string? id = null, CommitType type = CommitType.Normal, string? tag = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            id = id is null ? null : GitGraphSanitizer.SanitizeCommitOrTag(id);
+            tag = tag is null ? null : GitGraphSanitizer.SanitizeCommitOrTag(tag);
+        }
+
+        if (_options.ValidateInputs)
         {
             branch.ThrowIfForeignTo(_commands);
             id.ThrowIfWhiteSpace();
             tag.ThrowIfWhiteSpace();
+            if (id is not null)
+            {
+                GitGraphSanitizer.ValidateCommitOrTag(id);
+            }
+
+            if (tag is not null)
+            {
+                GitGraphSanitizer.ValidateCommitOrTag(tag);
+            }
         }
 
         _commands.Add(new Merge(branch.Name, id, type, tag));

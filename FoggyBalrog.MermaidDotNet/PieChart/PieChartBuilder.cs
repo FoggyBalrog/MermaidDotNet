@@ -14,12 +14,14 @@ public class PieChartBuilder
     private readonly bool _displayValuesOnLegend;
     private readonly MermaidConfig? _config;
     private readonly string? _title;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly List<DataSet> _dataSets = [];
 
-    internal PieChartBuilder(string? title, MermaidConfig? config, bool displayValuesOnLegend, bool isSafe)
+    internal PieChartBuilder(string? title, MermaidConfig? config, bool displayValuesOnLegend, MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.ValidateInputs)
         {
             title.ThrowIfWhiteSpace();
         }
@@ -27,7 +29,6 @@ public class PieChartBuilder
         _displayValuesOnLegend = displayValuesOnLegend;
         _config = config;
         _title = title;
-        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -40,10 +41,16 @@ public class PieChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="value"/> is strictly negative, with the reason <see cref="MermaidExceptionReason.StrictlyNegative"/>.</exception>
     public PieChartBuilder AddDataSet(string label, double value)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            label = PieChartSanitizer.SanitizeDataSetLabel(label);
+        }
+
+        if (_options.ValidateInputs)
         {
             label.ThrowIfWhiteSpace();
             value.ThrowIfStrictlyNegative();
+            PieChartSanitizer.ValidateDataSetLabel(label);
         }
 
         _dataSets.Add(new DataSet(label, value));

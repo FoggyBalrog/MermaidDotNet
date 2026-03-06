@@ -16,7 +16,7 @@ public class GanttDiagramBuilder
     private readonly bool _hideTodayMarker;
     private readonly string? _todayMarkerCss;
     private readonly string _dateFormat;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly List<Exclude> _excludes = [];
     private readonly List<IGanttItem> _items = [];
     private int _taskCounter = 1;
@@ -28,14 +28,15 @@ public class GanttDiagramBuilder
         bool hideTodayMarker,
         string? todayMarkerCss,
         string dateFormat,
-        bool isSafe)
+        MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.ValidateInputs)
         {
             title.ThrowIfWhiteSpace();
             dateFormat.ThrowIfWhiteSpace();
             todayMarkerCss.ThrowIfWhiteSpace();
-
             if (hideTodayMarker && todayMarkerCss is not null)
             {
                 throw MermaidException.InvalidConfiguration($"{nameof(hideTodayMarker)} and {nameof(todayMarkerCss)} cannot be used together.");
@@ -47,7 +48,6 @@ public class GanttDiagramBuilder
         _hideTodayMarker = hideTodayMarker;
         _todayMarkerCss = todayMarkerCss;
         _dateFormat = dateFormat;
-        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -153,9 +153,14 @@ public class GanttDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, DateTimeOffset start, DateTimeOffset end, out GanttTask task, TaskTags tags = TaskTags.None)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            name.ThrowIfWhiteSpace();
+            name = GanttDiagramSanitizer.SanitizeTaskName(name);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            GanttDiagramSanitizer.ValidateTaskName(name);
         }
 
         task = new StartEndGanttTask($"task{_taskCounter++}", name, start, end, tags);
@@ -175,9 +180,14 @@ public class GanttDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, DateTimeOffset start, TimeSpan duration, out GanttTask task, TaskTags tags = TaskTags.None)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            name.ThrowIfWhiteSpace();
+            name = GanttDiagramSanitizer.SanitizeTaskName(name);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            GanttDiagramSanitizer.ValidateTaskName(name);
         }
 
         task = new StartDurationGanttTask($"task{_taskCounter++}", name, start, duration, tags);
@@ -198,10 +208,16 @@ public class GanttDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="afterTask"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, GanttTask afterTask, DateTimeOffset end, out GanttTask task, TaskTags tags = TaskTags.None)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            name = GanttDiagramSanitizer.SanitizeTaskName(name);
+        }
+
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             afterTask.ThrowIfForeignTo(_items);
+            GanttDiagramSanitizer.ValidateTaskName(name);
         }
 
         task = new AfterEndGanttTask($"task{_taskCounter++}", name, afterTask, end, tags);
@@ -222,10 +238,16 @@ public class GanttDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="afterTask"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, GanttTask afterTask, TimeSpan duration, out GanttTask task, TaskTags tags = TaskTags.None)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            name = GanttDiagramSanitizer.SanitizeTaskName(name);
+        }
+
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             afterTask.ThrowIfForeignTo(_items);
+            GanttDiagramSanitizer.ValidateTaskName(name);
         }
 
         task = new AfterDurationGanttTask($"task{_taskCounter++}", name, afterTask, duration, tags);
@@ -246,10 +268,16 @@ public class GanttDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="untilTask"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, DateTimeOffset start, GanttTask untilTask, out GanttTask task, TaskTags tags = TaskTags.None)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            name = GanttDiagramSanitizer.SanitizeTaskName(name);
+        }
+
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             untilTask.ThrowIfForeignTo(_items);
+            GanttDiagramSanitizer.ValidateTaskName(name);
         }
 
         task = new StartUntilGanttTask($"task{_taskCounter++}", name, start, untilTask, tags);
@@ -271,11 +299,17 @@ public class GanttDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="untilTask"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public GanttDiagramBuilder AddTask(string name, GanttTask afterTask, GanttTask untilTask, out GanttTask task, TaskTags tags = TaskTags.None)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            name = GanttDiagramSanitizer.SanitizeTaskName(name);
+        }
+
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             afterTask.ThrowIfForeignTo(_items);
             untilTask.ThrowIfForeignTo(_items);
+            GanttDiagramSanitizer.ValidateTaskName(name);
         }
 
         task = new AfterUntilGanttTask($"task{_taskCounter++}", name, afterTask, untilTask, tags);
@@ -294,9 +328,14 @@ public class GanttDiagramBuilder
     /// <remarks>This feature was introduced in Mermaid 11.7.0.</remarks>
     public GanttDiagramBuilder AddVerticalMarker(string name, DateTimeOffset position, TimeSpan? nextTaskOffset = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            name.ThrowIfWhiteSpace();
+            name = GanttDiagramSanitizer.SanitizeVerticalMarkerName(name);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            GanttDiagramSanitizer.ValidateVerticalMarkerName(name);
         }
 
         _items.Add(new VerticalMarker($"vert{_vertCounter++}", name, position, nextTaskOffset ?? TimeSpan.Zero));
@@ -311,9 +350,14 @@ public class GanttDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GanttDiagramBuilder AddSection(string name)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            name.ThrowIfWhiteSpace();
+            name = GanttDiagramSanitizer.SanitizeSectionName(name);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            GanttDiagramSanitizer.ValidateSectionName(name);
         }
 
         _items.Add(new Section(name));
@@ -330,10 +374,15 @@ public class GanttDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="functionName"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GanttDiagramBuilder AddCallback(GanttTask task, string functionName)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            functionName = GanttDiagramSanitizer.SanitizeFunctionName(functionName);
+        }
+
+        if (_options.ValidateInputs)
         {
             task.ThrowIfForeignTo(_items);
-            functionName.ThrowIfWhiteSpace();
+            GanttDiagramSanitizer.ValidateFunctionName(functionName);
         }
 
         task.ClickBinding = new TaskCallback(functionName);
@@ -350,10 +399,15 @@ public class GanttDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="uri"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public GanttDiagramBuilder AddHyperlink(GanttTask task, string uri)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            uri = GanttDiagramSanitizer.SanitizeHyperlinkUri(uri);
+        }
+
+        if (_options.ValidateInputs)
         {
             task.ThrowIfForeignTo(_items);
-            uri.ThrowIfWhiteSpace();
+            GanttDiagramSanitizer.ValidateHyperlinkUri(uri);
         }
 
         task.ClickBinding = new TaskHyperlink(uri);

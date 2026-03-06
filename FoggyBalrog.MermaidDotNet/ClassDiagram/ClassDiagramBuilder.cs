@@ -17,15 +17,17 @@ public class ClassDiagramBuilder
     private readonly List<Note> _notes = [];
     private readonly List<IStyle> _style = [];
     private readonly ClassDiagramDirection? _direction;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
 
     internal ClassDiagramBuilder(
         string? title,
         MermaidConfig? config,
         ClassDiagramDirection? direction,
-        bool isSafe)
+        MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.ValidateInputs)
         {
             title.ThrowIfWhiteSpace();
         }
@@ -33,7 +35,6 @@ public class ClassDiagramBuilder
         _title = title;
         _config = config;
         _direction = direction;
-        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -49,11 +50,20 @@ public class ClassDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="annotation"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddClass(string name, out Class @class, string? label = null, string? annotation = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            label = label is null ? null : ClassDiagramSanitizer.SanitizeClassLabel(label);
+        }
+
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             label.ThrowIfWhiteSpace();
             annotation.ThrowIfWhiteSpace();
+            if (label is not null)
+            {
+                ClassDiagramSanitizer.ValidateClassLabel(label);
+            }
         }
 
         @class = new Class(name, label, annotation, null);
@@ -71,7 +81,7 @@ public class ClassDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddNamespace(string name, Action<ClassDiagramBuilder> action)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
         }
@@ -95,11 +105,19 @@ public class ClassDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddProperty(Class @class, string type, string name)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            type = ClassDiagramSanitizer.SanitizeMember(type);
+            name = ClassDiagramSanitizer.SanitizeMember(name);
+        }
+
+        if (_options.ValidateInputs)
         {
             @class.ThrowIfForeignTo(_items);
             type.ThrowIfWhiteSpace();
             name.ThrowIfWhiteSpace();
+            ClassDiagramSanitizer.ValidateMember(type);
+            ClassDiagramSanitizer.ValidateMember(name);
         }
 
         @class.AddProperty(new Property(type, name));
@@ -121,16 +139,35 @@ public class ClassDiagramBuilder
     /// <exception cref="MermaidException">Thrown when a type or name in <paramref name="parameters"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddMethod(Class @class, string? returnType, string name, Visibilities visibility = Visibilities.Public, (string type, string name)[]? parameters = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            returnType = returnType is null ? null : ClassDiagramSanitizer.SanitizeMember(returnType);
+            name = ClassDiagramSanitizer.SanitizeMember(name);
+            parameters = parameters?.Select(p => (ClassDiagramSanitizer.SanitizeMember(p.type), ClassDiagramSanitizer.SanitizeMember(p.name))).ToArray();
+        }
+
+        if (_options.ValidateInputs)
         {
             @class.ThrowIfForeignTo(_items);
             returnType.ThrowIfWhiteSpace();
             name.ThrowIfWhiteSpace();
-
             foreach (var (type, parameterName) in parameters ?? [])
             {
                 type.ThrowIfWhiteSpace();
                 parameterName.ThrowIfWhiteSpace();
+            }
+
+            if (returnType is not null)
+            {
+                ClassDiagramSanitizer.ValidateMember(returnType);
+            }
+
+            ClassDiagramSanitizer.ValidateMember(name);
+
+            foreach (var (type, parameterName) in parameters ?? [])
+            {
+                ClassDiagramSanitizer.ValidateMember(type);
+                ClassDiagramSanitizer.ValidateMember(parameterName);
             }
         }
 
@@ -163,11 +200,20 @@ public class ClassDiagramBuilder
         LinkStyle linkStyle = LinkStyle.Solid,
         string? label = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            label = label is null ? null : ClassDiagramSanitizer.SanitizeRelationshipLabel(label);
+        }
+
+        if (_options.ValidateInputs)
         {
             @from.ThrowIfForeignTo(_items);
             to.ThrowIfForeignTo(_items);
             label.ThrowIfWhiteSpace();
+            if (label is not null)
+            {
+                ClassDiagramSanitizer.ValidateRelationshipLabel(label);
+            }
         }
 
         _relationships.Add(new Relationship(from, to, fromRelationshipType, fromCardinality, toRelationshipType, toCardinality, linkStyle, label));
@@ -184,10 +230,16 @@ public class ClassDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="class"/> is not <c>null</c> and is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public ClassDiagramBuilder AddNote(string text, Class? @class = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            text = ClassDiagramSanitizer.SanitizeNote(text);
+        }
+
+        if (_options.ValidateInputs)
         {
             text.ThrowIfWhiteSpace();
             @class?.ThrowIfForeignTo(_items);
+            ClassDiagramSanitizer.ValidateNote(text);
         }
 
         _notes.Add(new Note(text, @class));
@@ -206,11 +258,20 @@ public class ClassDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddCallback(Class @class, string functionName, string? tooltip = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            tooltip = tooltip is null ? null : ClassDiagramSanitizer.SanitizeTooltip(tooltip);
+        }
+
+        if (_options.ValidateInputs)
         {
             @class.ThrowIfForeignTo(_items);
             functionName.ThrowIfWhiteSpace();
             tooltip.ThrowIfWhiteSpace();
+            if (tooltip is not null)
+            {
+                ClassDiagramSanitizer.ValidateTooltip(tooltip);
+            }
         }
 
         @class.ClickBinding = new ClassCallback(functionName, tooltip);
@@ -229,11 +290,21 @@ public class ClassDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddHyperlink(Class @class, string uri, string? tooltip = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            uri = ClassDiagramSanitizer.SanitizeHyperlinkUri(uri);
+            tooltip = tooltip is null ? null : ClassDiagramSanitizer.SanitizeTooltip(tooltip);
+        }
+
+        if (_options.ValidateInputs)
         {
             @class.ThrowIfForeignTo(_items);
-            uri.ThrowIfWhiteSpace();
+            ClassDiagramSanitizer.ValidateHyperlinkUri(uri);
             tooltip.ThrowIfWhiteSpace();
+            if (tooltip is not null)
+            {
+                ClassDiagramSanitizer.ValidateTooltip(tooltip);
+            }
         }
 
         @class.ClickBinding = new ClassHyperlink(uri, tooltip);
@@ -250,7 +321,7 @@ public class ClassDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="css"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder StyleWithRawCss(Class @class, string css)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             @class.ThrowIfForeignTo(_items);
             css.ThrowIfWhiteSpace();
@@ -271,7 +342,7 @@ public class ClassDiagramBuilder
     /// <exception cref="MermaidException">Thrown when any of <paramref name="classes"/> is not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public ClassDiagramBuilder StyleWithCssClass(string cssClass, params Class[] classes)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             cssClass.ThrowIfWhiteSpace();
             classes.ThrowIfEmpty();
