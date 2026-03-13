@@ -14,19 +14,20 @@ public class UserJourneyDiagramBuilder
     private string _indent = Shared.Indent;
     private readonly string? _title;
     private readonly MermaidConfig? _config;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly List<IUserJourneyDiagramItem> _items = [];
 
-    internal UserJourneyDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
+    internal UserJourneyDiagramBuilder(string? title, MermaidConfig? config, MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.ValidateInputs)
         {
             title.ThrowIfWhiteSpace();
         }
 
         _title = title;
         _config = config;
-        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -39,10 +40,21 @@ public class UserJourneyDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> or any of <paramref name="actors"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public UserJourneyDiagramBuilder AddTask(string description, int score, params string[] actors)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            description = UserJourneyDiagramSanitizer.SanitizeTaskDescription(description);
+            actors = [.. actors.Select(UserJourneyDiagramSanitizer.SanitizeActor)];
+        }
+
+        if (_options.ValidateInputs)
         {
             description.ThrowIfWhiteSpace();
             actors.ThrowIfAnyWhitespace();
+            UserJourneyDiagramSanitizer.ValidateTaskDescription(description);
+            foreach (string actor in actors)
+            {
+                UserJourneyDiagramSanitizer.ValidateActor(actor);
+            }
         }
 
         var task = new Task(description, score, actors);
@@ -58,9 +70,14 @@ public class UserJourneyDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public UserJourneyDiagramBuilder AddSection(string description)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            description.ThrowIfWhiteSpace();
+            description = UserJourneyDiagramSanitizer.SanitizeSectionDescription(description);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            UserJourneyDiagramSanitizer.ValidateSectionDescription(description);
         }
 
         var section = new Section(description);

@@ -36,7 +36,8 @@ A .NET library to generate Mermaid diagrams code.
   - [Sankey diagram](#sankey-diagram)
   - [XY Chart](#xy-chart)
   - [Block Diagram](#block-diagram)
-- [Unsafe mode](#unsafe-mode)
+- [Input sanitization](#input-sanitization)
+- [Input options](#input-options)
 - [License](#license)
 - [Credits](#credits)
 
@@ -516,18 +517,46 @@ block
 
 Read more at [block-diagram.md](./docs/diagrams/block-diagram.md).
 
-## Unsafe mode
+## Input sanitization
 
-By default, the library uses safe mode, which means that it will throw an exception if the arguments passed to the methods are invalid.
+Input sanitization is the process of escaping reserved characters in inputs to prevent syntax errors in the generated Mermaid code. The sanitization rules are based on Mermaid syntax and vary by diagram type and input position.
 
-You can disable this behavior by accessing the buiders through the `Unsafe` property in the `Mermaid` class.
+Sanitization is not a universal escaping layer. It is only applied where Mermaid syntax supports escaped codes, so some inputs still need to avoid reserved characters even when sanitization is enabled.
+
+## Input options
+
+Input processing is configured through `MermaidDotNetOptions`.
+
+Default values:
+
+- `ValidateInputs = true`
+- `SanitizeInputs = false`
+
+Option behavior:
+
+- `ValidateInputs`: when `true`, MermaidDotNet checks inputs against its supported Mermaid rules and throws a `MermaidException` for invalid values.
+- `SanitizeInputs`: when `true`, MermaidDotNet escapes supported inputs before generating Mermaid code. Escaping is diagram-specific and only available where Mermaid syntax supports it.
+
+Option combinations:
+
+| `ValidateInputs` | `SanitizeInputs` | Behavior |
+| --- | --- | --- |
+| `true` | `false` | Default mode. Invalid inputs throw exceptions, and valid inputs are emitted as provided. |
+| `false` | `false` | Raw mode. No validation and no sanitization are applied. |
+| `false` | `true` | Supported inputs are sanitized, but no validation is performed. |
+| `true` | `true` | Supported inputs are sanitized first, then validated. Values made valid by sanitization can pass validation, but unsupported Mermaid positions may still reject reserved characters. |
 
 Example:
 
 ```csharp
+var options = new MermaidDotNetOptions
+{
+    ValidateInputs = false,
+    SanitizeInputs = true
+};
+
 string diagram = Mermaid
-    .Unsafe
-    .Flowchart()
+    .Flowchart(options: options)
     .AddNode("N1", out var n1)
     .AddNode("N2", out var n2)
     .AddNode("N3", out var n3)

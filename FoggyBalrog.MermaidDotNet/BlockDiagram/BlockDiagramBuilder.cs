@@ -9,7 +9,7 @@ public class BlockDiagramBuilder
 {
     private readonly string? _title;
     private readonly MermaidConfig? _config;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly int? _columns;
     private readonly List<IBlockDiagramItem> _items = [];
     private readonly List<Link> _links = [];
@@ -17,11 +17,11 @@ public class BlockDiagramBuilder
     private int _blockCount = 0;
     private int _compositeCount = 0;
 
-    internal BlockDiagramBuilder(string? title, MermaidConfig? config, bool isSafe, int? columns)
+    internal BlockDiagramBuilder(string? title, MermaidConfig? config, MermaidDotNetOptions? options, int? columns)
     {
         _title = title;
         _config = config;
-        _isSafe = isSafe;
+        _options = options ?? new MermaidDotNetOptions();
         _columns = columns;
     }
 
@@ -35,9 +35,15 @@ public class BlockDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="width"/> is stricly negative, with the reason <see cref="MermaidExceptionReason.StrictlyNegative"/>.</exception>
     public BlockDiagramBuilder AddBlock(string label, out Block block, int width = 1, BlockShape shape = BlockShape.Rectangle)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            label = BlockDiagramSanitizer.SanitizeBlockLabel(label);
+        }
+
+        if (_options.ValidateInputs)
         {
             width.ThrowIfStrictlyNegative();
+            BlockDiagramSanitizer.ValidateBlockLabel(label);
         }
 
         block = new Block($"b{_blockCount++}", label, shape);
@@ -55,12 +61,12 @@ public class BlockDiagramBuilder
     /// <returns>The current <see cref="BlockDiagramBuilder"/> instance.</returns>
     public BlockDiagramBuilder AddCompositeBlock(Action<BlockDiagramBuilder> buildAction, int? columns = null, int width = 1)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             width.ThrowIfStrictlyNegative();
         }
 
-        var compositeBuilder = new BlockDiagramBuilder(null, _config, _isSafe, columns)
+        var compositeBuilder = new BlockDiagramBuilder(null, _config, _options, columns)
         {
             _blockCount = _blockCount
         };
@@ -93,6 +99,19 @@ public class BlockDiagramBuilder
     /// <returns>The current <see cref="BlockDiagramBuilder"/> instance.</returns>
     public BlockDiagramBuilder AddLink(Block from, Block to, string? text = null)
     {
+        if (_options.SanitizeInputs)
+        {
+            text = text is null ? text : BlockDiagramSanitizer.SanitizeLinkText(text);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            if (text is not null)
+            {
+                BlockDiagramSanitizer.ValidateLinkText(text);
+            }
+        }
+
         _links.Add(new Link(from, to, text));
 
         return this;
@@ -106,7 +125,7 @@ public class BlockDiagramBuilder
     /// <returns>The current <see cref="BlockDiagramBuilder"/> instance.</returns>
     public BlockDiagramBuilder StyleBlock(Block block, string css)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             css.ThrowIfWhiteSpace();
         }

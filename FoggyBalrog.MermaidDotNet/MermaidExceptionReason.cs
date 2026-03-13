@@ -10,5 +10,7 @@ public enum MermaidExceptionReason
     StrictlyNegative,
     OutOfRange,
     InvalidConfiguration,
-    InvalidOperation
+    InvalidOperation,
+    InvalidUri,
+    InvalidCharacter
 }

@@ -17,19 +17,19 @@ public class FlowchartBuilder
     private readonly List<INodeStyle> _nodeStyles = [];
     private readonly List<CssClass> _cssClasses = [];
     private readonly FlowchartOrientation _orientation;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private int _linkCounter = 0;
 
     internal FlowchartBuilder(
         string? title,
         MermaidConfig? config,
         FlowchartOrientation orientation,
-        bool isSafe)
+        MermaidDotNetOptions? options)
     {
         _title = title;
         _config = config;
         _orientation = orientation;
-        _isSafe = isSafe;
+        _options = options ?? new MermaidDotNetOptions();
     }
 
     /// <summary>
@@ -42,9 +42,14 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddNode(string text, out Node node, NodeShape shape = NodeShape.Rectangle)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            text.ThrowIfWhiteSpace();
+            text = FlowchartSanitizer.SanitizeNodeText(text);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            FlowchartSanitizer.ValidateNodeText(text);
         }
 
         node = new Node($"id{_items.Count + 1}", text, shape, null);
@@ -62,9 +67,14 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddNodeWithExpandedShape(string text, out Node node, ExpandedNodeShape expandedNodeShape)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            text.ThrowIfWhiteSpace();
+            text = FlowchartSanitizer.SanitizeNodeText(text);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            FlowchartSanitizer.ValidateNodeText(text);
         }
 
         node = new Node($"id{_items.Count + 1}", text, null, null, expandedNodeShape);
@@ -82,7 +92,7 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="markdown"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddMarkdownNode(string markdown, out Node node, NodeShape shape = NodeShape.Rectangle)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             markdown.ThrowIfWhiteSpace();
         }
@@ -117,12 +127,21 @@ public class FlowchartBuilder
         bool multidirectional = false,
         int extraLength = 0)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            text = text is null ? null : FlowchartSanitizer.SanitizeLinkText(text);
+        }
+
+        if (_options.ValidateInputs)
         {
             from.ThrowIfForeignTo(_items);
             to.ThrowIfForeignTo(_items);
             text.ThrowIfWhiteSpace();
             extraLength.ThrowIfStrictlyNegative();
+            if (text is not null)
+            {
+                FlowchartSanitizer.ValidateLinkText(text);
+            }
         }
 
         link = new Link(_linkCounter++, [from], [to], text, lineStyle, ending, curveStyle, multidirectional, extraLength);
@@ -159,12 +178,21 @@ public class FlowchartBuilder
         bool multidirectional = false,
         int extraLength = 0)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            text = text is null ? null : FlowchartSanitizer.SanitizeLinkText(text);
+        }
+
+        if (_options.ValidateInputs)
         {
             from.ThrowIfAnyForeignTo(_items);
             to.ThrowIfAnyForeignTo(_items);
             text.ThrowIfWhiteSpace();
             extraLength.ThrowIfStrictlyNegative();
+            if (text is not null)
+            {
+                FlowchartSanitizer.ValidateLinkText(text);
+            }
         }
 
         link = new Link(_linkCounter++, from, to, text, lineStyle, ending, curveStyle, multidirectional, extraLength);
@@ -185,11 +213,20 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddCallback(Node node, string functionName, string? tooltip = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            tooltip = tooltip is null ? null : FlowchartSanitizer.SanitizeTooltip(tooltip);
+        }
+
+        if (_options.ValidateInputs)
         {
             node.ThrowIfForeignTo(_items);
             functionName.ThrowIfWhiteSpace();
             tooltip.ThrowIfWhiteSpace();
+            if (tooltip is not null)
+            {
+                FlowchartSanitizer.ValidateTooltip(tooltip);
+            }
         }
 
         node.NodeClickBinding = new NodeCallback(functionName, tooltip);
@@ -209,11 +246,21 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddHyperlink(Node node, string uri, string? tooltip = null, HyperlinkTarget target = HyperlinkTarget.Self)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            uri = FlowchartSanitizer.SanitizeHyperlinkUri(uri);
+            tooltip = tooltip is null ? null : FlowchartSanitizer.SanitizeTooltip(tooltip);
+        }
+
+        if (_options.ValidateInputs)
         {
             node.ThrowIfForeignTo(_items);
-            uri.ThrowIfWhiteSpace();
+            FlowchartSanitizer.ValidateHyperlinkUri(uri);
             tooltip.ThrowIfWhiteSpace();
+            if (tooltip is not null)
+            {
+                FlowchartSanitizer.ValidateTooltip(tooltip);
+            }
         }
 
         node.NodeClickBinding = new NodeHyperlink(uri, tooltip, target);
@@ -231,7 +278,7 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddSubgraph(string text, out Subgraph subgraph, Action<FlowchartBuilder> action, FlowchartOrientation? direction = null)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             text.ThrowIfWhiteSpace();
         }
@@ -251,7 +298,7 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder Comment(string text)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             text.ThrowIfWhiteSpace();
         }
@@ -271,7 +318,7 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when any of the links in <paramref name="links"/> are not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public FlowchartBuilder StyleLinks(string css, params Link[] links)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             css.ThrowIfWhiteSpace();
             links.ThrowIfEmpty();
@@ -294,7 +341,7 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when any of the nodes in <paramref name="nodes"/> are not part of the diagram, with a reason of <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public FlowchartBuilder StyleNodes(string css, params Node[] nodes)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             css.ThrowIfWhiteSpace();
             nodes.ThrowIfEmpty();
@@ -314,7 +361,7 @@ public class FlowchartBuilder
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
     public FlowchartBuilder StyleNodesWithPredefinedCssClass(string cssClassName, params Node[] nodes)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             cssClassName.ThrowIfWhiteSpace();
             nodes.ThrowIfEmpty();
@@ -335,7 +382,7 @@ public class FlowchartBuilder
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
     public FlowchartBuilder DefineCssClass(string name, string css, out CssClass @class)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             css.ThrowIfWhiteSpace();
@@ -355,7 +402,7 @@ public class FlowchartBuilder
     /// <returns>The current <see cref="FlowchartBuilder"/> instance.</returns>
     public FlowchartBuilder StyleNodes(CssClass @class, params Node[] nodes)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             @class.ThrowIfForeignTo(_cssClasses);
             nodes.ThrowIfEmpty();

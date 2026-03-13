@@ -5,11 +5,14 @@
 /// </summary>
 public record Member
 {
-    internal Member(string name, MemberType type)
+    internal Member(string id, string name, MemberType type)
     {
+        Id = id;
         Name = name;
         Type = type;
     }
+
+    internal string Id { get; }
 
     /// <summary>
     /// The name of the member.

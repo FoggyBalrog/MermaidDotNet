@@ -19,7 +19,7 @@ public class QuadrantChartBuilder
     private readonly string? _quadrant3;
     private readonly string? _quadrant4;
     private readonly List<CssClass> _cssClasses = [];
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private string? _axisLeft;
     private string? _axisRight;
     private string? _axisBottom;
@@ -32,15 +32,45 @@ public class QuadrantChartBuilder
         string? quadrant2,
         string? quadrant3,
         string? quadrant4,
-        bool isSafe)
+        MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.SanitizeInputs)
+        {
+            quadrant1 = quadrant1 is null ? null : QuadrantChartSanitizer.SanitizeQuadrantLabel(quadrant1);
+            quadrant2 = quadrant2 is null ? null : QuadrantChartSanitizer.SanitizeQuadrantLabel(quadrant2);
+            quadrant3 = quadrant3 is null ? null : QuadrantChartSanitizer.SanitizeQuadrantLabel(quadrant3);
+            quadrant4 = quadrant4 is null ? null : QuadrantChartSanitizer.SanitizeQuadrantLabel(quadrant4);
+        }
+
+        if (_options.ValidateInputs)
         {
             title.ThrowIfWhiteSpace();
             quadrant1.ThrowIfWhiteSpace();
             quadrant2.ThrowIfWhiteSpace();
             quadrant3.ThrowIfWhiteSpace();
             quadrant4.ThrowIfWhiteSpace();
+
+            if (quadrant1 is not null)
+            {
+                QuadrantChartSanitizer.ValidateQuadrantLabel(quadrant1);
+            }
+
+            if (quadrant2 is not null)
+            {
+                QuadrantChartSanitizer.ValidateQuadrantLabel(quadrant2);
+            }
+
+            if (quadrant3 is not null)
+            {
+                QuadrantChartSanitizer.ValidateQuadrantLabel(quadrant3);
+            }
+
+            if (quadrant4 is not null)
+            {
+                QuadrantChartSanitizer.ValidateQuadrantLabel(quadrant4);
+            }
         }
 
         _title = title;
@@ -49,7 +79,6 @@ public class QuadrantChartBuilder
         _quadrant2 = quadrant2;
         _quadrant3 = quadrant3;
         _quadrant4 = quadrant4;
-        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -61,10 +90,22 @@ public class QuadrantChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="left"/> or <paramref name="right"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public QuadrantChartBuilder SetXAxisLabel(string left, string? right = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            left = QuadrantChartSanitizer.SanitizeAxisLabel(left);
+            right = right is null ? null : QuadrantChartSanitizer.SanitizeAxisLabel(right);
+        }
+
+        if (_options.ValidateInputs)
         {
             left.ThrowIfWhiteSpace();
             right.ThrowIfWhiteSpace();
+            QuadrantChartSanitizer.ValidateAxisLabel(left);
+
+            if (right is not null)
+            {
+                QuadrantChartSanitizer.ValidateAxisLabel(right);
+            }
         }
 
         _axisLeft = left;
@@ -81,10 +122,22 @@ public class QuadrantChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="bottom"/> or <paramref name="top"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public QuadrantChartBuilder SetYAxisLabel(string bottom, string? top = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            bottom = QuadrantChartSanitizer.SanitizeAxisLabel(bottom);
+            top = top is null ? null : QuadrantChartSanitizer.SanitizeAxisLabel(top);
+        }
+
+        if (_options.ValidateInputs)
         {
             bottom.ThrowIfWhiteSpace();
             top.ThrowIfWhiteSpace();
+            QuadrantChartSanitizer.ValidateAxisLabel(bottom);
+
+            if (top is not null)
+            {
+                QuadrantChartSanitizer.ValidateAxisLabel(top);
+            }
         }
 
         _axisBottom = bottom;
@@ -105,13 +158,19 @@ public class QuadrantChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="x"/> or <paramref name="y"/> is out of [0, 1] range, with the reason <see cref="MermaidExceptionReason.OutOfRange"/>.</exception>
     public QuadrantChartBuilder AddPoint(string label, double x, double y, string? css = null, CssClass? cssClass = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            label = QuadrantChartSanitizer.SanitizePointLabel(label);
+        }
+
+        if (_options.ValidateInputs)
         {
             label.ThrowIfWhiteSpace();
             x.ThrowIfOutOfRange(0, 1);
             y.ThrowIfOutOfRange(0, 1);
             css.ThrowIfWhiteSpace();
             cssClass?.ThrowIfForeignTo(_cssClasses);
+            QuadrantChartSanitizer.ValidatePointLabel(label);
         }
 
         _points.Add(new Point(label, x, y, css, cssClass));
@@ -127,7 +186,7 @@ public class QuadrantChartBuilder
     /// <returns>The current <see cref="QuadrantChartBuilder"/> instance.</returns>
     public QuadrantChartBuilder DefineCssClass(string name, string css, out CssClass @class)
     {
-        if (_isSafe)
+        if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
             css.ThrowIfWhiteSpace();

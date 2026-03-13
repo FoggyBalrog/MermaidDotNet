@@ -12,19 +12,20 @@ public class PacketDiagramBuilder
 {
     private readonly MermaidConfig? _config;
     private readonly string? _title;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly List<AbstractField> _fields = [];
 
-    internal PacketDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
+    internal PacketDiagramBuilder(string? title, MermaidConfig? config, MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.ValidateInputs)
         {
             title.ThrowIfWhiteSpace();
         }
 
         _title = title;
         _config = config;
-        _isSafe = isSafe;
     }
 
     // <summary>
@@ -36,9 +37,18 @@ public class PacketDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="bits"/> is strictly negative, with the reason <see cref="MermaidExceptionReason.StrictlyNegative"/>.</exception>
     public PacketDiagramBuilder AddFieldWithEnd(int end, string? description = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            description = description is null ? null : PacketDiagramSanitizer.SanitizeFieldDescription(description);
+        }
+
+        if (_options.ValidateInputs)
         {
             end.ThrowIfStrictlyNegative();
+            if (description is not null)
+            {
+                PacketDiagramSanitizer.ValidateFieldDescription(description);
+            }
         }
 
         _fields.Add(new EndField(end, description));
@@ -55,9 +65,18 @@ public class PacketDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="bits"/> is strictly negative, with the reason <see cref="MermaidExceptionReason.StrictlyNegative"/>.</exception>
     public PacketDiagramBuilder AddFieldWithBits(int bits, string? description = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            description = description is null ? null : PacketDiagramSanitizer.SanitizeFieldDescription(description);
+        }
+
+        if (_options.ValidateInputs)
         {
             bits.ThrowIfStrictlyNegative();
+            if (description is not null)
+            {
+                PacketDiagramSanitizer.ValidateFieldDescription(description);
+            }
         }
 
         _fields.Add(new BitsFiels(bits, description));

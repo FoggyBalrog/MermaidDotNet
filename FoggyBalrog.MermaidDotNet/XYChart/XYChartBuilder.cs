@@ -10,14 +10,16 @@ public class XYChartBuilder
     private readonly string? _title;
     private readonly MermaidConfig? _config;
     private readonly XYChartOrientation? _orientation;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly ICollection<XYChartSeries> _series = [];
     private AbstractAxisInfo? _xAxis;
     private AbstractAxisInfo? _yAxis;
 
-    internal XYChartBuilder(string? title, MermaidConfig? config, XYChartOrientation? orientation, bool isSafe)
+    internal XYChartBuilder(string? title, MermaidConfig? config, XYChartOrientation? orientation, MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.ValidateInputs)
         {
             title?.ThrowIfWhiteSpace();
         }
@@ -25,7 +27,6 @@ public class XYChartBuilder
         _title = title;
         _config = config;
         _orientation = orientation;
-        _isSafe = isSafe;
     }
 
     /// <summary>
@@ -39,6 +40,16 @@ public class XYChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public XYChartBuilder WithTitledXAxis(string title)
     {
+        if (_options.SanitizeInputs)
+        {
+            title = XYChartSanitizer.SanitizeAxisTitle(title);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            XYChartSanitizer.ValidateAxisTitle(title);
+        }
+
         _xAxis = new TitledAxisInfo(title);
         return this;
     }
@@ -56,6 +67,20 @@ public class XYChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public XYChartBuilder WithNumericXAxis(double min, double max, string? title = null)
     {
+        if (_options.SanitizeInputs)
+        {
+            title = title is null ? null : XYChartSanitizer.SanitizeAxisTitle(title);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            title.ThrowIfWhiteSpace();
+            if (title is not null)
+            {
+                XYChartSanitizer.ValidateAxisTitle(title);
+            }
+        }
+
         _xAxis = new NumericAxisInfo(title, min, max);
         return this;
     }
@@ -72,9 +97,27 @@ public class XYChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public XYChartBuilder WithCategoricalXAxis(ICollection<string> categories, string? title = null)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            title = title is null ? null : XYChartSanitizer.SanitizeAxisTitle(title);
+            categories = [.. categories.Select(XYChartSanitizer.SanitizeCategory)];
+        }
+
+        if (_options.ValidateInputs)
         {
             categories.ThrowIfEmpty();
+            categories.ThrowIfAnyWhitespace();
+            title.ThrowIfWhiteSpace();
+
+            if (title is not null)
+            {
+                XYChartSanitizer.ValidateAxisTitle(title);
+            }
+
+            foreach (string category in categories)
+            {
+                XYChartSanitizer.ValidateCategory(category);
+            }
         }
 
         _xAxis = new CategoricalAxisInfo(title, categories);
@@ -93,6 +136,16 @@ public class XYChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public XYChartBuilder WithTitledYAxis(string title)
     {
+        if (_options.SanitizeInputs)
+        {
+            title = XYChartSanitizer.SanitizeAxisTitle(title);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            XYChartSanitizer.ValidateAxisTitle(title);
+        }
+
         _yAxis = new TitledAxisInfo(title);
         return this;
     }
@@ -110,6 +163,20 @@ public class XYChartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public XYChartBuilder WithNumericYAxis(double min, double max, string? title = null)
     {
+        if (_options.SanitizeInputs)
+        {
+            title = title is null ? null : XYChartSanitizer.SanitizeAxisTitle(title);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            title.ThrowIfWhiteSpace();
+            if (title is not null)
+            {
+                XYChartSanitizer.ValidateAxisTitle(title);
+            }
+        }
+
         _yAxis = new NumericAxisInfo(title, min, max);
         return this;
     }

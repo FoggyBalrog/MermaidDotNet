@@ -12,19 +12,30 @@ public class TimelineDiagramBuilder
 {
     private readonly string? _title;
     private readonly MermaidConfig? _config;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly List<ITimelineItem> _items = [];
 
-    internal TimelineDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
+    internal TimelineDiagramBuilder(string? title, MermaidConfig? config, MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.SanitizeInputs)
+        {
+            title = title is null ? null : TimelineDiagramSanitizer.SanitizeTimelineTitle(title);
+        }
+
+        if (_options.ValidateInputs)
         {
             title?.ThrowIfWhiteSpace();
+            if (title is not null)
+            {
+                TimelineDiagramSanitizer.ValidateTimelineTitle(title);
+            }
         }
 
         _title = title;
         _config = config;
-        _isSafe = isSafe;
+
     }
 
     /// <summary>
@@ -36,10 +47,21 @@ public class TimelineDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="timePeriod"/> or any of the <paramref name="events"/> is whitespace, with reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public TimelineDiagramBuilder AddEvents(string timePeriod, params string[] events)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
+        {
+            timePeriod = TimelineDiagramSanitizer.SanitizeTimePeriod(timePeriod);
+            events = [.. events.Select(TimelineDiagramSanitizer.SanitizeEvent)];
+        }
+
+        if (_options.ValidateInputs)
         {
             timePeriod.ThrowIfWhiteSpace();
             events.ThrowIfAnyWhitespace();
+            TimelineDiagramSanitizer.ValidateTimePeriod(timePeriod);
+            foreach (string @event in events)
+            {
+                TimelineDiagramSanitizer.ValidateEvent(@event);
+            }
         }
 
         _items.Add(new TimelineRecord(timePeriod, events));
@@ -57,9 +79,14 @@ public class TimelineDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="title"/> is whitespace, with reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public TimelineDiagramBuilder AddSection(string title)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            title.ThrowIfWhiteSpace();
+            title = TimelineDiagramSanitizer.SanitizeSectionTitle(title);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            TimelineDiagramSanitizer.ValidateSectionTitle(title);
         }
 
         _items.Add(new TimelineSection(title));

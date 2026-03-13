@@ -9,15 +9,15 @@ public class SankeyDiagramBuilder
 {
     private readonly string? _title;
     private readonly MermaidConfig? _config;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly List<ISankeyItem> _items = [];
 
 
-    internal SankeyDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
+    internal SankeyDiagramBuilder(string? title, MermaidConfig? config, MermaidDotNetOptions? options)
     {
         _title = title;
         _config = config;
-        _isSafe = isSafe;
+        _options = options ?? new MermaidDotNetOptions();
     }
 
     /// <summary>
@@ -30,10 +30,16 @@ public class SankeyDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="source"/> or <paramref name="target"/> is null or whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public SankeyDiagramBuilder AddFlow(string source, string target, double value)
     {
-        if (_isSafe)
+        if (_options.SanitizeInputs)
         {
-            source.ThrowIfWhiteSpace();
-            target.ThrowIfWhiteSpace();
+            source = SankeyDiagramSanitizer.SanitizeFlowText(source);
+            target = SankeyDiagramSanitizer.SanitizeFlowText(target);
+        }
+
+        if (_options.ValidateInputs)
+        {
+            SankeyDiagramSanitizer.ValidateFlowText(source);
+            SankeyDiagramSanitizer.ValidateFlowText(target);
         }
 
         _items.Add(new Flow(source, target, value));

@@ -14,29 +14,36 @@ public class KanbanDiagramBuilder
 {
     private readonly MermaidConfig? _config;
     private readonly string? _title;
-    private readonly bool _isSafe;
+    private readonly MermaidDotNetOptions _options;
     private readonly List<Column> _columns = [];
 
-    internal KanbanDiagramBuilder(string? title, MermaidConfig? config, bool isSafe)
+    internal KanbanDiagramBuilder(string? title, MermaidConfig? config, MermaidDotNetOptions? options)
     {
-        if (isSafe)
+        _options = options ?? new MermaidDotNetOptions();
+
+        if (_options.ValidateInputs)
         {
             title.ThrowIfWhiteSpace();
         }
 
         _title = title;
         _config = config;
-        _isSafe = isSafe;
     }
 
     public KanbanDiagramBuilder AddColumn(string title, Action<KanbanDiagramColumnBuilder>? tasksAction = null)
     {
-        if(_isSafe)
+        if (_options.SanitizeInputs)
         {
-            title.ThrowIfEmpty();
+            title = KanbanDiagramSanitizer.SanitizeColumnTitle(title);
         }
 
-        var columnBuilder = new KanbanDiagramColumnBuilder(title);
+        if (_options.ValidateInputs)
+        {
+            title.ThrowIfEmpty();
+            KanbanDiagramSanitizer.ValidateColumnTitle(title);
+        }
+
+        var columnBuilder = new KanbanDiagramColumnBuilder(title, _options);
 
         if (tasksAction is not null)
         {
