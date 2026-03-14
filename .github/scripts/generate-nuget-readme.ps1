@@ -16,7 +16,7 @@ $readmeContent = $readmeContent -replace '\(./', "(https://github.com/FoggyBalro
 $readmeContent | Out-File -FilePath "./NUGET_README.md"
 
 # Add the <PackageReadmeFile>NUGET_README.md</PackageReadmeFile> to the csproj
-$csproj = [xml](Get-Content -Path "./FoggyBalrog.MermaidDotNet/FoggyBalrog.MermaidDotNet.csproj")
+$csproj = [xml](Get-Content -Path "./src/FoggyBalrog.MermaidDotNet/FoggyBalrog.MermaidDotNet.csproj")
 $packageReadmeFile = $csproj.Project.PropertyGroup.PackageReadmeFile
 if ($null -eq $packageReadmeFile) {
     $packageReadmeFile = $csproj.CreateElement("PackageReadmeFile")
@@ -37,4 +37,4 @@ $none.AppendChild($packagePath)
 $itemGroup.AppendChild($none)
 
 # Save the csproj file
-$csproj.Save("./FoggyBalrog.MermaidDotNet/FoggyBalrog.MermaidDotNet.csproj")
+$csproj.Save("./src/FoggyBalrog.MermaidDotNet/FoggyBalrog.MermaidDotNet.csproj")

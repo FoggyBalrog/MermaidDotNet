@@ -17,7 +17,7 @@
     <UserSecretsId>97d2ea75-59b8-46d1-ac77-23b5ab2cef2f</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\mermaid.png">
+    <None Include="..\..\mermaid.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

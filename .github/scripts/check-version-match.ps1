@@ -15,7 +15,7 @@ if ($null -eq $tagVersion -or $tagVersion -eq '') {
 }
 
 # Get the version from the csproj
-$csprojVersion = ([xml](Get-Content -Path "./FoggyBalrog.MermaidDotNet/FoggyBalrog.MermaidDotNet.csproj")).Project.PropertyGroup.Version
+$csprojVersion = ([xml](Get-Content -Path "./src/FoggyBalrog.MermaidDotNet/FoggyBalrog.MermaidDotNet.csproj")).Project.PropertyGroup.Version
 
 # Compare the versions and fail if they do not match
 if ($tagVersion -ne $csprojVersion) {

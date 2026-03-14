@@ -3,12 +3,9 @@
     {
       "src": [
         {
-          "src": "./..",
+          "src": "./../src",
           "files": [
             "**/*.csproj"
-          ],
-          "exclude": [
-            "**/*UnitTests.csproj"
           ]
         }
       ],
