@@ -18,6 +18,7 @@ A .NET library to generate Mermaid diagrams code.
 - [Compatibility](#compatibility)
 - [About documentation](#about-documentation)
 - [Testing](#testing)
+- [Contributing](#contributing)
 - [Quick Start](#quick-start)
   - [Flowchart](#flowchart)
   - [Sequence diagram](#sequence-diagram)
@@ -74,6 +75,14 @@ To run the full test suite locally:
 ```bash
 dotnet test FoggyBalrog.MermaidDotNet.slnx
 ```
+
+## Contributing
+
+Bug reports are welcome through GitHub issues.
+
+Feature requests are also welcome, but please keep in mind that this library intentionally has a limited scope, so some proposals may be declined.
+
+I am not accepting unsolicited pull requests at this time. If you would like to contribute code, please open an issue first and wait for confirmation before starting work. Pull requests opened without prior discussion may be closed without review.
 
 ## Quick Start
 
