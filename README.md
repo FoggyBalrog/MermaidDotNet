@@ -17,6 +17,7 @@ A .NET library to generate Mermaid diagrams code.
 - [Add the library to your project](#add-the-library-to-your-project)
 - [Compatibility](#compatibility)
 - [About documentation](#about-documentation)
+- [Testing](#testing)
 - [Quick Start](#quick-start)
   - [Flowchart](#flowchart)
   - [Sequence diagram](#sequence-diagram)
@@ -58,6 +59,21 @@ To read the documentation for the latest published version, go to <https://foggy
 The current README is valid for the commit you are currently viewing. This may differ from the latest published version, or the version you have installed.
 
 To see the documentation for a specific version, checkout the corresponding tag on GitHub and read the files in the `docs` folder. Optionally, you can view the generated documentation locally using DocFX by running `docfx ./docs/docfx.json --serve` in the root of the repository.
+
+## Testing
+
+This repository includes both unit tests and integration tests.
+
+- Unit tests check the generated Mermaid text, builder behavior, validation rules, and sanitization rules in C#.
+- Integration tests generate Mermaid text with the library and validate it against Mermaid's own parser through a small Node-based test harness.
+
+These tests help catch regressions, but they do not guarantee that every Mermaid feature, parser change, or input combination is covered.
+
+To run the full test suite locally:
+
+```bash
+dotnet test FoggyBalrog.MermaidDotNet.slnx
+```
 
 ## Quick Start
 

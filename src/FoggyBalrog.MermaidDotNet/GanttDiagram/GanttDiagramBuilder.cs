@@ -436,7 +436,7 @@ public class GanttDiagramBuilder
 
         if (_todayMarkerCss is not null)
         {
-            builder.AppendLine($"{_indent}todayMarker {_todayMarkerCss}");
+            builder.AppendLine($"{_indent}todayMarker {NormalizeTodayMarkerCss(_todayMarkerCss)}");
         }
 
         if (_excludes.Count > 0)
@@ -468,6 +468,13 @@ public class GanttDiagramBuilder
         builder.Length -= Environment.NewLine.Length;
 
         return builder.ToString();
+    }
+
+    private static string NormalizeTodayMarkerCss(string todayMarkerCss)
+    {
+        return string.Join(", ", todayMarkerCss
+            .Split(';', StringSplitOptions.RemoveEmptyEntries)
+            .Select(part => part.Trim()));
     }
 
     private void BuildVerticalMarker(StringBuilder builder, VerticalMarker marker)

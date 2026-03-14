@@ -159,7 +159,7 @@ config:
 gantt
     dateFormat DD-MM-YYYY
     todayMarker off
-    todayMarker stroke: #d3d3d3; stroke-width: 2px;
+    todayMarker stroke: #d3d3d3, stroke-width: 2px
     Foo: task1, 01-05-2024, 05-05-2024", diagram, ignoreLineEndingDifferences: true);
     }
 

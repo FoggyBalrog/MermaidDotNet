@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FoggyBalrog.MermaidDotNet\FoggyBalrog.MermaidDotNet.csproj" />
+    <ProjectReference Include="..\..\src\FoggyBalrog.MermaidDotNet\FoggyBalrog.MermaidDotNet.csproj" />
   </ItemGroup>
 
   <ItemGroup>
