@@ -17,7 +17,7 @@ public class SankeyDiagramBuilder
     {
         _title = title;
         _config = config;
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
     }
 
     /// <summary>

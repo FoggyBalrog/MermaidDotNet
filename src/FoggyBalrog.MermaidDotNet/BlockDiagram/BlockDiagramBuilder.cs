@@ -21,7 +21,7 @@ public class BlockDiagramBuilder
     {
         _title = title;
         _config = config;
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
         _columns = columns;
     }
 

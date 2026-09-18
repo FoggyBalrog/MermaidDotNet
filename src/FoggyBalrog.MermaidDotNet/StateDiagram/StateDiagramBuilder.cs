@@ -20,7 +20,7 @@ public class StateDiagramBuilder
 
     internal StateDiagramBuilder(string? title, MermaidConfig? config, StateDiagramDirection? direction, MermaidDotNetOptions? options)
     {
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
 
         if (_options.ValidateInputs)
         {

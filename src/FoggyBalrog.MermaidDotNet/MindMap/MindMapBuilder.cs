@@ -27,7 +27,7 @@ public class MindMapBuilder
         string[]? rootClasses,
         MermaidDotNetOptions? options)
     {
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
 
         if (_options.SanitizeInputs)
         {

@@ -29,7 +29,7 @@ public class FlowchartBuilder
         _title = title;
         _config = config;
         _orientation = orientation;
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
     }
 
     /// <summary>

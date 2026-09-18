@@ -92,7 +92,21 @@ public sealed class MermaidToolingFixture : IAsyncLifetime
 
         try
         {
-            if (!File.Exists(Path.Combine(NodeToolingDirectory, "node_modules", "mermaid", "package.json")))
+            var session = _sharedSession;
+            if (session is not null && !session.HasExited)
+            {
+                return session;
+            }
+
+            if (session is not null)
+            {
+                await session.DisposeAsync();
+                _sharedSession = null;
+            }
+
+            // A partially completed install can leave Mermaid present but its transitive dependencies missing.
+            var dependencyCheck = await RunProcessAsync("npm", ["ls", "--all", "--json", "--offline"]);
+            if (dependencyCheck.ExitCode != 0)
             {
                 var result = await RunProcessAsync("npm", ["ci", "--no-fund", "--no-audit"]);
 
@@ -108,17 +122,6 @@ public sealed class MermaidToolingFixture : IAsyncLifetime
                          {FormatOutput(result.StandardError)}
                          """);
                 }
-            }
-
-            var session = _sharedSession;
-            if (session is not null && !session.HasExited)
-            {
-                return session;
-            }
-
-            if (session is not null)
-            {
-                await session.DisposeAsync();
             }
 
             _sharedSession = await WorkerSession.StartAsync(NodeToolingDirectory);

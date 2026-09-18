@@ -26,7 +26,7 @@ public class SequenceDiagramBuilder
         _title = title;
         _config = config;
         _autonumber = autonumber;
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
     }
 
     /// <summary>

@@ -12,5 +12,6 @@ public enum MermaidExceptionReason
     InvalidConfiguration,
     InvalidOperation,
     InvalidUri,
-    InvalidCharacter
+    InvalidCharacter,
+    IncompatibleVersion
 }

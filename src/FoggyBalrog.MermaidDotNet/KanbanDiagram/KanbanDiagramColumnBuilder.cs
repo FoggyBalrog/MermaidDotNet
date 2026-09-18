@@ -13,7 +13,7 @@ public class KanbanDiagramColumnBuilder
     internal KanbanDiagramColumnBuilder(string title, MermaidDotNetOptions? options)
     {
         _title = title;
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
     }
 
     public KanbanDiagramColumnBuilder AddTask(string description, string? assigned = null, string? ticket = null, Priority? priority = null)

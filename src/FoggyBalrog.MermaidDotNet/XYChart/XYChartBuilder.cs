@@ -17,7 +17,7 @@ public class XYChartBuilder
 
     internal XYChartBuilder(string? title, MermaidConfig? config, XYChartOrientation? orientation, MermaidDotNetOptions? options)
     {
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
 
         if (_options.ValidateInputs)
         {

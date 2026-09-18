@@ -34,7 +34,7 @@ public class QuadrantChartBuilder
         string? quadrant4,
         MermaidDotNetOptions? options)
     {
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
 
         if (_options.SanitizeInputs)
         {
