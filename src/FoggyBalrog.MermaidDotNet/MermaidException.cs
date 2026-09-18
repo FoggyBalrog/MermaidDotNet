@@ -11,6 +11,30 @@ public class MermaidException : Exception
 
     public MermaidExceptionReason Reason { get; }
 
+    internal static MermaidException IncompatibleVersion(
+        string feature,
+        MermaidVersion targetVersion,
+        MermaidVersion minimumVersion,
+        MermaidVersion? maximumVersion = null,
+        MermaidVersion? removedInVersion = null)
+    {
+        string range = $">= {minimumVersion}";
+
+        if (maximumVersion.HasValue)
+        {
+            range += $" and <= {maximumVersion.Value}";
+        }
+
+        if (removedInVersion.HasValue)
+        {
+            range += $" and < {removedInVersion.Value}";
+        }
+
+        return new MermaidException(
+            MermaidExceptionReason.IncompatibleVersion,
+            $"Feature '{feature}' is not compatible with target Mermaid {targetVersion}. Required version range: {range}.");
+    }
+
     internal static MermaidException ForeignItem(string itemName)
     {
         return new MermaidException(MermaidExceptionReason.ForeignItem, $"Item '{itemName}' must belong to the current diagram.");

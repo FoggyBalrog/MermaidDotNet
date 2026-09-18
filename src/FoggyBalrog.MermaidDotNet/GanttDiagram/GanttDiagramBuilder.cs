@@ -30,7 +30,7 @@ public class GanttDiagramBuilder
         string dateFormat,
         MermaidDotNetOptions? options)
     {
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
 
         if (_options.ValidateInputs)
         {

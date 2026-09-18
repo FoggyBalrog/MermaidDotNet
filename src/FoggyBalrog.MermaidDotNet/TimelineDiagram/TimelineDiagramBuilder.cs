@@ -17,7 +17,7 @@ public class TimelineDiagramBuilder
 
     internal TimelineDiagramBuilder(string? title, MermaidConfig? config, MermaidDotNetOptions? options)
     {
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
 
         if (_options.SanitizeInputs)
         {

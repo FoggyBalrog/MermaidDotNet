@@ -19,7 +19,7 @@ public class PieChartBuilder
 
     internal PieChartBuilder(string? title, MermaidConfig? config, bool displayValuesOnLegend, MermaidDotNetOptions? options)
     {
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
 
         if (_options.ValidateInputs)
         {

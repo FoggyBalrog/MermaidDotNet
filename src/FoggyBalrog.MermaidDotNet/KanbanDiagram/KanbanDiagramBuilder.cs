@@ -19,7 +19,7 @@ public class KanbanDiagramBuilder
 
     internal KanbanDiagramBuilder(string? title, MermaidConfig? config, MermaidDotNetOptions? options)
     {
-        _options = options ?? new MermaidDotNetOptions();
+        _options = MermaidDotNetOptions.Snapshot(options);
 
         if (_options.ValidateInputs)
         {
