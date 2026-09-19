@@ -158,6 +158,11 @@ public class SequenceDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="box"/> is not null and not part of the diagram, with the reason <see cref="MermaidExceptionReason.ForeignItem"/>.</exception>
     public SequenceDiagramBuilder AddMember(string name, out Member member, MemberType memberType = MemberType.Participant, Box? box = null)
     {
+        if (memberType is not MemberType.Participant and not MemberType.Actor)
+        {
+            _options.EnsureCompatible(MermaidFeature.SequenceParticipantShapesWithAliases);
+        }
+
         if (_options.SanitizeInputs)
         {
             name = SequenceDiagramSanitizer.SanitizeParticipantName(name);
@@ -245,6 +250,11 @@ public class SequenceDiagramBuilder
         ArrowType arrowType = ArrowType.Filled,
         ActivationType activationType = ActivationType.None)
     {
+        if (memberType is not MemberType.Participant and not MemberType.Actor)
+        {
+            _options.EnsureCompatible(MermaidFeature.SequenceParticipantShapesWithAliases);
+        }
+
         if (_options.SanitizeInputs)
         {
             name = SequenceDiagramSanitizer.SanitizeParticipantName(name);
@@ -496,6 +506,8 @@ public class SequenceDiagramBuilder
     /// <exception cref="InvalidOperationException">Thrown when an unknown sequence item is encountered. Should never happen.</exception>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.SequenceDiagram, _config);
+
         string indent = Shared.Indent;
         var builder = new StringBuilder();
 
@@ -675,13 +687,13 @@ public class SequenceDiagramBuilder
             return $"actor {memberId} as {name}";
         }
 
-        string str = $"participant {memberId} as {name}";
+        string str = $"participant {memberId}";
 
         if (type is not MemberType.Participant)
         {
             str += $"@{{ \"type\" : \"{SymbolMaps.MemberTypes[type]}\" }}";
         }
 
-        return str;
+        return $"{str} as {name}";
     }
 }

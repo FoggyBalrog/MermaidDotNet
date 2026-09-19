@@ -8,7 +8,7 @@ public class BlockDiagramNoValidationNoSanitizationOptionsValidationTests
     public void AddBlock_DoesNotThrowIfWidthIsStrictlyNegative()
     {
         Mermaid
-            .BlockDiagram(options: _options)
+            .BlockDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("foo", out _, -1)
             .Build();
     }
@@ -17,7 +17,7 @@ public class BlockDiagramNoValidationNoSanitizationOptionsValidationTests
     public void AddCompositeBlock_DoesNotThrowIfWidthIsStrictlyNegative()
     {
         Mermaid
-            .BlockDiagram(options: _options)
+            .BlockDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddCompositeBlock(b => {}, width: -1)
             .Build();
     }
@@ -26,7 +26,7 @@ public class BlockDiagramNoValidationNoSanitizationOptionsValidationTests
     public void StyleBlock_DoesNotThrowIfCssIsWhitespace()
     {
         Mermaid
-            .BlockDiagram(options: _options)
+            .BlockDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("foo", out var b)
             .StyleBlock(b, " ")
             .Build();

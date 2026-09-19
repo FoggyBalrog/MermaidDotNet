@@ -6,7 +6,7 @@ public class PacketDiagramDefaultOptionsBuilderTests
     public void CanBuildEmptyDiagram()
     {
         string diagram = Mermaid
-            .PacketDiagram()
+            .PacketDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_9 })
             .Build();
 
         Assert.Equal("packet", diagram, ignoreLineEndingDifferences: true);
@@ -16,7 +16,7 @@ public class PacketDiagramDefaultOptionsBuilderTests
     public void CanBuildDiagramWithEndFieldFirst()
     {
         string diagram = Mermaid
-            .PacketDiagram("some title")
+            .PacketDiagram("some title", options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_9 })
             .AddFieldWithEnd(10, "foo")
             .AddFieldWithBits(5, "bar")
             .AddFieldWithEnd(25, "baz")
@@ -35,7 +35,7 @@ packet
     public void CanBuildDiagramWithBitsFieldFirst()
     {
         string diagram = Mermaid
-            .PacketDiagram("some title")
+            .PacketDiagram("some title", options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_9 })
             .AddFieldWithBits(5, "foo")
             .AddFieldWithEnd(10, "bar")
             .Build();

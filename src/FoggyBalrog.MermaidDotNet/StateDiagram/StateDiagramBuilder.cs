@@ -131,6 +131,8 @@ public class StateDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="tooltip"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddStateLink(State state, string url, string? tooltip = null)
     {
+        _options.EnsureCompatible(MermaidFeature.StateHyperlinks);
+
         if (_options.SanitizeInputs)
         {
             url = StateDiagramSanitizer.SanitizeLinkUrl(url);
@@ -351,6 +353,8 @@ public class StateDiagramBuilder
     /// <returns>The Mermaid code for the state diagram.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.StateDiagram, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

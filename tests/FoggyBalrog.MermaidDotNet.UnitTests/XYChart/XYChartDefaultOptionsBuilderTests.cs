@@ -8,7 +8,7 @@ public class XYChartDefaultOptionsBuilderTests
     public void CanBuildDiagram()
     {
         string diagram = Mermaid
-            .XYChart()
+            .XYChart(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .Build();
 
         Assert.Equal("xychart", diagram, ignoreLineEndingDifferences: true);
@@ -18,7 +18,7 @@ public class XYChartDefaultOptionsBuilderTests
     public void CanBuildSimpleDiagramWithTitleAndOrientation()
     {
         string diagram = Mermaid
-            .XYChart(title: "My title", orientation: XYChartOrientation.Horizontal)
+            .XYChart(title: "My title", orientation: XYChartOrientation.Horizontal, options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBarSeries([1, 2, 3, 4])
                     .AddLineSeries([4, 3, 2, 1])
                     .AddBarSeries([5, 6, 7, 8])
@@ -39,7 +39,7 @@ line [8, 7, 6, 5]", diagram, ignoreLineEndingDifferences: true);
     public void CanBuildDiagramWithTitledAxes()
     {
         string diagram = Mermaid
-            .XYChart()
+            .XYChart(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithTitledXAxis("foo")
             .WithTitledYAxis("bar")
             .AddBarSeries([1, 2, 3, 4])
@@ -55,7 +55,7 @@ bar [1, 2, 3, 4]", diagram, ignoreLineEndingDifferences: true);
     public void CanBuildDiagramWithNumericAxis()
     {
         string diagram = Mermaid
-            .XYChart()
+            .XYChart(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithNumericXAxis(0, 10, "foo")
             .WithNumericYAxis(-5, 5, "bar")
             .AddBarSeries([1, 2, 3, 4])
@@ -71,7 +71,7 @@ bar [1, 2, 3, 4]", diagram, ignoreLineEndingDifferences: true);
     public void CanBuildDiagramWithCategoricalAxis()
     {
         string diagram = Mermaid
-            .XYChart()
+            .XYChart(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithCategoricalXAxis(["A", "B", "C", "D"], "foo")
             .AddBarSeries([1, 2, 3, 4])
             .Build();

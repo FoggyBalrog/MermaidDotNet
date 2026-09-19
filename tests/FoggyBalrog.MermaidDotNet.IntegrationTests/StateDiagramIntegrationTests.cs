@@ -44,7 +44,7 @@ public class StateDiagramDefaultOptionsBuilderIntegrationTests(MermaidToolingFix
     public async Task CanBuildStateDiagramWithLinks()
     {
         string diagram = Mermaid
-            .StateDiagram()
+            .StateDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_7 })
             .AddState("State 1", out State s1)
             .AddState("State 2", out State s2)
             .AddStateLink(s1, "https://example.com/state1")
@@ -296,7 +296,7 @@ public class StateDiagramNoValidationNoSanitizationOptionsBuilderIntegrationTest
     public async Task CanBuildStateDiagramWithLinks()
     {
         string diagram = Mermaid
-            .StateDiagram(options: _options)
+            .StateDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_7 })
             .AddState("State 1", out State s1)
             .AddState("State 2", out State s2)
             .AddStateLink(s1, "https://example.com/state1")

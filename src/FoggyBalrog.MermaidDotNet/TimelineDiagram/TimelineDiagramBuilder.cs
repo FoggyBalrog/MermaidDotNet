@@ -99,6 +99,8 @@ public class TimelineDiagramBuilder
     /// <returns>The Mermaid code for the timeline diagram.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.TimelineDiagram, _config);
+
         string indent = Shared.Indent;
         var builder = new StringBuilder();
 

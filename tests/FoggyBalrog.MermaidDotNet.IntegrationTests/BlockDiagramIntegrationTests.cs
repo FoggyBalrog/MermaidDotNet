@@ -8,7 +8,7 @@ public class BlockDiagramDefaultOptionsBuilderIntegrationTests(MermaidToolingFix
     public async Task CanBuildSimpleDiagram()
     {
         string diagram = Mermaid
-            .BlockDiagram()
+            .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("foo", out var foo)
             .AddSpace()
             .AddBlock("bar", out var bar)
@@ -30,7 +30,7 @@ public class BlockDiagramDefaultOptionsBuilderIntegrationTests(MermaidToolingFix
         Block? e = null;
 
         string diagram = Mermaid
-            .BlockDiagram(columns: 4)
+            .BlockDiagram(columns: 4, options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("A", out var a)
             .AddBlock("B", out var b)
             .AddBlock("C", out var c)
@@ -65,7 +65,7 @@ public class BlockDiagramDefaultOptionsBuilderIntegrationTests(MermaidToolingFix
     public async Task CanBuildDiagramWithAllShapes()
     {
         string diagram = Mermaid
-            .BlockDiagram()
+            .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("A", out var a, shape: BlockShape.Rectangle)
             .AddBlock("B", out var b, shape: BlockShape.RoundEdges)
             .AddBlock("C", out var c, shape: BlockShape.Stadium)
@@ -98,7 +98,7 @@ public class BlockDiagramDefaultOptionsBuilderIntegrationTests(MermaidToolingFix
     public async Task CanBuildDiagramWithStyles()
     {
         string diagram = Mermaid
-            .BlockDiagram()
+            .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("A", out var a)
             .AddBlock("B", out var b)
             .StyleBlock(a, "fill:#f96,stroke:#333,stroke-width:4px")
@@ -120,7 +120,7 @@ public class BlockDiagramNoValidationNoSanitizationOptionsBuilderIntegrationTest
     public async Task CanBuildSimpleDiagram()
     {
         string diagram = Mermaid
-            .BlockDiagram(options: _options)
+            .BlockDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("foo", out var foo)
             .AddSpace()
             .AddBlock("bar", out var bar)
@@ -142,7 +142,7 @@ public class BlockDiagramNoValidationNoSanitizationOptionsBuilderIntegrationTest
         Block? e = null;
 
         string diagram = Mermaid
-            .BlockDiagram(columns: 4, options: _options)
+            .BlockDiagram(columns: 4, options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("A", out var a)
             .AddBlock("B", out var b)
             .AddBlock("C", out var c)
@@ -177,7 +177,7 @@ public class BlockDiagramNoValidationNoSanitizationOptionsBuilderIntegrationTest
     public async Task CanBuildDiagramWithAllShapes()
     {
         string diagram = Mermaid
-            .BlockDiagram(options: _options)
+            .BlockDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("A", out var a, shape: BlockShape.Rectangle)
             .AddBlock("B", out var b, shape: BlockShape.RoundEdges)
             .AddBlock("C", out var c, shape: BlockShape.Stadium)
@@ -210,7 +210,7 @@ public class BlockDiagramNoValidationNoSanitizationOptionsBuilderIntegrationTest
     public async Task CanBuildDiagramWithStyles()
     {
         string diagram = Mermaid
-            .BlockDiagram(options: _options)
+            .BlockDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("A", out var a)
             .AddBlock("B", out var b)
             .StyleBlock(a, "fill:#f96,stroke:#333,stroke-width:4px")

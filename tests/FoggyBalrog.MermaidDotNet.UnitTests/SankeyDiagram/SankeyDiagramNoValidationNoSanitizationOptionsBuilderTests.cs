@@ -8,7 +8,7 @@ public class SankeyDiagramNoValidationNoSanitizationOptionsBuilderTests
     public void CanBuildEmptyDiagram()
     {
         string diagram = Mermaid
-            .SankeyDiagram(options: _options)
+            .SankeyDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .Build();
 
         Assert.Equal("sankey", diagram, ignoreLineEndingDifferences: true);
@@ -18,7 +18,7 @@ public class SankeyDiagramNoValidationNoSanitizationOptionsBuilderTests
     public void CanBuildDiagramWithFlowsAndEmptyLines()
     {
         string diagram = Mermaid
-            .SankeyDiagram(options: _options)
+            .SankeyDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddFlow("A", "B", 10)
             .AddEmptyLine()
             .AddFlow("B", "C", 20)

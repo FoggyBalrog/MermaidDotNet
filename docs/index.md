@@ -59,23 +59,27 @@ Option behavior:
 
 ### Version compatibility
 
-- **Strict** (default): enforces version checks and rejects targets newer than `MermaidCompatibility.LatestTestedVersion` (currently `11.13`).
-- **Unchecked**: allows newer targets, including `MermaidVersion.V12_0`, without compatibility guarantees.
+- **Strict** (default): checks implemented features against a central compatibility registry. Explicit syntax operations are checked at the builder call; diagram syntax and typed configuration are checked on every `Build()`, including configuration changed after builder creation.
+- **Unchecked** (loose mode): skips feature compatibility checks without disabling input validation or sanitization.
 
-Both modes require Mermaid **11.0 or later**. A version preset does not imply support, and selecting a target does not rewrite syntax. Checks for all existing version-sensitive features are still being added in [#112](https://github.com/FoggyBalrog/MermaidDotNet/issues/112).
+Both modes require Mermaid **11.0 or later**. Strict mode now accepts newer targets, including Mermaid 12, and enforces known introduction and removal boundaries. `MermaidCompatibility.LatestTestedVersion` (currently `11.13`) describes parser test coverage, not a target-version ceiling; newer targets have no compatibility guarantee. Selecting a target does not rewrite syntax.
 
-Compatibility failures throw `MermaidException` with reason `IncompatibleVersion` and a message explaining the target and required versions.
+The default strict target remains **11.4**. For example, Gantt vertical markers and state hyperlinks require **11.7**, per-edge flowchart curves require **11.10**, and the emitted sequence participant shapes with aliases require **11.13**. The non-`beta` headers emitted for packet diagrams require **11.9**; block, Sankey, and XY diagrams require **11.10**. Select an adequate target for these features.
+
+Compatibility failures throw `MermaidException` with reason `IncompatibleVersion`. Each message identifies the feature, target, required version range, and remediation. Strict Mermaid 12 targets reject flowchart, class, and state `DefaultRenderer` configuration; remove it and use top-level `MermaidConfig.Layout` (`"dagre"` or `"elk"`) instead.
 
 ```csharp
 var options = new MermaidDotNetOptions
 {
-    TargetMermaidVersion = MermaidVersion.V12_0,
-    CompatibilityMode = MermaidCompatibilityMode.Unchecked
+    TargetMermaidVersion = MermaidVersion.V11_7
 };
 
-// Input validation remains enabled; Mermaid 12 compatibility is not guaranteed.
-var builder = Mermaid.Flowchart(options: options);
+string diagram = Mermaid.GanttDiagram(options: options)
+    .AddVerticalMarker("Release", new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero))
+    .Build();
 ```
+
+For unrestricted generation, set `CompatibilityMode = MermaidCompatibilityMode.Unchecked`. See the [compatibility reference](compatibility.md) for the feature matrix, migration guidance, and audit scope.
 
 ### Input option combinations
 

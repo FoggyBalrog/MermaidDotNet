@@ -67,6 +67,8 @@ public class FlowchartBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="text"/> is whitespace, with a reason of <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public FlowchartBuilder AddNodeWithExpandedShape(string text, out Node node, ExpandedNodeShape expandedNodeShape)
     {
+        _options.EnsureCompatible(MermaidFeature.FlowchartExpandedNodeShapes);
+
         if (_options.SanitizeInputs)
         {
             text = FlowchartSanitizer.SanitizeNodeText(text);
@@ -127,6 +129,11 @@ public class FlowchartBuilder
         bool multidirectional = false,
         int extraLength = 0)
     {
+        if (curveStyle is not null)
+        {
+            _options.EnsureCompatible(MermaidFeature.FlowchartEdgeCurves);
+        }
+
         if (_options.SanitizeInputs)
         {
             text = text is null ? null : FlowchartSanitizer.SanitizeLinkText(text);
@@ -178,6 +185,11 @@ public class FlowchartBuilder
         bool multidirectional = false,
         int extraLength = 0)
     {
+        if (curveStyle is not null)
+        {
+            _options.EnsureCompatible(MermaidFeature.FlowchartEdgeCurves);
+        }
+
         if (_options.SanitizeInputs)
         {
             text = text is null ? null : FlowchartSanitizer.SanitizeLinkText(text);
@@ -420,6 +432,8 @@ public class FlowchartBuilder
     /// <returns>The Mermaid code for the flowchart.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.Flowchart, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

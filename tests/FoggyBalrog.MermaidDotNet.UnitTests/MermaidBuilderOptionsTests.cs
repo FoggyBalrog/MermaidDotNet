@@ -61,7 +61,7 @@ public class MermaidBuilderOptionsTests
 
     [Theory]
     [MemberData(nameof(BuilderNames))]
-    public void Constructor_InStrictMode_RejectsFutureTargetsRegardlessOfInputValidation(string builderName)
+    public void Constructor_InStrictMode_AllowsFutureTargetsRegardlessOfInputValidation(string builderName)
     {
         MermaidVersion[] targets = [new(11, 13, 1), new(11, 14), new(12, 0)];
 
@@ -76,9 +76,9 @@ public class MermaidBuilderOptionsTests
                     CompatibilityMode = MermaidCompatibilityMode.Strict
                 };
 
-                MermaidException exception = Assert.Throws<MermaidException>(() => _builders[builderName](options));
+                object builder = _builders[builderName](options);
 
-                AssertIncompatibleVersion(exception, target, MermaidCompatibility.LatestTestedVersion);
+                AssertOptions(GetOptions(builder), validateInputs, false, target, MermaidCompatibilityMode.Strict);
             }
         }
     }
@@ -129,8 +129,7 @@ public class MermaidBuilderOptionsTests
 
                     MermaidException exception = Assert.Throws<MermaidException>(() => _builders[builderName](options));
 
-                    AssertIncompatibleVersion(exception, target,
-                        mode == MermaidCompatibilityMode.Strict ? MermaidCompatibility.LatestTestedVersion : null);
+                    AssertIncompatibleVersion(exception, target);
                 }
             }
         }
@@ -336,16 +335,12 @@ public class MermaidBuilderOptionsTests
         Assert.Equal(mode, options.CompatibilityMode);
     }
 
-    private static void AssertIncompatibleVersion(MermaidException exception, MermaidVersion target, MermaidVersion? maximum)
+    private static void AssertIncompatibleVersion(MermaidException exception, MermaidVersion target)
     {
         Assert.Equal(MermaidExceptionReason.IncompatibleVersion, exception.Reason);
         string range = $">= {MermaidCompatibility.MinimumSupportedVersion}";
-        if (maximum.HasValue)
-        {
-            range += $" and <= {maximum.Value}";
-        }
 
-        Assert.Equal(
+        Assert.Contains(
             $"Feature 'MermaidDotNet support' is not compatible with target Mermaid {target}. Required version range: {range}.",
             exception.Message);
     }

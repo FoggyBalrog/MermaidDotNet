@@ -145,6 +145,8 @@ public class RequirementDiagramBuilder
     /// <returns></returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.RequirementDiagram, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

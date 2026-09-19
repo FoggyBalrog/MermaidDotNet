@@ -65,6 +65,8 @@ public class PacketDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="bits"/> is strictly negative, with the reason <see cref="MermaidExceptionReason.StrictlyNegative"/>.</exception>
     public PacketDiagramBuilder AddFieldWithBits(int bits, string? description = null)
     {
+        _options.EnsureCompatible(MermaidFeature.PacketBitsSyntax);
+
         if (_options.SanitizeInputs)
         {
             description = description is null ? null : PacketDiagramSanitizer.SanitizeFieldDescription(description);
@@ -90,6 +92,8 @@ public class PacketDiagramBuilder
     /// <returns>The Mermaid code for the packet diagram.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.PacketDiagram, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

@@ -8,7 +8,7 @@ public class XYChartNoValidationNoSanitizationOptionsBuilderSanitizationTests
     public void DoesntSanitizeInputs()
     {
         string diagram = Mermaid
-            .XYChart(options: _options)
+            .XYChart(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithCategoricalXAxis(["C\\D"], "T\\X")
             .WithTitledYAxis("Y\\Z")
             .AddBarSeries([1])
