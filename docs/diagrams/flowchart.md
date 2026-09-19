@@ -611,13 +611,13 @@ Set the `Flowchart.Curve` property of the `MermadConfig` object. See [Mermaid co
 
 #### Individual link curve style
 
-Pass the optional `curveStyle` parameter to the `AddLink` method. Provide a value will override the default curve style set in the configuration.
+Pass the optional `curveStyle` parameter to the `AddLink` method. Provide a value will override the default curve style set in the configuration. Per-edge curves require a strict target of **11.10 or later**; see [version compatibility](../compatibility.md).
 
 Example:
 
 ```csharp
 string diagram = Mermaid
-    .Flowchart()
+    .Flowchart(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddNode("N1", out var n1)
     .AddNode("N2", out var n2)
     .AddNode("N3", out var n3)

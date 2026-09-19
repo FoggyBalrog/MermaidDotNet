@@ -8,7 +8,7 @@ public class SankeyDiagramNoValidationNoSanitizationOptionsBuilderSanitizationTe
     public void DoesntSanitizeInputs()
     {
         string diagram = Mermaid
-            .SankeyDiagram(options: _options)
+            .SankeyDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddFlow("A,B", "C,D", 1)
             .Build();
 

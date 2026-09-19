@@ -142,11 +142,11 @@ sequenceDiagram
 
 Members can be of type `Participant`, `Actor`, `Boundary`, `Control`, `Entity`, `Database`, `Collections` or `Queue`.
 
-Use the `AddMember` method with the right `MemberType` argument.
+Use the `AddMember` method with the right `MemberType` argument. Types other than `Participant` and `Actor` require a strict target of **11.13 or later**, because the generated syntax combines shape metadata with an alias. See [version compatibility](../compatibility.md).
 
 ```csharp
 string diagram = Mermaid
-    .SequenceDiagram()
+    .SequenceDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_13 })
     .AddMember("Alice", out _, MemberType.Participant) // or just `.AddMember("Alice", out _)`
     .AddMember("Bob", out _, MemberType.Actor)
     .AddMember("Charlie", out _, MemberType.Boundary)
@@ -162,28 +162,28 @@ The code above generates the following Mermaid code:
 
 ```text
 sequenceDiagram
-    participant Alice
-    actor Bob
-    participant Charlie@{ "type" : "boundary" }
-    participant David@{ "type" : "control" }
-    participant Eve@{ "type" : "entity" }
-    participant Frank@{ "type" : "database" }
-    participant Grace@{ "type" : "collections" }
-    participant Heidi@{ "type" : "queue" }
+    participant m0 as Alice
+    actor m1 as Bob
+    participant m2@{ "type" : "boundary" } as Charlie
+    participant m3@{ "type" : "control" } as David
+    participant m4@{ "type" : "entity" } as Eve
+    participant m5@{ "type" : "database" } as Frank
+    participant m6@{ "type" : "collections" } as Grace
+    participant m7@{ "type" : "queue" } as Heidi
 ```
 
 That renders as:
 
 ```mermaid
 sequenceDiagram
-    participant Alice
-    actor Bob
-    participant Charlie@{ "type" : "boundary" }
-    participant David@{ "type" : "control" }
-    participant Eve@{ "type" : "entity" }
-    participant Frank@{ "type" : "database" }
-    participant Grace@{ "type" : "collections" }
-    participant Heidi@{ "type" : "queue" }
+    participant m0 as Alice
+    actor m1 as Bob
+    participant m2@{ "type" : "boundary" } as Charlie
+    participant m3@{ "type" : "control" } as David
+    participant m4@{ "type" : "entity" } as Eve
+    participant m5@{ "type" : "database" } as Frank
+    participant m6@{ "type" : "collections" } as Grace
+    participant m7@{ "type" : "queue" } as Heidi
 ```
 
 [⬆ Back to top](#sequence-diagram)

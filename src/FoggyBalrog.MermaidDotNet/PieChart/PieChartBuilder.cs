@@ -63,6 +63,8 @@ public class PieChartBuilder
     /// <returns>The Mermaid code for the pie chart.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.PieChart, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

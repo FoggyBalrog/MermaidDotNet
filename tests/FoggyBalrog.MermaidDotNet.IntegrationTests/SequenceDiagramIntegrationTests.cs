@@ -22,7 +22,7 @@ public class SequenceDiagramDefaultOptionsBuilderIntegrationTests(MermaidTooling
     public async Task CanBuildDiagramWithAllMembers()
     {
         string diagram = Mermaid
-            .SequenceDiagram()
+            .SequenceDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_13 })
             .AddMember("Alice", out _, MemberType.Participant)
             .AddMember("Bob", out _, MemberType.Actor)
             .AddMember("Charlie", out _, MemberType.Boundary)
@@ -501,7 +501,7 @@ public class SequenceDiagramNoValidationNoSanitizationOptionsBuilderIntegrationT
     public async Task CanBuildDiagramWithAllMembers()
     {
         string diagram = Mermaid
-            .SequenceDiagram(options: _options)
+            .SequenceDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_13 })
             .AddMember("Alice", out _, MemberType.Participant)
             .AddMember("Bob", out _, MemberType.Actor)
             .AddMember("Charlie", out _, MemberType.Boundary)

@@ -208,6 +208,8 @@ public class XYChartBuilder
     /// </summary>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.XYChart, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

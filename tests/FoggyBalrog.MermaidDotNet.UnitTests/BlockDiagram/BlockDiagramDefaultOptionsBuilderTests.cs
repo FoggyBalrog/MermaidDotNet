@@ -8,7 +8,7 @@ public class BlockDiagramDefaultOptionsBuilderTests
     public void CanBuildEmptyDiagram()
     {
         string diagram = Mermaid
-            .BlockDiagram()
+            .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .Build();
 
         Assert.Equal("block", diagram, ignoreLineEndingDifferences: true);
@@ -18,7 +18,7 @@ public class BlockDiagramDefaultOptionsBuilderTests
     public void CanBuildSimpleDiagram()
     {
         string diagram = Mermaid
-            .BlockDiagram()
+            .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("foo", out var foo)
             .AddSpace()
             .AddBlock("bar", out var bar)
@@ -44,7 +44,7 @@ public class BlockDiagramDefaultOptionsBuilderTests
         Block? e = null;
 
         string diagram = Mermaid
-            .BlockDiagram(columns: 4)
+            .BlockDiagram(columns: 4, options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("A", out var a)
             .AddBlock("B", out var b)
             .AddBlock("C", out var c)
@@ -97,7 +97,7 @@ public class BlockDiagramDefaultOptionsBuilderTests
     public void CanBuildDiagramWithAllShapes()
     {
         string diagram = Mermaid
-            .BlockDiagram()
+            .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("A", out var a, shape: BlockShape.Rectangle)
             .AddBlock("B", out var b, shape: BlockShape.RoundEdges)
             .AddBlock("C", out var c, shape: BlockShape.Stadium)
@@ -147,7 +147,7 @@ public class BlockDiagramDefaultOptionsBuilderTests
     public void CanBuildDiagramWithStyles()
     {
         string diagram = Mermaid
-            .BlockDiagram()
+            .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("A", out var a)
             .AddBlock("B", out var b)
             .StyleBlock(a, "fill:#f96,stroke:#333,stroke-width:4px")

@@ -61,6 +61,8 @@ public class KanbanDiagramBuilder
     /// <returns>The Mermaid code for the kanban diagram.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.KanbanDiagram, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

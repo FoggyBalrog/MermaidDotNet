@@ -328,6 +328,8 @@ public class GanttDiagramBuilder
     /// <remarks>This feature was introduced in Mermaid 11.7.0.</remarks>
     public GanttDiagramBuilder AddVerticalMarker(string name, DateTimeOffset position, TimeSpan? nextTaskOffset = null)
     {
+        _options.EnsureCompatible(MermaidFeature.GanttVerticalMarkers);
+
         if (_options.SanitizeInputs)
         {
             name = GanttDiagramSanitizer.SanitizeVerticalMarkerName(name);
@@ -421,6 +423,8 @@ public class GanttDiagramBuilder
     /// <exception cref="NotSupportedException">Thrown when an item type is not supported. Should never happen.</exception>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.GanttDiagram, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

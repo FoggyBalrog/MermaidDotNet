@@ -186,7 +186,7 @@ gantt
     public void CanBuildGanttDiagramWithVerticalMarker()
     {
         string diagram = Mermaid
-            .GanttDiagram(options: _options)
+            .GanttDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_7 })
             .AddTask("Foo", Date("2024-05-01"), Date("2024-05-05"), out GanttTask t1)
             .AddTask("Bar", Date("2024-05-08"), Date("2024-05-12"), out GanttTask t2)
             .AddVerticalMarker("Milestone 1", Date("2024-05-03"))

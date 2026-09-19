@@ -140,6 +140,8 @@ public class BlockDiagramBuilder
     /// </summary>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.BlockDiagram, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

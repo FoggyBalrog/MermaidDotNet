@@ -167,6 +167,8 @@ public class GitGraphBuilder
     /// <exception cref="InvalidOperationException">Thrown when an unknown command is encountered. Should never happen.</exception>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.GitGraph, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

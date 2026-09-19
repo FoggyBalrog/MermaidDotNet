@@ -5,6 +5,8 @@
 > [!NOTE]
 > All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
 
+The emitted `block` header requires a strict target of **11.10 or later**. See [version compatibility](../compatibility.md).
+
 ## Simple block diagram
 
 The following code sample shows how to create a simple Mermaid block diagram.
@@ -15,7 +17,7 @@ Add blocks with the `AddBlock` method, add links with the `AddLink` method, and 
 
 ```csharp
 var diagram = Mermaid
-    .BlockDiagram()
+    .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddBlock("Frontend", out var frontend)
     .AddSpace()
     .AddBlock("Backend", out var backend)
@@ -62,7 +64,7 @@ Example:
 
 ```csharp
 var diagram = Mermaid
-    .BlockDiagram(columns: 3)
+    .BlockDiagram(columns: 3, options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddBlock("A", out _)
     .AddBlock("B", out _)
     .AddBlock("C", out _)
@@ -102,7 +104,7 @@ Example:
 
 ```csharp
 var diagram = Mermaid
-    .BlockDiagram()
+    .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddBlock("Rectangle", out _, shape: BlockShape.Rectangle)
     .AddBlock("Round edges", out _, shape: BlockShape.RoundEdges)
     .AddBlock("Stadium", out _, shape: BlockShape.Stadium)
@@ -149,7 +151,7 @@ Example:
 
 ```csharp
 var diagram = Mermaid
-    .BlockDiagram(columns: 3)
+    .BlockDiagram(columns: 3, options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddBlock("A", out _)
     .AddSpace()
     .AddBlock("B", out _)
@@ -190,7 +192,7 @@ Example:
 
 ```csharp
 var diagram = Mermaid
-    .BlockDiagram()
+    .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddBlock("A", out var a)
     .AddSpace()
     .AddBlock("B", out var b)
@@ -232,7 +234,7 @@ Block api;
 Block db;
 
 var diagram = Mermaid
-    .BlockDiagram(columns: 3)
+    .BlockDiagram(columns: 3, options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddBlock("UI", out var ui)
     .AddSpace()
     .AddCompositeBlock(builder => builder
@@ -290,7 +292,7 @@ Example:
 
 ```csharp
 var diagram = Mermaid
-    .BlockDiagram()
+    .BlockDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddBlock("Critical", out var critical)
     .StyleBlock(critical, "fill:#ffcccc,stroke:#cc0000,stroke-width:2px")
     .Build();

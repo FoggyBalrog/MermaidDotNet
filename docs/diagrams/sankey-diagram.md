@@ -5,6 +5,8 @@
 > [!NOTE]
 > All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
 
+The emitted `sankey` header requires a strict target of **11.10 or later**. See [version compatibility](../compatibility.md).
+
 ## Simple sankey diagram
 
 The following code sample shows how to create a simple Mermaid sankey diagram.
@@ -17,7 +19,7 @@ Generate the diagram mermaid code with the `Build` method.
 
 ```csharp
 var diagram = Mermaid
-    .SankeyDiagram()
+    .SankeyDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddFlow("A", "B", 30)
     .AddEmptyLine()
     .AddFlow("B", "C", 20)

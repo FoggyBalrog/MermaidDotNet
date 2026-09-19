@@ -92,6 +92,11 @@ public class EntityRelationshipDiagramBuilder
             EntityRelationshipDiagramSanitizer.ValidateRelationshipLabel(label);
         }
 
+        if (!string.IsNullOrEmpty(label) && (label.Contains("<br/>") || label.Contains("<br />")))
+        {
+            _options.EnsureCompatible(MermaidFeature.ERMultilineRelationshipLabels);
+        }
+
         _relationships.Add(new Relationship(fromCardinality, fromEntity, toCardinality, toEntity, label, type));
         return this;
     }
@@ -102,6 +107,8 @@ public class EntityRelationshipDiagramBuilder
     /// <returns>The Mermaid code for the entity relationship diagram.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.EntityRelationshipDiagram, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));
