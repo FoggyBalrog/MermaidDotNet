@@ -15,7 +15,7 @@ public class PacketDiagramNoValidationNoSanitizationOptionsValidationTests
     public void AddFieldWithEnd_DoesNotThrowIfValueIsStrictlyNegative()
     {
         Mermaid
-            .PacketDiagram(options: _options)
+            .PacketDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_9 })
             .AddFieldWithEnd(-1)
             .Build();
     }
@@ -24,7 +24,7 @@ public class PacketDiagramNoValidationNoSanitizationOptionsValidationTests
     public void AddFieldWithBits_DoesNotThrowIfValueIsStrictlyNegative()
     {
         Mermaid
-            .PacketDiagram(options: _options)
+            .PacketDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_9 })
             .AddFieldWithBits(-1)
             .Build();
     }

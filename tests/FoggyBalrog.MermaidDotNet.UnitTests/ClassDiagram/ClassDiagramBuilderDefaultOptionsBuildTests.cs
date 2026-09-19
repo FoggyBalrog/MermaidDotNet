@@ -500,6 +500,53 @@ classDiagram
     c1 <|-- c7", diagram, ignoreLineEndingDifferences: true);
     }
 
+    [Theory]
+    [InlineData(MermaidCompatibilityMode.Strict, 15)]
+    [InlineData(MermaidCompatibilityMode.Unchecked, 4)]
+    public void Build_NestedNamespacesRetainClassesAfterInnerScopesClose(MermaidCompatibilityMode mode, int minor)
+    {
+        var builder = Mermaid.ClassDiagram(options: new()
+        {
+            TargetMermaidVersion = new MermaidVersion(11, minor),
+            CompatibilityMode = mode
+        }).AddClass("Outside", out var outside);
+
+        builder.AddNamespace("Outer", outer =>
+        {
+            outer.AddNamespace("Middle", middle =>
+            {
+                middle.AddNamespace("Inner", inner => inner.AddClass("Leaf", out _));
+                middle.AddClass("MiddleAfter", out var middleAfter)
+                    .AddRelationship(middleAfter, outside, RelationshipType.Unspecified);
+            });
+            outer.AddClass("OuterAfter", out var outerAfter)
+                .AddRelationship(outerAfter, outside, RelationshipType.Unspecified);
+        });
+        builder.AddNamespace("Sibling", sibling => sibling.AddClass("SiblingClass", out _))
+            .AddClass("AfterAll", out var afterAll)
+            .AddRelationship(outside, afterAll, RelationshipType.Unspecified);
+
+        const string expected = @"classDiagram
+    namespace Outer {
+    namespace Middle {
+    namespace Inner {
+        class Leaf
+    }
+        class MiddleAfter
+    }
+        class OuterAfter
+    }
+    namespace Sibling {
+        class SiblingClass
+    }
+    MiddleAfter -- Outside
+    OuterAfter -- Outside
+    Outside -- AfterAll";
+
+        Assert.Equal(expected, builder.Build(), ignoreLineEndingDifferences: true);
+        Assert.Equal(expected, builder.Build(), ignoreLineEndingDifferences: true);
+    }
+
     [Fact]
     public void CanBuildClassDiagramWithClassLabels()
     {

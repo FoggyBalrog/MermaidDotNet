@@ -32,7 +32,7 @@ public class PacketDiagramDefaultOptionsValidationTests
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
-                .PacketDiagram()
+                .PacketDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_7 })
                 .AddFieldWithBits(-1);
         });
 

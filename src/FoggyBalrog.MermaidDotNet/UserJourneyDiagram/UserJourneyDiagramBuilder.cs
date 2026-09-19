@@ -91,6 +91,8 @@ public class UserJourneyDiagramBuilder
     /// <returns>The Mermaid code for the user journey diagram.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.UserJourneyDiagram, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

@@ -280,7 +280,7 @@ public class FlowchartDefaultOptionsBuilderTests
     public void CanBuildDiagramWithAllLinkCurveStyles()
     {
         string diagram = Mermaid
-            .Flowchart()
+            .Flowchart(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddNode("N1", out Node n1)
             .AddNode("N2", out Node n2)
             .AddNode("N3", out Node n3)

@@ -8,7 +8,7 @@ public class XYChartDefaultOptionsBuilderIntegrationTests(MermaidToolingFixture 
     public async Task CanBuildDiagram()
     {
         string diagram = Mermaid
-            .XYChart()
+            .XYChart(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .Build();
 
         var diagramResult = await toolingFixture.ValidateDiagramAsync(diagram);
@@ -21,7 +21,7 @@ public class XYChartDefaultOptionsBuilderIntegrationTests(MermaidToolingFixture 
     public async Task CanBuildSimpleDiagramWithTitleAndOrientation()
     {
         string diagram = Mermaid
-            .XYChart(title: "My title", orientation: XYChartOrientation.Horizontal)
+            .XYChart(title: "My title", orientation: XYChartOrientation.Horizontal, options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBarSeries([1, 2, 3, 4])
                     .AddLineSeries([4, 3, 2, 1])
                     .AddBarSeries([5, 6, 7, 8])
@@ -38,7 +38,7 @@ public class XYChartDefaultOptionsBuilderIntegrationTests(MermaidToolingFixture 
     public async Task CanBuildDiagramWithTitledAxes()
     {
         string diagram = Mermaid
-            .XYChart()
+            .XYChart(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithTitledXAxis("foo")
             .WithTitledYAxis("bar")
             .AddBarSeries([1, 2, 3, 4])
@@ -54,7 +54,7 @@ public class XYChartDefaultOptionsBuilderIntegrationTests(MermaidToolingFixture 
     public async Task CanBuildDiagramWithNumericAxis()
     {
         string diagram = Mermaid
-            .XYChart()
+            .XYChart(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithNumericXAxis(0, 10, "foo")
             .WithNumericYAxis(-5, 5, "bar")
             .AddBarSeries([1, 2, 3, 4])
@@ -70,7 +70,7 @@ public class XYChartDefaultOptionsBuilderIntegrationTests(MermaidToolingFixture 
     public async Task CanBuildDiagramWithCategoricalAxis()
     {
         string diagram = Mermaid
-            .XYChart()
+            .XYChart(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithCategoricalXAxis(["A", "B", "C", "D"], "foo")
             .AddBarSeries([1, 2, 3, 4])
             .Build();
@@ -90,7 +90,7 @@ public class XYChartNoValidationNoSanitizationOptionsBuilderIntegrationTests(Mer
     public async Task CanBuildDiagram()
     {
         string diagram = Mermaid
-            .XYChart(options: _options)
+            .XYChart(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .Build();
 
         var diagramResult = await toolingFixture.ValidateDiagramAsync(diagram);
@@ -103,7 +103,7 @@ public class XYChartNoValidationNoSanitizationOptionsBuilderIntegrationTests(Mer
     public async Task CanBuildSimpleDiagramWithTitleAndOrientation()
     {
         string diagram = Mermaid
-            .XYChart(title: "My title", orientation: XYChartOrientation.Horizontal, options: _options)
+            .XYChart(title: "My title", orientation: XYChartOrientation.Horizontal, options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBarSeries([1, 2, 3, 4])
             .AddLineSeries([4, 3, 2, 1])
             .AddBarSeries([5, 6, 7, 8])
@@ -120,7 +120,7 @@ public class XYChartNoValidationNoSanitizationOptionsBuilderIntegrationTests(Mer
     public async Task CanBuildDiagramWithTitledAxes()
     {
         string diagram = Mermaid
-            .XYChart(options: _options)
+            .XYChart(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithTitledXAxis("foo")
             .WithTitledYAxis("bar")
             .AddBarSeries([1, 2, 3, 4])
@@ -136,7 +136,7 @@ public class XYChartNoValidationNoSanitizationOptionsBuilderIntegrationTests(Mer
     public async Task CanBuildDiagramWithNumericAxis()
     {
         string diagram = Mermaid
-            .XYChart(options: _options)
+            .XYChart(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithNumericXAxis(0, 10, "foo")
             .WithNumericYAxis(-5, 5, "bar")
             .AddBarSeries([1, 2, 3, 4])
@@ -152,7 +152,7 @@ public class XYChartNoValidationNoSanitizationOptionsBuilderIntegrationTests(Mer
     public async Task CanBuildDiagramWithCategoricalAxis()
     {
         string diagram = Mermaid
-            .XYChart(options: _options)
+            .XYChart(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithCategoricalXAxis(["A", "B", "C", "D"], "foo")
             .AddBarSeries([1, 2, 3, 4])
             .Build();

@@ -51,7 +51,7 @@ stateDiagram-v2
     public void CanBuildStateDiagramWithLinks()
     {
         string diagram = Mermaid
-            .StateDiagram()
+            .StateDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_7 })
             .AddState("State 1", out State s1)
             .AddState("State 2", out State s2)
             .AddStateLink(s1, "https://example.com/state1")

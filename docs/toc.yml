@@ -2,6 +2,8 @@
   href: index.md
 - name: Configuration
   href: configuration.md
+- name: Version compatibility
+  href: compatibility.md
 - name: Diagrams
   href: diagrams/
 - name: API

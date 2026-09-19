@@ -11,7 +11,7 @@ public class GanttDiagramNoValidationNoSanitizationOptionsBuilderSanitizationTes
     public void DoesntSanitizeInputs()
     {
         string diagram = Mermaid
-            .GanttDiagram(options: _options)
+            .GanttDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_7 })
             .AddTask("Task:1", Date("2024-05-01"), Date("2024-05-02"), out GanttTask t1)
             .AddTask("Task:2", Date("2024-05-03"), Date("2024-05-04"), out GanttTask t2)
             .AddSection("Section:1")

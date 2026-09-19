@@ -42,7 +42,7 @@ public class StateDiagramNoValidationNoSanitizationOptionsValidationTests
             .AddState("State", out var state);
 
         Mermaid
-            .StateDiagram(options: _options)
+            .StateDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_7 })
             .AddStateLink(state, "http://example.com")
             .Build();
     }
@@ -51,7 +51,7 @@ public class StateDiagramNoValidationNoSanitizationOptionsValidationTests
     public void AddStateLink_DoesNotThrowIfUrlIsWhitespace()
     {
         Mermaid
-            .StateDiagram(options: _options)
+            .StateDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_7 })
             .AddState("State", out var state)
             .AddStateLink(state, " ")
             .Build();
@@ -61,7 +61,7 @@ public class StateDiagramNoValidationNoSanitizationOptionsValidationTests
     public void AddStateLink_DoesNotThrowIfTooltipIsWhitespace()
     {
         Mermaid
-            .StateDiagram(options: _options)
+            .StateDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_7 })
             .AddState("State", out var state)
             .AddStateLink(state, "http://example.com", " ")
             .Build();

@@ -19,7 +19,7 @@ public class SequenceDiagramDefaultOptionsBuilderTests
     public void CanBuildDiagramWithAllMembers()
     {
         string diagram = Mermaid
-            .SequenceDiagram()
+            .SequenceDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_13 })
             .AddMember("Alice", out _, MemberType.Participant)
             .AddMember("Bob", out _, MemberType.Actor)
             .AddMember("Charlie", out _, MemberType.Boundary)
@@ -33,12 +33,12 @@ public class SequenceDiagramDefaultOptionsBuilderTests
         Assert.Equal(@"sequenceDiagram
     participant m0 as Alice
     actor m1 as Bob
-    participant m2 as Charlie@{ ""type"" : ""boundary"" }
-    participant m3 as David@{ ""type"" : ""control"" }
-    participant m4 as Eve@{ ""type"" : ""entity"" }
-    participant m5 as Frank@{ ""type"" : ""database"" }
-    participant m6 as Grace@{ ""type"" : ""collections"" }
-    participant m7 as Heidi@{ ""type"" : ""queue"" }", diagram, ignoreLineEndingDifferences: true);
+    participant m2@{ ""type"" : ""boundary"" } as Charlie
+    participant m3@{ ""type"" : ""control"" } as David
+    participant m4@{ ""type"" : ""entity"" } as Eve
+    participant m5@{ ""type"" : ""database"" } as Frank
+    participant m6@{ ""type"" : ""collections"" } as Grace
+    participant m7@{ ""type"" : ""queue"" } as Heidi", diagram, ignoreLineEndingDifferences: true);
     }
 
     [Fact]

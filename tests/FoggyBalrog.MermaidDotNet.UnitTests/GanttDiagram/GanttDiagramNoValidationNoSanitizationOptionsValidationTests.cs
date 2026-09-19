@@ -221,7 +221,7 @@ public class GanttDiagramNoValidationNoSanitizationOptionsValidationTests
     public void AddVerticalMarker_DoesNotThrowIfNameIsWhiteSpace()
     {
         Mermaid
-            .GanttDiagram(options: _options)
+            .GanttDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_7 })
             .AddVerticalMarker(" ", DateTimeOffset.Now)
             .Build();
     }

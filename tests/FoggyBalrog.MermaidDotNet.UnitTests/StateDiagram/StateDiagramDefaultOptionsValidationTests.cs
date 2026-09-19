@@ -54,7 +54,7 @@ public class StateDiagramDefaultOptionsValidationTests
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
-                .StateDiagram()
+                .StateDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_7 })
                 .AddStateLink(state, "http://example.com");
         });
 
@@ -67,7 +67,7 @@ public class StateDiagramDefaultOptionsValidationTests
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
-                .StateDiagram()
+                .StateDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_7 })
                 .AddState("State", out var state)
                 .AddStateLink(state, " ");
         });
@@ -80,7 +80,7 @@ public class StateDiagramDefaultOptionsValidationTests
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
-                .StateDiagram()
+                .StateDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_7 })
                 .AddState("State", out var state)
                 .AddStateLink(state, "http://example.com", " ");
         });

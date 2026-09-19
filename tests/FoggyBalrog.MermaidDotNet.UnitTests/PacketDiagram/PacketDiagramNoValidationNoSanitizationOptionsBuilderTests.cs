@@ -8,7 +8,7 @@ public class PacketDiagramNoValidationNoSanitizationOptionsBuilderTests
     public void CanBuildEmptyDiagram()
     {
         string diagram = Mermaid
-            .PacketDiagram(options: _options)
+            .PacketDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_9 })
             .Build();
 
         Assert.Equal("packet", diagram, ignoreLineEndingDifferences: true);
@@ -18,7 +18,7 @@ public class PacketDiagramNoValidationNoSanitizationOptionsBuilderTests
     public void CanBuildDiagramWithEndFieldFirst()
     {
         string diagram = Mermaid
-            .PacketDiagram("some title", options: _options)
+            .PacketDiagram("some title", options: _options with { TargetMermaidVersion = MermaidVersion.V11_9 })
             .AddFieldWithEnd(10, "foo")
             .AddFieldWithBits(5, "bar")
             .AddFieldWithEnd(25, "baz")
@@ -37,7 +37,7 @@ packet
     public void CanBuildDiagramWithBitsFieldFirst()
     {
         string diagram = Mermaid
-            .PacketDiagram("some title", options: _options)
+            .PacketDiagram("some title", options: _options with { TargetMermaidVersion = MermaidVersion.V11_9 })
             .AddFieldWithBits(5, "foo")
             .AddFieldWithEnd(10, "bar")
             .Build();

@@ -452,13 +452,13 @@ stateDiagram-v2
 
 ## Interaction
 
-States can be made clickable by using the `AddStateLink` method.
+States can be made clickable by using the `AddStateLink` method. State hyperlinks require a strict target of **11.7 or later**; see [version compatibility](../compatibility.md).
 
 Example:
 
 ```csharp
 string diagram = Mermaid
-    .StateDiagram()
+    .StateDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_7 })
     .AddState("State 1", out State s1)
     .AddState("State 2", out State s2)
     .AddStateLink(s1, "https://example.com/state1")

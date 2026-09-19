@@ -8,7 +8,7 @@ public class SankeyDiagramNoValidationNoSanitizationOptionsValidationTests
     public void AddFlow_DoesNotThrowIfSourceIsWhiteSpace()
     {
         Mermaid
-            .SankeyDiagram(options: _options)
+            .SankeyDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddFlow(" ", "B", 10)
             .Build();
     }
@@ -17,7 +17,7 @@ public class SankeyDiagramNoValidationNoSanitizationOptionsValidationTests
     public void AddFlow_DoesNotThrowIfTargetIsWhiteSpace()
     {
         Mermaid
-            .SankeyDiagram(options: _options)
+            .SankeyDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddFlow("A", " ", 10)
             .Build();
     }

@@ -204,6 +204,8 @@ public class QuadrantChartBuilder
     /// <returns>The Mermaid code for the quadrant chart.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.QuadrantChart, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

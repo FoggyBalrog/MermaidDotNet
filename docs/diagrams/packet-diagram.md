@@ -5,6 +5,8 @@
 > [!NOTE]
 > All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
 
+The emitted `packet` header requires a strict target of **11.9 or later**. `AddFieldWithBits` itself requires 11.7. See [version compatibility](../compatibility.md).
+
 ## Simple packet diagram
 
 The following code sample shows how to create a simple Mermaid packet diagram.
@@ -17,7 +19,7 @@ Generate the diagram mermaid code with the `Build` method.
 
 ```csharp
 string diagram = Mermaid
-    .PacketDiagram("some title")
+    .PacketDiagram("some title", options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_9 })
     .AddFieldWithEnd(10, "foo")
     .AddFieldWithBits(5, "bar")
     .AddFieldWithEnd(25, "baz")
