@@ -16,7 +16,7 @@ public record MermaidDotNetOptions
             ? new MermaidDotNetOptions()
             : options with { }; // This is a shallow copy.
 
-        MermaidCompatibility.ValidateTarget(snapshot);
+        snapshot.EnsureSupportedTarget();
         return snapshot;
     }
 }

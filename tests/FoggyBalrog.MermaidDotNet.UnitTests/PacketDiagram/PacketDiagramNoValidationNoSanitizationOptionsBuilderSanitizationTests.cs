@@ -8,7 +8,7 @@ public class PacketDiagramNoValidationNoSanitizationOptionsBuilderSanitizationTe
     public void DoesntSanitizeInputs()
     {
         string diagram = Mermaid
-            .PacketDiagram(options: _options)
+            .PacketDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_9 })
             .AddFieldWithEnd(1, "a\\b")
             .Build();
 

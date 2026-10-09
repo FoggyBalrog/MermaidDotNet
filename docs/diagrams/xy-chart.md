@@ -5,6 +5,8 @@
 > [!NOTE]
 > All Mermaid diagrams can be configured, by passing a `MermaidConfig` object to any of the methods in the `Mermaid` class. Read more on [Mermaid configuration](~/configuration.md).
 
+The emitted `xychart` header requires a strict target of **11.10 or later**. See [version compatibility](../compatibility.md).
+
 ## Simple XY chart
 
 The following code sample shows how to create a simple Mermaid XY chart.
@@ -17,7 +19,7 @@ Generate the diagram mermaid code with the `Build` method.
 
 ```csharp
 string diagram = Mermaid
-    .XYChart("Some title")
+    .XYChart("Some title", options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddBarSeries([20, 40, 60, 80, 100])
     .AddLineSeries([15, 95, 25, 75, 35])
     .Build();
@@ -53,7 +55,7 @@ By default, the XY chart is rendered in a vertical orientation. To render the ch
 
 ```csharp
 string diagram = Mermaid
-    .XYChart(orientation: XYChartOrientation.Horizontal)
+    .XYChart(orientation: XYChartOrientation.Horizontal, options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .AddBarSeries([1, 2, 3, 4])
     .Build();
 ```
@@ -85,7 +87,7 @@ Both axes can be given only a title, using the `WithTitledXAxis` or `WithTitledY
 
 ```csharp
 string diagram = Mermaid
-    .XYChart("Some title")
+    .XYChart("Some title", options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
     .WithCategoricalXAxis(["Jan", "Feb", "Mar", "Apr", "May"], "Months")
     .WithNumericYAxis(0, 100, "Percentage")
     .AddBarSeries([20, 40, 60, 80, 100])

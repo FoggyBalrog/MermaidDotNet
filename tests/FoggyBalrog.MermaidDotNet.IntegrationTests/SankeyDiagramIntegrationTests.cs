@@ -12,7 +12,7 @@ public class SankeyDiagramDefaultOptionsBuilderIntegrationTests(MermaidToolingFi
     public async Task CanBuildDiagramWithFlowsAndEmptyLines()
     {
         string diagram = Mermaid
-            .SankeyDiagram()
+            .SankeyDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddFlow("A", "B", 10)
             .AddEmptyLine()
             .AddFlow("B", "C", 20)
@@ -34,7 +34,7 @@ public class SankeyDiagramNoValidationNoSanitizationOptionsBuilderIntegrationTes
     public async Task CanBuildDiagramWithFlowsAndEmptyLines()
     {
         string diagram = Mermaid
-            .SankeyDiagram(options: _options)
+            .SankeyDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddFlow("A", "B", 10)
             .AddEmptyLine()
             .AddFlow("B", "C", 20)

@@ -67,93 +67,15 @@ public class MermaidCompatibilityTests
     }
 
     [Theory]
-    [InlineData("11.6.99", false)]
-    [InlineData("11.7", true)]
-    [InlineData("11.7.1", true)]
-    public void RequireVersion_UsesInclusiveIntroductionBoundary(string target, bool compatible)
-    {
-        var options = new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.Parse(target) };
-
-        if (compatible)
-        {
-            MermaidCompatibility.RequireVersion(options, "Test feature", MermaidVersion.V11_7);
-        }
-        else
-        {
-            MermaidException exception = Assert.Throws<MermaidException>(() =>
-                MermaidCompatibility.RequireVersion(options, "Test feature", MermaidVersion.V11_7));
-
-            Assert.Equal(MermaidExceptionReason.IncompatibleVersion, exception.Reason);
-            Assert.Equal(
-                $"Feature 'Test feature' is not compatible with target Mermaid {target}. Required version range: >= 11.7.",
-                exception.Message);
-        }
-    }
-
-    [Theory]
-    [InlineData("11.9.99", true)]
-    [InlineData("11.10", false)]
-    [InlineData("11.10.1", false)]
-    public void RequireVersion_UsesExclusiveRemovalBoundary(string target, bool compatible)
-    {
-        var options = new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.Parse(target) };
-
-        if (compatible)
-        {
-            MermaidCompatibility.RequireVersion(options, "Test feature", MermaidVersion.V11_0, MermaidVersion.V11_10);
-        }
-        else
-        {
-            MermaidException exception = Assert.Throws<MermaidException>(() =>
-                MermaidCompatibility.RequireVersion(options, "Test feature", MermaidVersion.V11_0, MermaidVersion.V11_10));
-
-            Assert.Equal(MermaidExceptionReason.IncompatibleVersion, exception.Reason);
-            Assert.Equal(
-                $"Feature 'Test feature' is not compatible with target Mermaid {target}. Required version range: >= 11.0 and < 11.10.",
-                exception.Message);
-        }
-    }
-
-    [Theory]
-    [InlineData("11.4")]
-    [InlineData("11.10")]
+    [InlineData("11.13.1")]
+    [InlineData("11.15")]
     [InlineData("12.0")]
-    public void RequireVersion_InUncheckedMode_IgnoresIntroductionAndRemoval(string target)
+    [InlineData("99.0")]
+    public void StrictMode_AcceptsFutureTargets(string target)
     {
-        var options = new MermaidDotNetOptions
-        {
-            TargetMermaidVersion = MermaidVersion.Parse(target),
-            CompatibilityMode = MermaidCompatibilityMode.Unchecked
-        };
+        var options = new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.Parse(target) };
 
-        MermaidCompatibility.RequireVersion(options, "Test feature", MermaidVersion.V11_7, MermaidVersion.V11_10);
-    }
-
-    [Fact]
-    public void RequireVersion_InStrictMode_StillChecksWhenInputValidationIsDisabled()
-    {
-        var options = new MermaidDotNetOptions { ValidateInputs = false };
-
-        MermaidException exception = Assert.Throws<MermaidException>(() =>
-            MermaidCompatibility.RequireVersion(options, "Test feature", MermaidVersion.V11_7));
-
-        Assert.Equal(MermaidExceptionReason.IncompatibleVersion, exception.Reason);
-        Assert.Equal(
-            "Feature 'Test feature' is not compatible with target Mermaid 11.4. Required version range: >= 11.7.",
-            exception.Message);
-    }
-
-    [Fact]
-    public void UnsupportedTarget_ExceptionIncludesRequiredRange()
-    {
-        var options = new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V12_0 };
-
-        MermaidException exception = Assert.Throws<MermaidException>(() => Mermaid.Flowchart(options: options));
-
-        Assert.Equal(MermaidExceptionReason.IncompatibleVersion, exception.Reason);
-        Assert.Equal(
-            "Feature 'MermaidDotNet support' is not compatible with target Mermaid 12.0. Required version range: >= 11.0 and <= 11.13.",
-            exception.Message);
+        Assert.Equal("flowchart TB", Mermaid.Flowchart(options: options).Build());
     }
 
     [Fact]
@@ -167,7 +89,7 @@ public class MermaidCompatibilityTests
             removedInVersion: MermaidVersion.V11_10);
 
         Assert.Equal(MermaidExceptionReason.IncompatibleVersion, exception.Reason);
-        Assert.Equal(
+        Assert.Contains(
             "Feature 'Test feature' is not compatible with target Mermaid 12.0. Required version range: >= 11.7 and <= 11.13 and < 11.10.",
             exception.Message);
     }

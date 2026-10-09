@@ -8,7 +8,7 @@ public class BlockDiagramValidationAndSanitizationOptionsTests
     public void SanitizeInputs()
     {
         string diagram = Mermaid
-            .BlockDiagram(options: _options)
+            .BlockDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .AddBlock("f\r\no\"o", out var foo)
             .AddBlock("b\nar", out var bar)
             .AddLink(foo, bar, "q\nu\"x")

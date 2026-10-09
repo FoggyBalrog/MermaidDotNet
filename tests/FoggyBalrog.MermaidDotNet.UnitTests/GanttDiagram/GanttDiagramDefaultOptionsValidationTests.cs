@@ -315,7 +315,7 @@ public class GanttDiagramDefaultOptionsValidationTests
         var exception = Assert.Throws<MermaidException>(() =>
         {
             Mermaid
-                .GanttDiagram()
+                .GanttDiagram(options: new MermaidDotNetOptions { TargetMermaidVersion = MermaidVersion.V11_7 })
                 .AddVerticalMarker(" ", DateTimeOffset.Now);
         });
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);

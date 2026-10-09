@@ -60,7 +60,8 @@ public class MindMapBuilder
         _root = new Node(rootText, rootShape, rootIsMarkdown, rootIcon, rootClasses);
         _nodes = [_root];
         _title = title;
-        _config = config;
+        _config = config;
+
     }
 
     /// <summary>
@@ -127,6 +128,8 @@ public class MindMapBuilder
     /// <returns>The Mermaid code for the mind map.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.MindMap, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

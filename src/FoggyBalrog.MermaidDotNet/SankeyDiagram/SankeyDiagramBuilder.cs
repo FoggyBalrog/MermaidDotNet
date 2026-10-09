@@ -63,6 +63,8 @@ public class SankeyDiagramBuilder
     /// <returns></returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.SankeyDiagram, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));

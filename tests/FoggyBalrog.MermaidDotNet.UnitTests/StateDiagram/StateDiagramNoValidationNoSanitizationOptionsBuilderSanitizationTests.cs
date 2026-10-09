@@ -10,7 +10,7 @@ public class StateDiagramNoValidationNoSanitizationOptionsBuilderSanitizationTes
     public void DoesntSanitizeInputs()
     {
         string diagram = Mermaid
-            .StateDiagram(options: _options)
+            .StateDiagram(options: _options with { TargetMermaidVersion = MermaidVersion.V11_7 })
             .AddState("S:\"", out State s1)
             .AddState("T", out State s2)
             .AddStateTransition(s1, s2, "D:")

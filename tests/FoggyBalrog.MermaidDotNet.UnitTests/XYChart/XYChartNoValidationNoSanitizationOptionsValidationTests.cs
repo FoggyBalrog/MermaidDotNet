@@ -8,7 +8,7 @@ public class XYChartNoValidationNoSanitizationOptionsValidationTests
     public void Constructor_DoesNotThrowIfTitleIsWhiteSpace()
     {
         Mermaid
-            .XYChart(title: "   ", options: _options)
+            .XYChart(title: "   ", options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .Build();
     }
 
@@ -16,7 +16,7 @@ public class XYChartNoValidationNoSanitizationOptionsValidationTests
     public void WithCategoricalXAxis_DoesNotThrowIfCategoriesIsEmpty()
     {
         Mermaid
-            .XYChart(options: _options)
+            .XYChart(options: _options with { TargetMermaidVersion = MermaidVersion.V11_10 })
             .WithCategoricalXAxis([])
             .Build();
     }

@@ -16,7 +16,8 @@ public class MermaidException : Exception
         MermaidVersion targetVersion,
         MermaidVersion minimumVersion,
         MermaidVersion? maximumVersion = null,
-        MermaidVersion? removedInVersion = null)
+        MermaidVersion? removedInVersion = null,
+                string? migrationGuidance = null)
     {
         string range = $">= {minimumVersion}";
 
@@ -30,9 +31,15 @@ public class MermaidException : Exception
             range += $" and < {removedInVersion.Value}";
         }
 
+        string remediation = "Select a TargetMermaidVersion in this range or remove the feature.";
+        if (migrationGuidance is not null)
+        {
+            remediation += $" {migrationGuidance}";
+        }
+
         return new MermaidException(
             MermaidExceptionReason.IncompatibleVersion,
-            $"Feature '{feature}' is not compatible with target Mermaid {targetVersion}. Required version range: {range}.");
+            $"Feature '{feature}' is not compatible with target Mermaid {targetVersion}. Required version range: {range}. {remediation}");
     }
 
     internal static MermaidException ForeignItem(string itemName)

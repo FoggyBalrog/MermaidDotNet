@@ -18,6 +18,7 @@ public class ClassDiagramBuilder
     private readonly List<IStyle> _style = [];
     private readonly ClassDiagramDirection? _direction;
     private readonly MermaidDotNetOptions _options;
+    private int _namespaceDepth;
 
     internal ClassDiagramBuilder(
         string? title,
@@ -81,14 +82,33 @@ public class ClassDiagramBuilder
     /// <exception cref="MermaidException">Thrown when <paramref name="name"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public ClassDiagramBuilder AddNamespace(string name, Action<ClassDiagramBuilder> action)
     {
+        if (_namespaceDepth > 0)
+        {
+            _options.EnsureCompatible(MermaidFeature.ClassNestedNamespaces);
+        }
+
+        if (name.Contains('.'))
+        {
+            _options.EnsureCompatible(MermaidFeature.ClassDottedNamespaces);
+        }
+
         if (_options.ValidateInputs)
         {
             name.ThrowIfWhiteSpace();
         }
 
         _items.Add(new NamespaceStart(name));
-        action(this);
-        _items.Add(new NamespaceEnd());
+        _namespaceDepth++;
+        try
+        {
+            action(this);
+        }
+        finally
+        {
+            _namespaceDepth--;
+            // Preserve completed callback operations, but always close their namespace scope.
+            _items.Add(new NamespaceEnd());
+        }
 
         return this;
     }
@@ -359,6 +379,8 @@ public class ClassDiagramBuilder
     /// <returns>The Mermaid code for the class diagram.</returns>
     public string Build()
     {
+        _options.EnsureCompatible(MermaidFeature.ClassDiagram, _config);
+
         var builder = new StringBuilder();
 
         builder.Append(FrontmatterGenerator.Generate(_title, _config));
@@ -377,24 +399,24 @@ public class ClassDiagramBuilder
             builder.AppendLine($"{Shared.Indent}note{noteClassString} \"{note.Text}\"");
         }
 
-        bool isInNamespace = false;
+        int namespaceDepth = 0;
 
         foreach (IClassDiagramItem? item in _items)
         {
             switch (item)
             {
                 case Class @class:
-                    BuildClass(builder, @class, isInNamespace);
+                    BuildClass(builder, @class, namespaceDepth > 0);
                     break;
 
                 case NamespaceStart namespaceStart:
                     builder.AppendLine($"{Shared.Indent}namespace {namespaceStart.Name} {{");
-                    isInNamespace = true;
+                    namespaceDepth++;
                     break;
 
                 case NamespaceEnd:
                     builder.AppendLine($"{Shared.Indent}}}");
-                    isInNamespace = false;
+                    namespaceDepth--;
                     break;
             }
         }
