@@ -44,6 +44,25 @@ public class StateDiagramDefaultOptionsValidationTests
         Assert.Equal(MermaidExceptionReason.WhiteSpace, exception.Reason);
     }
 
+    [Theory]
+    [InlineData(" ", MermaidExceptionReason.WhiteSpace)]
+    [InlineData("S:", MermaidExceptionReason.InvalidCharacter)]
+    [InlineData("S\"", MermaidExceptionReason.InvalidCharacter)]
+    [InlineData("S\n", MermaidExceptionReason.InvalidCharacter)]
+    public void AddCompositeStateWithDirection_ThrowsIfDescriptionIsInvalid(string description, MermaidExceptionReason reason)
+    {
+        var exception = Assert.Throws<MermaidException>(() =>
+        {
+            Mermaid
+                .StateDiagram()
+                .AddCompositeState(description, out State _, _ =>
+                {
+                }, StateDiagramDirection.LeftToRight);
+        });
+
+        Assert.Equal(reason, exception.Reason);
+    }
+
     [Fact]
     public void AddStateLink_ThrowsIfStateIsForeign()
     {

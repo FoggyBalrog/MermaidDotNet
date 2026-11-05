@@ -5,11 +5,12 @@
 /// </summary>
 public record State : IStateDiagramItem
 {
-    internal State(string id, string description, StateKind kind)
+    internal State(string id, string description, StateKind kind, StateDiagramDirection? direction = null)
     {
         Id = id;
         Description = description;
         Kind = kind;
+        Direction = direction;
     }
 
     /// <summary>
@@ -23,4 +24,6 @@ public record State : IStateDiagramItem
     public string Description { get; }
 
     internal StateKind Kind { get; }
+
+    internal StateDiagramDirection? Direction { get; }
 }

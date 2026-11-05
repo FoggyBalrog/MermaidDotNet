@@ -145,6 +145,62 @@ stateDiagram-v2
     s2 --> [*]
 ```
 
+### Composite state direction
+
+A composite state can have its own direction by passing a `direction` parameter to the `AddCompositeState` overload. This direction applies only to that composite state.
+
+Omitting the direction or passing `null` emits no direction statement inside the composite state, leaving its layout to Mermaid. The builder does not automatically copy the direction from the diagram or an enclosing composite state.
+
+Example:
+
+```csharp
+var diagram = Mermaid
+    .StateDiagram(direction: StateDiagramDirection.LeftToRight)
+    .AddCompositeState("Composite", out var composite, builder => builder
+        .AddState("State 1", out var s1)
+        .AddState("State 2", out var s2)
+        .AddTransitionFromStart(s1)
+        .AddStateTransition(s1, s2)
+        .AddTransitionToEnd(s2), direction: StateDiagramDirection.TopToBottom)
+    .AddTransitionFromStart(composite)
+    .AddTransitionToEnd(composite)
+    .Build();
+```
+
+The code above generates the following Mermaid code:
+
+```text
+stateDiagram-v2
+    direction LR
+    state "Composite" as s1 {
+        direction TB
+        s2 : State 1
+        s3 : State 2
+        [*] --> s2
+        s2 --> s3
+        s3 --> [*]
+    }
+    [*] --> s1
+    s1 --> [*]
+```
+
+That renders as:
+
+```mermaid
+stateDiagram-v2
+    direction LR
+    state "Composite" as s1 {
+        direction TB
+        s2 : State 1
+        s3 : State 2
+        [*] --> s2
+        s2 --> s3
+        s3 --> [*]
+    }
+    [*] --> s1
+    s1 --> [*]
+```
+
 [⬆ Back to top](#state-diagram)
 
 ## Transition descriptions
