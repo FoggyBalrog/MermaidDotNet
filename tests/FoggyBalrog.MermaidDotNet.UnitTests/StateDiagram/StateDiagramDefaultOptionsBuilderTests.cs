@@ -161,6 +161,92 @@ stateDiagram-v2
     s17 --> [*]", diagram, ignoreLineEndingDifferences: true);
     }
 
+    [Theory]
+    [InlineData(StateDiagramDirection.TopToBottom, "TB")]
+    [InlineData(StateDiagramDirection.BottomToTop, "BT")]
+    [InlineData(StateDiagramDirection.LeftToRight, "LR")]
+    [InlineData(StateDiagramDirection.RightToLeft, "RL")]
+    public void CanBuildStateDiagramWithCompositeStateDirection(StateDiagramDirection direction, string symbol)
+    {
+        string diagram = Mermaid
+            .StateDiagram(direction: StateDiagramDirection.RightToLeft)
+            .AddCompositeState("Composite", out State composite, builder => builder
+                .AddState("State 1", out State s1)
+                .AddState("State 2", out State s2)
+                .AddStateTransition(s1, s2), direction)
+            .AddState("After", out State after)
+            .AddStateTransition(composite, after)
+            .Build();
+
+        Assert.Equal($@"stateDiagram-v2
+    direction RL
+    state ""Composite"" as s1 {{
+        direction {symbol}
+        s2 : State 1
+        s3 : State 2
+        s2 --> s3
+    }}
+    s6 : After
+    s1 --> s6", diagram, ignoreLineEndingDifferences: true);
+    }
+
+    [Fact]
+    public void CompositeStatesWithoutDirectionDoNotEmitDirection()
+    {
+        string legacyDiagram = Mermaid
+            .StateDiagram(direction: StateDiagramDirection.LeftToRight)
+            .AddCompositeState("Composite", out State _, builder => builder
+                .AddState("State", out State _))
+            .Build();
+        string nullDirectionDiagram = Mermaid
+            .StateDiagram(direction: StateDiagramDirection.LeftToRight)
+            .AddCompositeState("Composite", out State _, builder => builder
+                .AddState("State", out State _), direction: null)
+            .Build();
+
+        Assert.Equal(@"stateDiagram-v2
+    direction LR
+    state ""Composite"" as s1 {
+        s2 : State
+    }", legacyDiagram, ignoreLineEndingDifferences: true);
+        Assert.Equal(legacyDiagram, nullDirectionDiagram);
+    }
+
+    [Fact]
+    public void CanBuildStateDiagramWithIndependentCompositeStateDirections()
+    {
+        var builder = Mermaid
+            .StateDiagram(direction: StateDiagramDirection.LeftToRight)
+            .AddCompositeState("Outer", out State _, outer => outer
+                .AddCompositeState("Directed child", out State _, child => child
+                    .AddState("State 1", out State _), StateDiagramDirection.RightToLeft)
+                .AddCompositeState("Default child", out State _, child => child
+                    .AddState("State 2", out State _)), StateDiagramDirection.BottomToTop)
+            .AddCompositeState("Sibling", out State _, sibling => sibling
+                .AddState("State 3", out State _), direction: null)
+            .AddState("After", out State _);
+
+        string diagram = builder.Build();
+
+        Assert.Equal(@"stateDiagram-v2
+    direction LR
+    state ""Outer"" as s1 {
+        direction BT
+        state ""Directed child"" as s2 {
+            direction RL
+            s3 : State 1
+        }
+        state ""Default child"" as s5 {
+            s6 : State 2
+        }
+    }
+    state ""Sibling"" as s9 {
+        s10 : State 3
+    }
+    s12 : After", diagram, ignoreLineEndingDifferences: true);
+        Assert.Equal(diagram, builder.Build());
+    }
+
     [Fact]
     public void CanBuildStateDiagramWithChoiceStates()
     {

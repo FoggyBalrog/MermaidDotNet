@@ -22,4 +22,20 @@ public class StateDiagramValidationAndSanitizationOptionsTests
         Assert.Contains("s1 --> s2 : D#58;", diagram);
         Assert.Contains("click s1 \"https://example.com/#34;\" \"tip#34;\"", diagram);
     }
+
+    [Fact]
+    public void CompositeStateWithDirection_SanitizesDescription()
+    {
+        string diagram = Mermaid
+            .StateDiagram(options: _options)
+            .AddCompositeState("S:\"", out State _, _ =>
+            {
+            }, StateDiagramDirection.LeftToRight)
+            .Build();
+
+        Assert.Equal(@"stateDiagram-v2
+    state ""S#58;#34;"" as s1 {
+        direction LR
+    }", diagram, ignoreLineEndingDifferences: true);
+    }
 }

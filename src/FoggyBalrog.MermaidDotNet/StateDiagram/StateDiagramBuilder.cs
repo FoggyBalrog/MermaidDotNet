@@ -65,6 +65,18 @@ public class StateDiagramBuilder
     /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
     /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
     public StateDiagramBuilder AddCompositeState(string description, out State state, Action<StateDiagramBuilder> action)
+        => AddCompositeState(description, out state, action, null);
+
+    /// <summary>
+    /// Adds a composite state with an optional direction to the state diagram.
+    /// </summary>
+    /// <param name="description">The description of the state.</param>
+    /// <param name="state">The state that was added.</param>
+    /// <param name="action">An action that will be executed to add other items to the composite state.</param>
+    /// <param name="direction">An optional direction for this composite state only. If null, no direction statement is emitted and Mermaid's rendering default is used.</param>
+    /// <returns>The current instance of the <see cref="StateDiagramBuilder"/>.</returns>
+    /// <exception cref="MermaidException">Thrown when <paramref name="description"/> is whitespace, with the reason <see cref="MermaidExceptionReason.WhiteSpace"/>.</exception>
+    public StateDiagramBuilder AddCompositeState(string description, out State state, Action<StateDiagramBuilder> action, StateDiagramDirection? direction)
     {
         if (_options.SanitizeInputs)
         {
@@ -76,7 +88,7 @@ public class StateDiagramBuilder
             StateDiagramSanitizer.ValidateStateDescription(description);
         }
 
-        state = new State($"s{_items.Count + 1}", description, StateKind.Composite);
+        state = new State($"s{_items.Count + 1}", description, StateKind.Composite, direction);
         _items.Add(state);
         action(this);
         _items.Add(new CompositeStateEnd());
@@ -387,6 +399,11 @@ public class StateDiagramBuilder
                 case State { Kind: StateKind.Composite } state:
                     builder.AppendLine($"{_indent}state \"{state.Description}\" as {state.Id} {{");
                     _indent += Shared.Indent;
+                    if (state.Direction is not null)
+                    {
+                        string directionString = SymbolMaps.Directions[state.Direction.Value];
+                        builder.AppendLine($"{_indent}direction {directionString}");
+                    }
                     break;
 
                 case State { Kind: StateKind.Simple } state:

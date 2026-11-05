@@ -23,4 +23,22 @@ public class StateDiagramNoValidationNoSanitizationOptionsBuilderSanitizationTes
         Assert.Contains("click s1 \"https://example.com/\"\" \"tip\"\"", diagram);
         Assert.DoesNotContain("#58;", diagram);
     }
+
+    [Theory]
+    [InlineData(" ")]
+    [InlineData("S:\"")]
+    public void CompositeStateWithDirection_DoesntProcessDescription(string description)
+    {
+        string diagram = Mermaid
+            .StateDiagram(options: _options)
+            .AddCompositeState(description, out State _, _ =>
+            {
+            }, StateDiagramDirection.LeftToRight)
+            .Build();
+
+        Assert.Equal($@"stateDiagram-v2
+    state ""{description}"" as s1 {{
+        direction LR
+    }}", diagram, ignoreLineEndingDifferences: true);
+    }
 }
