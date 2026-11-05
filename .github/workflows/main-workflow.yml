@@ -22,6 +22,13 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: tests/FoggyBalrog.MermaidDotNet.IntegrationTests/Tooling/Node/package-lock.json
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -42,7 +49,7 @@ jobs:
         run: dotnet tool install --global dotnet-coverage --version 18.1.*
 
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore FoggyBalrog.MermaidDotNet.slnx
 
       - name: Build and analyze
         shell: pwsh
@@ -55,8 +62,8 @@ jobs:
             /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" `
             /d:sonar.cs.vstest.reportsPaths="**/*.trx"
 
-          dotnet build --no-incremental
+          dotnet build FoggyBalrog.MermaidDotNet.slnx --no-restore --no-incremental
 
-          dotnet-coverage collect "dotnet test --no-build --logger trx" -f xml -o coverage.xml
+          dotnet-coverage collect "dotnet test FoggyBalrog.MermaidDotNet.slnx --no-build --logger trx" -f xml -o coverage.xml
 
           dotnet sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"

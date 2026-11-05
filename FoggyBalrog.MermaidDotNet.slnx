@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/FoggyBalrog.MermaidDotNet/FoggyBalrog.MermaidDotNet.csproj" />
+  <Project Path="tests/FoggyBalrog.MermaidDotNet.IntegrationTests/FoggyBalrog.MermaidDotNet.IntegrationTests.csproj" />
+  <Project Path="tests/FoggyBalrog.MermaidDotNet.UnitTests/FoggyBalrog.MermaidDotNet.UnitTests.csproj" />
+</Solution>

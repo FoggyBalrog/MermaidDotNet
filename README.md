@@ -17,6 +17,8 @@ A .NET library to generate Mermaid diagrams code.
 - [Add the library to your project](#add-the-library-to-your-project)
 - [Compatibility](#compatibility)
 - [About documentation](#about-documentation)
+- [Testing](#testing)
+- [Contributing](#contributing)
 - [Quick Start](#quick-start)
   - [Flowchart](#flowchart)
   - [Sequence diagram](#sequence-diagram)
@@ -58,6 +60,29 @@ To read the documentation for the latest published version, go to <https://foggy
 The current README is valid for the commit you are currently viewing. This may differ from the latest published version, or the version you have installed.
 
 To see the documentation for a specific version, checkout the corresponding tag on GitHub and read the files in the `docs` folder. Optionally, you can view the generated documentation locally using DocFX by running `docfx ./docs/docfx.json --serve` in the root of the repository.
+
+## Testing
+
+This repository includes both unit tests and integration tests.
+
+- Unit tests check the generated Mermaid text, builder behavior, validation rules, and sanitization rules in C#.
+- Integration tests generate Mermaid text with the library and validate it against Mermaid's own parser through a small Node-based test harness.
+
+These tests help catch regressions, but they do not guarantee that every Mermaid feature, parser change, or input combination is covered.
+
+To run the full test suite locally:
+
+```bash
+dotnet test FoggyBalrog.MermaidDotNet.slnx
+```
+
+## Contributing
+
+Bug reports are welcome through GitHub issues.
+
+Feature requests are also welcome, but please keep in mind that this library intentionally has a limited scope, so some proposals may be declined.
+
+I am not accepting unsolicited pull requests at this time. If you would like to contribute code, please open an issue first and wait for confirmation before starting work. Pull requests opened without prior discussion may be closed without review.
 
 ## Quick Start
 
@@ -525,24 +550,48 @@ Sanitization is not a universal escaping layer. It is only applied where Mermaid
 
 ## Input options
 
-Input processing is configured through `MermaidDotNetOptions`.
+Configure input processing and Mermaid version compatibility with `MermaidDotNetOptions`. Builders copy the options when created, so later changes do not affect existing builders.
 
 Default values:
 
 - `ValidateInputs = true`
 - `SanitizeInputs = false`
+- `TargetMermaidVersion = MermaidVersion.V11_4`
+- `CompatibilityMode = MermaidCompatibilityMode.Strict`
 
 Option behavior:
 
 - `ValidateInputs`: when `true`, MermaidDotNet checks inputs against its supported Mermaid rules and throws a `MermaidException` for invalid values.
 - `SanitizeInputs`: when `true`, MermaidDotNet escapes supported inputs before generating Mermaid code. Escaping is diagram-specific and only available where Mermaid syntax supports it.
+- `TargetMermaidVersion`: the Mermaid version to target. Use presets such as `MermaidVersion.V11_4`, or parse a version with `MermaidVersion.Parse("11.4.1")`.
+- `CompatibilityMode`: controls version checks independently of input validation and sanitization.
 
-Option combinations:
+### Version compatibility
+
+- **Strict** (default): enforces version checks and rejects targets newer than `MermaidCompatibility.LatestTestedVersion` (currently `11.13`).
+- **Unchecked**: allows newer targets, including `MermaidVersion.V12_0`, without compatibility guarantees.
+
+Both modes require Mermaid **11.0 or later**. A version preset does not imply support, and selecting a target does not rewrite syntax. Checks for all existing version-sensitive features are still being added in [#112](https://github.com/FoggyBalrog/MermaidDotNet/issues/112).
+
+Compatibility failures throw `MermaidException` with reason `IncompatibleVersion` and a message explaining the target and required versions.
+
+```csharp
+var options = new MermaidDotNetOptions
+{
+    TargetMermaidVersion = MermaidVersion.V12_0,
+    CompatibilityMode = MermaidCompatibilityMode.Unchecked
+};
+
+// Input validation remains enabled; Mermaid 12 compatibility is not guaranteed.
+var builder = Mermaid.Flowchart(options: options);
+```
+
+### Input option combinations
 
 | `ValidateInputs` | `SanitizeInputs` | Behavior |
 | --- | --- | --- |
 | `true` | `false` | Default mode. Invalid inputs throw exceptions, and valid inputs are emitted as provided. |
-| `false` | `false` | Raw mode. No validation and no sanitization are applied. |
+| `false` | `false` | Raw input mode. No input validation or sanitization is applied; compatibility checks remain independent. |
 | `false` | `true` | Supported inputs are sanitized, but no validation is performed. |
 | `true` | `true` | Supported inputs are sanitized first, then validated. Values made valid by sanitization can pass validation, but unsupported Mermaid positions may still reject reserved characters. |
 

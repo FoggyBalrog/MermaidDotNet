@@ -1,0 +1,12 @@
+{
+  "name": "foggybalrog-mermaiddotnet-integration-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate-mermaid": "node ./validate-mermaid.mjs"
+  },
+  "dependencies": {
+    "jsdom": "28.1.0",
+    "mermaid": "11.13.0"
+  }
+}

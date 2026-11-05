@@ -7,7 +7,36 @@ on:
       - "v*"
 
 jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: tests/FoggyBalrog.MermaidDotNet.IntegrationTests/Tooling/Node/package-lock.json
+
+      - name: Restore dependencies
+        run: dotnet restore FoggyBalrog.MermaidDotNet.slnx
+
+      - name: Build
+        run: dotnet build FoggyBalrog.MermaidDotNet.slnx --no-restore --configuration Release
+
+      - name: Run tests
+        run: dotnet test FoggyBalrog.MermaidDotNet.slnx --no-build --configuration Release
+
   publish-docs:
+    needs: build-test
     runs-on: ubuntu-latest
     
     permissions:
@@ -52,6 +81,7 @@ jobs:
       uses: actions/deploy-pages@v4
       
   publish-nuget:
+    needs: build-test
     runs-on: ubuntu-latest
 
     steps:
@@ -69,13 +99,13 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 10.x
+          dotnet-version: 10.0.x
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore FoggyBalrog.MermaidDotNet.slnx
 
       - name: Build
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build FoggyBalrog.MermaidDotNet.slnx --no-restore --configuration Release
 
       - name: Create NuGet package
         run: dotnet pack --no-build --output nupkgs
